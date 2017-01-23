@@ -13,7 +13,7 @@ e.single(ELO1old, ELO2old, outcome, k = 100, normprob = TRUE)
 "2" = second individual wins and first looses\cr
 "0" = interaction ends in a draw/tie (no winner and no looser)}
 
-\item{k}{\emph{k} factor}
+\item{k}{\emph{k} factor, by default \code{k = 100}}
 
 \item{normprob}{logical (by default \code{TRUE}). Should a normal curve be assumed for calculating the winning/losing probablities, or a logistic curve. See \code{\link{winprob}} for details}
 }

@@ -3,5 +3,7 @@
 export(DS)
 export(e.single)
 export(h.index)
+export(randomsequence)
 export(winprob)
 importFrom(stats,pnorm)
+importFrom(utils,combn)

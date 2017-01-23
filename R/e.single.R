@@ -12,7 +12,7 @@
 #' @param outcome "1" = first individual wins and second looses\cr
 #' "2" = second individual wins and first looses\cr
 #' "0" = interaction ends in a draw/tie (no winner and no looser)
-#' @param k \emph{k} factor
+#' @param k \emph{k} factor, by default \code{k = 100}
 #' @param normprob logical (by default \code{TRUE}). Should a normal curve be assumed for calculating the winning/losing probablities, or a logistic curve. See \code{\link{winprob}} for details
 #'
 #' @return integer vector of length 2 with updated ratings of first and second individual after the interaction

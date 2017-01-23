@@ -11,7 +11,7 @@ winprob(elo1, elo2, normprob = TRUE)
 
 \item{elo2}{Elo rating of the opponent}
 
-\item{normprob}{logical (by default \code{TRUE}). Should a normal curve be assumed for calculating the winning/losing probablities, or a logistic curve. See \code{\link{winprob}} for details}
+\item{normprob}{logical (by default \code{TRUE}). Should a normal curve be assumed for calculating the winning/losing probablities, or a logistic curve.}
 }
 \value{
 numeric, expected chance of first individual to win an interacation with the second individual
