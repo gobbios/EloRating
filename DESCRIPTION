@@ -1,7 +1,7 @@
-Package: Elo2pack
+Package: EloRating2
 Type: Package
 Title: What the package does (short line)
-Version: 0.0.0.9004
+Version: 0.0.0.9005
 Date: 2017-01-22
 Author: Christof Neumann
 Maintainer: <christofneumann1@gmail.com>

@@ -1,0 +1,19 @@
+#' Dominance sequence from Albers and de Vries (2001)
+#'
+#' Dominance sequence from Albers and de Vries (2001) with added information about interaction type and whether interaction ended in a draw
+#'
+#' @docType data
+#'
+#' @usage data(adv2)
+#'
+#' @format Fictional example of an interaction sequence, with 33 interactions between 7 individuals.
+#'
+#' @keywords datasets
+#'
+#' @references Albers, P. C. H. & de Vries, H. 2001. Elo-rating as a tool in the sequential estimation of dominance strengths. Animal Behaviour, 61, 489-495. (\href{https://dx.doi.org/10.1006/anbe.2000.1571}{DOI: 10.1006/anbe.2000.1571})
+#'
+#' @rdname adv
+#'
+#' @examples
+#' data(adv2)
+"adv2"
