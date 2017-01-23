@@ -6,7 +6,7 @@
 #'
 #' @param mat square interaction matrix with winner in rows and losers in columns, for example the output from \code{\link{creatematrix}}
 #'
-#' @return integer, the number of inconsistencies in the matrix
+#' @return data frame with inconsistencies and their strength
 #'
 #' @author Christof Neumann
 #'
