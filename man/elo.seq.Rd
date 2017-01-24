@@ -44,7 +44,7 @@ An object of class \code{elo}, which is list with 10 items that serves as basis 
 \item{pmat}{a date by ID-\code{matrix} with with presence data}
 \item{nmat}{a date by ID-\code{matrix} containing the number of interactions a given ID was involved in on a given day}
 \item{logtable}{details on each single interaction}
-\item{stability}{a \code{data.frame} containing information about stability (see \code{\link{stab.elo}}) }
+\item{stability}{a \code{data.frame} containing information about stability (see \code{\link{stab_elo}}) }
 \item{truedates}{vector of class \code{Date} covering the ranges of dates in the dataset}
 \item{misc}{various}
 \item{allids}{a (sorted) character vector with all IDs that occur in the dataset}

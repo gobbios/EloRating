@@ -23,13 +23,13 @@
 #' @examples
 #' data(adv)
 #' SEQ <- elo.seq(winner=adv$winner, loser=adv$loser, Date=adv$Date)
-#' stab.elo(SEQ)
-#' stab.elo(SEQ, weight=FALSE)
-#' stab.elo(SEQ, from="2010-01-20", to="2010-01-30")
-#' stab.elo(SEQ, from="2010-01-20", to="2010-01-30", weight=FALSE)
+#' stab_elo(SEQ)
+#' stab_elo(SEQ, weight=FALSE)
+#' stab_elo(SEQ, from="2010-01-20", to="2010-01-30")
+#' stab_elo(SEQ, from="2010-01-20", to="2010-01-30", weight=FALSE)
 
 
-stab.elo <- function(eloobject, from=min(eloobject$stability$date), to=max(eloobject$stability$date), weight=TRUE) {
+stab_elo <- function(eloobject, from=min(eloobject$stability$date), to=max(eloobject$stability$date), weight=TRUE) {
 
   # create errors if the date range lies outside the supplied data
   if(as.Date(from)<min(eloobject$stability$date) | as.Date(from)>max(eloobject$stability$date)) stop("start date outside date range")
