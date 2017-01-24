@@ -8,15 +8,15 @@ eloplot(eloobject, ids = "all", interpolate = "yes", from = "start",
   to = "end", color = TRUE)
 }
 \arguments{
-\item{eloobject}{elo object output of \code{\link{elo.seq}} function}
+\item{eloobject}{elo object, output of \code{\link{elo.seq}} function}
 
 \item{ids}{character, \code{"all"} will plot trajectories for all individuals within the dataset. \code{"first.20"} will plot the 20 first individuals. \code{"random.20"} will plot 20 randomly chosen individuals from the dataset. Alternatively, provide a list of individual IDs.}
 
 \item{interpolate}{character, by default (\code{"yes"}) plot interpolated Elo values or plot Elo values without interpolation (\code{"no"})}
 
-\item{from}{character, \code{"start"}: the plotted date range will start at the first date of the dataset or provide a custom date ("YYYY-MM-DD")}
+\item{from}{character, either \code{"start"}, i.e. the plotted date range will start at the first date of the dataset, or provide a custom date ("YYYY-MM-DD")}
 
-\item{to}{character, \code{"end"}: the plotted date range will end at the last date of the dataset or provide a custom date ("YYYY-MM-DD")}
+\item{to}{character, either \code{"end"}, i.e. the plotted date range will end at the last date of the dataset, or provide a custom date ("YYYY-MM-DD")}
 
 \item{color}{logical, the plot is either colored (\code{TRUE}) or in black and white with symbols}
 }

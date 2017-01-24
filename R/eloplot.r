@@ -7,11 +7,11 @@
 #'
 #' plot Elo ratings for all or selected individuals over a specified time period
 #'
-#' @param eloobject elo object output of \code{\link{elo.seq}} function
+#' @param eloobject elo object, output of \code{\link{elo.seq}} function
 #' @param ids character, \code{"all"} will plot trajectories for all individuals within the dataset. \code{"first.20"} will plot the 20 first individuals. \code{"random.20"} will plot 20 randomly chosen individuals from the dataset. Alternatively, provide a list of individual IDs.
 #' @param interpolate character, by default (\code{"yes"}) plot interpolated Elo values or plot Elo values without interpolation (\code{"no"})
-#' @param from character, \code{"start"}: the plotted date range will start at the first date of the dataset or provide a custom date ("YYYY-MM-DD")
-#' @param to character, \code{"end"}: the plotted date range will end at the last date of the dataset or provide a custom date ("YYYY-MM-DD")
+#' @param from character, either \code{"start"}, i.e. the plotted date range will start at the first date of the dataset, or provide a custom date ("YYYY-MM-DD")
+#' @param to character, either \code{"end"}, i.e. the plotted date range will end at the last date of the dataset, or provide a custom date ("YYYY-MM-DD")
 #' @param color logical, the plot is either colored (\code{TRUE}) or in black and white with symbols
 #'
 #' @return a plot

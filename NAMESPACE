@@ -2,6 +2,7 @@
 
 export(DS)
 export(ISI)
+export(creatematrix)
 export(e.single)
 export(elo.seq)
 export(eloplot)
