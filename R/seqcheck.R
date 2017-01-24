@@ -12,7 +12,7 @@
 #'
 #' @details calender dates (for the sequence as well as in the first column of \code{presence}, if supplied) need to be in "YYYY-MM-DD" format!
 #'
-#' \code{seqcheck} will return two types of messages: warnings and errors. Errors will result in the data NOT working when supplied to \code{elo.seq}, and need to be fixed. Warning message do not necessarily lead to failure of executing \code{elo.seq}. Note that by default \code{seqcheck} is part of \code{elo.seq}. If any error or warning is produced by \code{seqcheck}, these data will not work in \code{elo.seq}. Some warning (but not error) messages can be ignored (see below) and if the \code{runcheck} argument in \code{elo.seq} is set to \code{FALSE} Elo ratings will be calculated properly in such cases.
+#' \code{seqcheck} will return two types of messages: warnings and errors. Errors will result in the data NOT working when supplied to \code{elo.seq}, and need to be fixed. Warning message do not necessarily lead to failure of executing \code{elo.seq}. Note that by default \code{seqcheck} is part of \code{elo.seq}. If any error or warning is produced by \code{seqcheck}, these data will not work in \code{\link{elo.seq}}. Some warning (but not error) messages can be ignored (see below) and if the \code{runcheck} argument in \code{elo.seq} is set to \code{FALSE} Elo ratings will be calculated properly in such cases.
 #'
 #' The actual checks (and corresponding messages) that are performed are described in more detail here:
 #'
