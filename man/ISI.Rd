@@ -9,7 +9,7 @@ ISI(mat, runs = 5000)
 \arguments{
 \item{mat}{square interaction matrix with winner in rows and losers in columns, for example the output from}
 
-\item{runs}{numeric, number of iterations}
+\item{runs}{numeric, number of iterations, by default \code{5000}}
 }
 \value{
 integer, the summed strength of inconsistencies in the matrix

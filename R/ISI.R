@@ -7,7 +7,7 @@
 #' calculate strength of inconsistencies
 #'
 #' @param mat square interaction matrix with winner in rows and losers in columns, for example the output from
-#' @param runs numeric, number of iterations
+#' @param runs numeric, number of iterations, by default \code{5000}
 #'
 #' @return integer, the summed strength of inconsistencies in the matrix
 #'
