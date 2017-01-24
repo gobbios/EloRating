@@ -10,6 +10,8 @@
 #' @return returns the \emph{S} index
 #' @export
 #'
+#' @aliases stab.elo
+#'
 #' @author Christof Neumann
 #'
 #' @details \emph{S} ranges between 0 and 1, where 0 indicates an unstable hierarchy, in which the ordering reverses every other day, and 1, in which the ordering is stable and no rank changes occur.

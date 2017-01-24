@@ -9,6 +9,8 @@
 #'
 #' @export
 #'
+#' @aliases scale.elo
+#'
 #' @author Christof Neumann
 #'
 #' @examples
