@@ -6,3 +6,11 @@
 EloRating.Rproj
 .Rbuildignore
 man/.Rapp.history
+vignettes/.pdf
+vignettes/.tex
+vignettes/.bbl
+vignettes/.log
+vignettes/.xml
+vignettes/.gz
+vignettes/.toc
+vignettes/tutorial-blx.bib
