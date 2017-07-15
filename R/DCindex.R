@@ -1,8 +1,3 @@
-# DCindex 15_05_20
-# library(EloRating)
-# data(bonobos)
-# interactionmatrix <- bonobos
-
 #' Directional Consistency Index
 #'
 #' calculate Directional Consistency Index
@@ -30,11 +25,6 @@ DCindex <- function(interactionmatrix) {
   uptri <- interactionmatrix[upper.tri(interactionmatrix)]
   lotri <- t(interactionmatrix)[upper.tri(interactionmatrix)]
   x <- cbind(uptri, lotri)
-  x <- t(apply(x, 1, sort, decreasing=T))
-  return((sum(x[,1])-sum(x[,2]))/sum(x))
+  x <- t(apply(x, 1, sort, decreasing = TRUE))
+  return((sum(x[, 1]) - sum(x[, 2])) / sum(x))
 }
-
-# DCindex(bonobos)
-
-
-

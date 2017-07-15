@@ -1,5 +1,3 @@
-# creatematrix 14_10_18
-
 #' create a dominance matrix
 #'
 #' create a dominance matrix from the underlying observed sequence
@@ -43,8 +41,11 @@
 
 creatematrix <- function(eloobject, daterange=NULL, drawmethod="omit", onlyinteracting=FALSE) {
   # set the date range in case it's not specified...
-  if(is.null(daterange[1])) { daterange <- c(min(eloobject$truedates), max(eloobject$truedates))
-  } else { daterange <- as.Date(daterange) }
+  if(is.null(daterange[1])) {
+    daterange <- c(min(eloobject$truedates), max(eloobject$truedates))
+  } else {
+    daterange <- as.Date(daterange)
+    }
 
   # get the sequence
   dataseq <- eloobject$logtable
@@ -55,36 +56,35 @@ creatematrix <- function(eloobject, daterange=NULL, drawmethod="omit", onlyinter
 
   # create empty matrix based on presence
   pmat <- eloobject$pmat[which(eloobject$truedates == daterange[1]):which(eloobject$truedates == daterange[2]), ]
-  IDS <- sort(colnames(pmat)[which(colSums(pmat)>0)])
+  IDS <- sort(colnames(pmat)[which(colSums(pmat) > 0)])
 
-  mat <- matrix(ncol=length(IDS), nrow=length(IDS), 0)
+  mat <- matrix(ncol = length(IDS), nrow = length(IDS), 0)
   colnames(mat) <- rownames(mat) <- IDS
-  mat1 <- mat;
+  mat1 <- mat
 
   # transform factors into characters...
-  dataseq$winner <- as.character(dataseq$winner); dataseq$loser <- as.character(dataseq$loser)
+  dataseq$winner <- as.character(dataseq$winner)
+  dataseq$loser <- as.character(dataseq$loser)
 
   # add decided interactions
-  xdata <- dataseq[dataseq$draw==FALSE, ]
+  xdata <- dataseq[dataseq$draw == FALSE, ]
   xdata <- table(xdata$winner, xdata$loser)
   mat[rownames(xdata), colnames(xdata)] <- xdata
 
 
   # add ties/draws, but separate depending on how they were specified to be treated (if present in the data)
-  if(sum(dataseq$draw)>0) {
+  if(sum(dataseq$draw) > 0) {
 
-    xdata <- dataseq[dataseq$draw==TRUE, ]
+    xdata <- dataseq[dataseq$draw == TRUE, ]
     xdata <- table(xdata$winner, xdata$loser)
-    if(drawmethod=="0.5") {
+    if(drawmethod == "0.5") {
       xdata <- xdata/2
       mat1[rownames(xdata), colnames(xdata)] <- xdata
       mat1 <- mat1 + t(mat1)
       mat <- mat + mat1
     }
 
-    #mat1[rownames(xdata), colnames(xdata)] <- xdata
-
-    if(drawmethod=="1") {
+    if(drawmethod == "1") {
       mat1[rownames(xdata), colnames(xdata)] <- xdata
       mat1 <- mat1 + t(mat1)
       mat <- mat + mat1

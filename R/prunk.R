@@ -1,5 +1,3 @@
-# prunk 14_10_18
-
 #' unknown relationships
 #'
 #' unknown relationships
@@ -15,22 +13,26 @@
 #'
 #' @examples
 #' data(adv); data(advpres)
-#' x <- elo.seq(winner=adv$winner, loser=adv$loser, Date=adv$Date, presence=advpres)
+#' x <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date, presence = advpres)
 #' prunk(x, c("2010-01-01", "2010-01-15"))
 #' mat <- creatematrix(x, c("2010-01-01", "2010-01-15"))
 #' prunk(mat)
 
 prunk <- function(eloobject, daterange=NULL) {
 
-  if(class(eloobject)=="elo") {
+  if(class(eloobject) == "elo") {
     # get all ids, the sequence, and the presence matrix
-    xd <- eloobject$logtable; xd$Date <- as.Date(eloobject$truedates[xd[,1]])
-    pres <- data.frame(Date=eloobject$truedates, eloobject$pmat)
+    xd <- eloobject$logtable
+    xd$Date <- as.Date(eloobject$truedates[xd[, 1]])
+    pres <- data.frame(Date = eloobject$truedates, eloobject$pmat)
     pres2 <- eloobject$pmat
 
     # and set the date range in case it's not specified...
-    if(is.null(daterange[1])) { daterange <- c(min(xd$Date), max(xd$Date))
-    } else { daterange <- as.Date(daterange) }
+    if(is.null(daterange[1])) {
+      daterange <- c(min(xd$Date), max(xd$Date))
+    } else {
+      daterange <- as.Date(daterange)
+      }
 
     # and limit the data sets accordingly
     xd <- xd[xd$Date <= daterange[2] & xd$Date >= daterange[1], ]
@@ -39,14 +41,16 @@ prunk <- function(eloobject, daterange=NULL) {
 
     # and remove columns of IDs that were not yet present
     if(0 %in% colSums(pres2)) {
-      pres2 <- pres2[, -c(which(colSums(pres2)==0))]
+      pres2 <- pres2[, -c(which(colSums(pres2) == 0))]
       ids <- colnames(pres2)
       pres <- pres[, c("Date", ids)]
     }
 
     # recreate eloobject and some info about how the supplied ratings were calculated
-    startval <- as.numeric(eloobject$misc["startvalue"]); kval <- as.numeric(eloobject$misc["k"]); init <- as.character(eloobject$misc["init"])
-    eloobject <- elo.seq(xd$winner, xd$loser, xd$Date, draw=xd$draw, presence=pres, startvalue=startval, k=kval, init=init, progressbar=F, runcheck=F)
+    startval <- as.numeric(eloobject$misc["startvalue"])
+    kval <- as.numeric(eloobject$misc["k"])
+    init <- as.character(eloobject$misc["init"])
+    eloobject <- elo.seq(xd$winner, xd$loser, xd$Date, draw = xd$draw, presence = pres, startvalue = startval, k = kval, init = init, progressbar = F, runcheck = F)
 
     # create the matrix, and make sure also IDs that didn't interact but were present are included
     mat <- creatematrix(eloobject, drawmethod = "omit")
@@ -69,14 +73,14 @@ prunk <- function(eloobject, daterange=NULL) {
 
     # get dyadic values of interactions
     # first without taking coresidenec into account
-    res <- mat[upper.tri(mat, diag=F)] + t(mat)[upper.tri(t(mat), diag=F)]
+    res <- mat[upper.tri(mat, diag = FALSE)] + t(mat)[upper.tri(t(mat), diag = FALSE)]
     N <- length(res)
-    pu <- length(which(res==0))/N
+    pu <- length(which(res == 0)) / N
 
     # and with those dyads that were not coresident set to NA (those are excluded)
-    res <- na.omit(mat2[upper.tri(mat2, diag=F)] + t(mat2)[upper.tri(t(mat2), diag=F)])
+    res <- na.omit(mat2[upper.tri(mat2, diag = FALSE)] + t(mat2)[upper.tri(t(mat2), diag = FALSE)])
     N2 <- length(res)
-    pup <- length(which(res==0))/N2
+    pup <- length(which(res == 0)) / N2
 
     res <- c(round(pu, 3), N, round(pup, 3), N2)
     names(res) <- c("pu.all", "dyads.all", "pu.cores", "dyads.cores")
@@ -86,12 +90,11 @@ prunk <- function(eloobject, daterange=NULL) {
   if(class(eloobject)=="matrix") {
     up <- eloobject[upper.tri(eloobject)]
     lo <- t(eloobject)[upper.tri(eloobject)]
-    res <- c(round(sum(up+lo==0)/length(lo), 3), length(lo))
+    res <- c(round(sum(up + lo == 0) / length(lo), 3), length(lo))
     names(res) <- c("pu.all", "dyads.all")
   }
 
   return(res)
-
 
 }
 

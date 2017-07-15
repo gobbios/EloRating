@@ -1,8 +1,3 @@
-# winprob 15_09_29
-# used in other functions:
-# ---
-
-
 #' expected probability of winning
 #'
 #' calculate expected probability of winning given known strength of both opponents
@@ -33,7 +28,7 @@ winprob <- function(elo1, elo2, normprob=TRUE) {
 
   if(normprob) {
     # z score based on fixed SD=200 (see Elo 1978)
-    z_score <- (elo1 - elo2)/(200*sqrt(2))
+    z_score <- (elo1 - elo2) / (200 * sqrt(2))
     p_win <- pnorm(z_score)
   } else {
     p_win <- 1 - 1 / (1 + 10^((elo1 - elo2)/400))

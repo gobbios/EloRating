@@ -2,12 +2,12 @@
 % Please edit documentation in R/DS.R
 \name{DS}
 \alias{DS}
-\title{calculate David's scores}
+\title{David's score}
 \usage{
 DS(interactionmatrix, prop = c("Dij", "Pij"))
 }
 \arguments{
-\item{interactionmatrix}{square interaction matrix with winner in rows and losers in columns, for example the output from}
+\item{interactionmatrix}{square interaction matrix with winner in rows and losers in columns, for example the output from \code{\link{creatematrix}}}
 
 \item{prop}{the type of dyadic win proportion to be use. By default corrected for number of interactions in a dyad (\code{prop="Dij"}), otherwise the raw proportion (\code{prop="Pij"})}
 }
@@ -15,7 +15,7 @@ DS(interactionmatrix, prop = c("Dij", "Pij"))
 a data.frame with columns ID, DS (David's scores) and normDS (normalized David's scores)
 }
 \description{
-calculate David's scores
+calculate David's scores from an interaction matrix
 }
 \examples{
 data(bonobos)

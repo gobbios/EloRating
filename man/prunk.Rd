@@ -19,7 +19,7 @@ unknown relationships
 }
 \examples{
 data(adv); data(advpres)
-x <- elo.seq(winner=adv$winner, loser=adv$loser, Date=adv$Date, presence=advpres)
+x <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date, presence = advpres)
 prunk(x, c("2010-01-01", "2010-01-15"))
 mat <- creatematrix(x, c("2010-01-01", "2010-01-15"))
 prunk(mat)
