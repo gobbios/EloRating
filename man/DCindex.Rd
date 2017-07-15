@@ -25,10 +25,9 @@ DCindex(mat)
 data(bonobos)
 DCindex(bonobos)
 }
-\author{
-Christof Neumann
-}
 \references{
 van Hooff, J. A. R. A. M., Wensing, J. A. B. 1987. Dominance and its behavioural measures in a captive wolf pack. In Man and Wolf, edited by H. Frank, 219-52. Dordrecht: Junk.
 }
-
+\author{
+Christof Neumann
+}

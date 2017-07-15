@@ -28,10 +28,9 @@ winprob(1000,1200)
 winprob(1000,1000)
 
 }
-\author{
-Christof Neumann
-}
 \references{
 Elo, A. E. 1978. The Rating of Chess Players, Past and Present. New York: Arco.
 }
-
+\author{
+Christof Neumann
+}

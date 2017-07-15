@@ -26,5 +26,7 @@ Neumann, C., Duboscq, J., Dubuc, C., Ginting, A., Irwan, A. M., Agil, M., Widdig
 \keyword{ package }
 
 \examples{
-rnorm(10)
+data(adv)
+SEQ <- elo.seq(winner=adv$winner, loser=adv$loser, Date=adv$Date)
+summary(SEQ)
 }

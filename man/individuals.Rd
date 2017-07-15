@@ -50,4 +50,3 @@ individuals(SEQ, from="2010-01-01", to="2010-01-31", outp="CV")
 \author{
 Christof Neumann
 }
-

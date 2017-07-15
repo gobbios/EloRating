@@ -27,4 +27,3 @@ prunk(mat)
 \author{
 Christof Neumann
 }
-

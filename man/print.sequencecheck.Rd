@@ -23,4 +23,3 @@ print(SEQC)
 \author{
 Christof Neumann
 }
-

@@ -40,4 +40,3 @@ eloplot(SEQ, ids="all", interpolate="yes", from="start", to="end",
 \author{
 Lars Kulik and Christof Neumann
 }
-

@@ -43,4 +43,3 @@ traj_elo(SEQ, c("a", "b", "c"))
 \author{
 Christof Neumann
 }
-

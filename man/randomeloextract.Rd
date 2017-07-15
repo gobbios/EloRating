@@ -31,4 +31,3 @@ randomeloextract(res, "a", "avg")
 \author{
 Christof Neumann
 }
-

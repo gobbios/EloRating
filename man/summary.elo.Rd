@@ -24,4 +24,3 @@ summary(SEQ)
 \author{
 Christof Neumann
 }
-

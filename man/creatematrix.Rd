@@ -51,4 +51,3 @@ creatematrix(SEQ, drawmethod="1")
 \author{
 Christof Neumann
 }
-

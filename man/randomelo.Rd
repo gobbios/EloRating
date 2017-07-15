@@ -32,4 +32,3 @@ data.frame(ID=colnames(res[[1]]), avg=round(colMeans(res[[1]]),1))
 \author{
 Christof Neumann
 }
-

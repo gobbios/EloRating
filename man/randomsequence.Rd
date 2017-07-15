@@ -44,4 +44,3 @@ IA <- randomsequence(presence=c(0.5,0.5))
 \author{
 Christof Neumann
 }
-

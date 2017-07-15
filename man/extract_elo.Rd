@@ -53,4 +53,3 @@ extract_elo(SEQ, "2010-01-10", daterange=5, NA.interpolate=TRUE)
 \author{
 Christof Neumann
 }
-

@@ -22,4 +22,3 @@ print(SEQ)
 \author{
 Christof Neumann
 }
-

@@ -38,10 +38,9 @@ The I&SI algorithm (c.f. de Vries 1998) does not necessarily result in a unique 
 
 
 }
-\author{
-Christof Neumann
-}
 \references{
 de Vries, H. 1998. Finding a dominance order most consistent with a linear hierarchy: a new procedure and review. Animal Behaviour, 55, 827-843. (\href{https://dx.doi.org/10.1006/anbe.1997.0708}{DOI: 10.1006/anbe.1997.0708})
 }
-
+\author{
+Christof Neumann
+}

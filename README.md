@@ -13,4 +13,7 @@ To install the current version, use the following command:
 
 `devtools::install_github("gobbios/EloRating2")`
 
+If you want to have a pdf of the tutorial, please use:
+
+`devtools::install_github("gobbios/EloRating2", build_vignettes=TRUE)`
 

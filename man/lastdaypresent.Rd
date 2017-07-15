@@ -31,4 +31,3 @@ lastdaypresent(SEQ, "f", refdate="2010-02-02")
 \author{
 Christof Neumann
 }
-

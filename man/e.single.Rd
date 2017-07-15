@@ -37,10 +37,9 @@ e.single(ELO1old=2000, ELO2old=1000, outcome=1, k=100)
 e.single(ELO1old=2000, ELO2old=1000, outcome=2, k=100)
 
 }
-\author{
-Christof Neumann
-}
 \references{
 Albers, P. C. H. & de Vries, H. 2001. Elo-rating as a tool in the sequential estimation of dominance strengths. Animal Behaviour, 61, 489-495. (\href{https://dx.doi.org/10.1006/anbe.2000.1571}{DOI: 10.1006/anbe.2000.1571})
 }
-
+\author{
+Christof Neumann
+}
