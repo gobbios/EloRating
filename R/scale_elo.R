@@ -23,5 +23,5 @@
 #' scale_elo(extract_elo(SEQ, "2010-01-30"))
 
 scale_elo <- function (x) {
-  round((x-min(x, na.rm=T))/max((x-min(x, na.rm=T)), na.rm=T), 3)
+  round((x - min(x, na.rm = TRUE)) / max((x - min(x, na.rm = TRUE)), na.rm = TRUE), 3)
 }

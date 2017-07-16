@@ -7,13 +7,13 @@
 e.single(ELO1old, ELO2old, outcome, k = 100, normprob = TRUE)
 }
 \arguments{
-\item{ELO1old, ELO2old}{Elo rating of the first and second individual}
+\item{ELO1old, ELO2old}{numeric, Elo rating of the first and second individual}
 
-\item{outcome}{"1" = first individual wins and second looses\cr
-"2" = second individual wins and first looses\cr
-"0" = interaction ends in a draw/tie (no winner and no looser)}
+\item{outcome}{\code{1} = first individual wins and second looses\cr
+\code{2} = second individual wins and first looses\cr
+\code{0} = interaction ends in a draw/tie (no winner and no looser)}
 
-\item{k}{\emph{k} factor, by default \code{k = 100}}
+\item{k}{numeric, \emph{k} factor, by default \code{k = 100}}
 
 \item{normprob}{logical (by default \code{TRUE}). Should a normal curve be assumed for calculating the winning/losing probablities, or a logistic curve. See \code{\link{winprob}} for details}
 }

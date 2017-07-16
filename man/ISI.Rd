@@ -2,12 +2,12 @@
 % Please edit documentation in R/ISI.R
 \name{ISI}
 \alias{ISI}
-\title{strength of inconsistencies}
+\title{de Vries' I&SI ranking}
 \usage{
 ISI(mat, runs = 5000)
 }
 \arguments{
-\item{mat}{square interaction matrix with winner in rows and losers in columns, for example the output from}
+\item{mat}{square interaction matrix with winner in rows and losers in columns, for example the output from \code{\link{creatematrix}}}
 
 \item{runs}{numeric, number of iterations, by default \code{5000}}
 }
@@ -15,10 +15,10 @@ ISI(mat, runs = 5000)
 integer, the summed strength of inconsistencies in the matrix
 }
 \description{
-calculate strength of inconsistencies
+de Vries' I&SI ranking
 }
 \details{
-The number of interations is set substantially higher than what was suggested in the de Vries' 1998 paper, because the algorithm here is less efficient.
+The number of interations is set substantially higher than what was suggested in the de Vries' 1998 paper, because my algorithm here is less efficient.
 
 The I&SI algorithm (c.f. de Vries 1998) does not necessarily result in a unique order (see example below). If such a case occurs, all (equally good) solutions are returned as a list.
 }

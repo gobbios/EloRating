@@ -1,12 +1,8 @@
-# isi 15_07_05
-# \code{\link{creatematrix}}
-
-
-#' strength of inconsistencies
+#' de Vries' I&SI ranking
 #'
-#' calculate strength of inconsistencies
+#' de Vries' I&SI ranking
 #'
-#' @param mat square interaction matrix with winner in rows and losers in columns, for example the output from
+#' @param mat square interaction matrix with winner in rows and losers in columns, for example the output from \code{\link{creatematrix}}
 #' @param runs numeric, number of iterations, by default \code{5000}
 #'
 #' @return integer, the summed strength of inconsistencies in the matrix
@@ -15,7 +11,7 @@
 #'
 #' @references de Vries, H. 1998. Finding a dominance order most consistent with a linear hierarchy: a new procedure and review. Animal Behaviour, 55, 827-843. (\href{https://dx.doi.org/10.1006/anbe.1997.0708}{DOI: 10.1006/anbe.1997.0708})
 #'
-#' @details The number of interations is set substantially higher than what was suggested in the de Vries' 1998 paper, because the algorithm here is less efficient.
+#' @details The number of interations is set substantially higher than what was suggested in the de Vries' 1998 paper, because my algorithm here is less efficient.
 #'
 #' @details The I&SI algorithm (c.f. de Vries 1998) does not necessarily result in a unique order (see example below). If such a case occurs, all (equally good) solutions are returned as a list.
 #'
@@ -49,32 +45,32 @@ ISI <- function(mat, runs=5000) {
 
     randmat <- function(mat) {
       s <- sample(1:ncol(mat))
-      return(mat[s,s])
+      return(mat[s, s])
     }
 
 
     largestincon <- function(mat) {
-      outmat <- matrix(FALSE, ncol=ncol(mat), nrow=nrow(mat))
+      outmat <- matrix(FALSE, ncol = ncol(mat), nrow = nrow(mat))
       outmat[upper.tri(mat)] <- mat[upper.tri(mat)] < t(mat)[upper.tri(mat)]
-      m <- matrix(1:length(mat), ncol(mat), byrow=F) + ncol(mat)-1
+      m <- matrix(1:length(mat), ncol(mat), byrow=FALSE) + ncol(mat) - 1
       ms <- na.omit(m[outmat])
       ps <- na.omit(.diffmat(mat)[outmat])
       x <- ms[which(ps == max(ps))]
-      if(length(x)>1) x<- sample(x,1)
-      return(c(x %/% ncol(mat),x %% ncol(mat) + 1)  )
+      if(length(x) > 1) x<- sample(x, 1)
+      return(c(x %/% ncol(mat), x %% ncol(mat) + 1)  )
     }
 
 
     flip1 <- function(mat, pos) {
       s <- 1:ncol(mat)
       s[pos] <- rev(pos)
-      return(mat[s,s])
+      return(mat[s, s])
     }
 
     compare2isi <- function(x, y) {
       res <- FALSE
       if(x[1] < y[1]) res <- TRUE
-      if(x[1]==y[1] & x[2] < y[2]) res <- TRUE
+      if(x[1] == y[1] & x[2] < y[2]) res <- TRUE
       return(res)
     }
 
@@ -84,17 +80,17 @@ ISI <- function(mat, runs=5000) {
       while(SWITCH == FALSE) {
         SWITCH <- TRUE
         for(i in 2:ncol(mat)) {
-          if(mat[i,i-1] == mat[i-1, i]) {
+          if(mat[i, i - 1] == mat[i - 1, i]) {
             di <- di1 <- 0
             for(k in 1:ncol(mat)) {
-              di <- di + sign(mat[i-1, k] - mat[k, i-1])
+              di <- di + sign(mat[i - 1, k] - mat[k, i - 1])
               di1 <- di1 + sign(mat[i, k] - mat[k, i])
             }
 
             if(di1 > di) {
-              mat <- flip1(mat, c(i-1, i))
+              mat <- flip1(mat, c(i - 1, i))
               bestsi <- .sincon(mat)
-              if(bestsi > si) mat <- flip1(mat, c(i-1, i))
+              if(bestsi > si) mat <- flip1(mat, c(i - 1, i))
               if(bestsi <= si) {
                 si <- bestsi
                 SWITCH <- FALSE
@@ -108,8 +104,6 @@ ISI <- function(mat, runs=5000) {
 
 
   }
-
-
 
   # get an index
   mindex <- 1:ncol(mat)
@@ -131,32 +125,26 @@ ISI <- function(mat, runs=5000) {
     # create testmat (apply flipping rule) and compare with best mat
     testmat <- flip1(bestmat, largestincon(bestmat))
     # store as bestmat if better than before
-    (temp <- c(.incon(testmat), .sincon(testmat)))
+    temp <- c(.incon(testmat), .sincon(testmat))
     compare2isi(temp, bestmetrics)
     if(compare2isi(temp, bestmetrics)) {
       bestmat <- testmat
-      (bestmetrics <- temp)
+      bestmetrics <- temp
       stuck <- stuck - 1
     } else {
       if(stuck == 5) {
-        res[[length(res)+1]] <- bestmat
-        #        bestmat <- flip2(bestmat)
+        res[[length(res) + 1]] <- bestmat
         x1 <- largestincon(bestmat)
         x2 <- sample(mindex[-x1], 2)
-        bestmat <- flip1(bestmat, c(x1[1],x2[1]))
-        bestmat <- flip1(bestmat, c(x1[2],x2[2]))
-        (bestmetrics <- c(.incon(bestmat), .sincon(bestmat)))
+        bestmat <- flip1(bestmat, c(x1[1], x2[1]))
+        bestmat <- flip1(bestmat, c(x1[2], x2[2]))
+        bestmetrics <- c(.incon(bestmat), .sincon(bestmat))
         stuck <- 0
       }
     }
-
-
-    if(sum(c(.incon(bestmat), .sincon(bestmat)))==0) {
-      #       cat("I =", incon(res[[1]]), "\n")
-      #       cat("SI =", sincon(res[[1]]), "\n")
+    if(sum(c(.incon(bestmat), .sincon(bestmat))) == 0) {
       res <- list(bestmat)
       break
-      #       return(list(laststep(bestmat)))
     }
 
   }
@@ -164,16 +152,11 @@ ISI <- function(mat, runs=5000) {
 
 
   # find the best matrix (or matrices with equal minI and minSI)
-  mini <- unlist(lapply(res, .incon)); mini <- which(mini==min(mini))
+  mini <- unlist(lapply(res, .incon)); mini <- which(mini == min(mini))
   res <- res[mini]
-  minsi <- unlist(lapply(res, .sincon)); minsi <- which(minsi==min(minsi))
+  minsi <- unlist(lapply(res, .sincon)); minsi <- which(minsi == min(minsi))
   res <- res[minsi]
   res <- res[which(!duplicated(lapply(res, colnames)))]
-  # sincon(res[[1]])
-  # incon(res[[1]])
-  #   unlist(lapply(res, sincon))
-  #   unlist(lapply(res, incon))
-  #   lapply(res, colnames)
 
   # put zeros back in
   for(i in 1:length(res)) res[[i]][is.na(res[[i]])] <- 0
@@ -182,23 +165,17 @@ ISI <- function(mat, runs=5000) {
   res <- lapply(res, laststep)
   res <- res[which(!duplicated(lapply(res, colnames)))]
 
-
-  #   unlist(lapply(res, sincon))
-  #   unlist(lapply(res, incon))
-  #   lapply(res, colnames)
-
   names(bestmetrics) <- c("I", "SI")
 
   res2 <- unique(lapply(res, colnames))
-  if(length(res2)>1) {
+  if(length(res2) > 1) {
     message("more than 1 solution")
 
-    temp <- matrix(ncol=length(res), nrow=nrow(mat)); rownames(temp) <- colnames(mat)
-    i=1
+    temp <- matrix(ncol=length(res), nrow = nrow(mat))
+    rownames(temp) <- colnames(mat)
     for(i in 1:nrow(mat)) {
-      temp[i, ] <- unlist(lapply(res, function(x)which(colnames(x)==rownames(temp)[i])))
+      temp[i, ] <- unlist(lapply(res, function(x) which(colnames(x) == rownames(temp)[i])))
     }
-    #return(list(incon(res[[1]]),sincon(res[[1]]),temp))
   }
 
   cat("I =", .incon(res[[1]]), "\n")

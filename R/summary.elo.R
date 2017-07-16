@@ -18,7 +18,7 @@
 
 summary.elo <- function(object, ...) {
   cat("Elo ratings from", object$misc["nID"], "individuals\n")
-  cat("total (mean/median) number of interactions: ", object$misc["nIA"], " (", object$misc["IAmean"],"/", object$misc["IAmedian"] ,")", "\n",sep="")
+  cat("total (mean/median) number of interactions: ", object$misc["nIA"], " (", object$misc["IAmean"],"/", object$misc["IAmedian"], ")", "\n", sep="")
   cat("range of interactions:", object$misc["IAmin"], "-", object$misc["IAmax"], "\n")
   cat("date range:", object$misc["minDate"], "-", object$misc["maxDate"], "\n")
   cat("startvalue:", object$misc["startvalue"],"\n")

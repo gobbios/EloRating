@@ -4,10 +4,10 @@
 \alias{h.index}
 \title{linearity indices}
 \usage{
-h.index(interactionmatrix, loops=1000)
+h.index(interactionmatrix, loops = 1000)
 }
 \arguments{
-\item{interactionmatrix}{square interaction matrix with winner in rows and losers in columns, for example the output from}
+\item{interactionmatrix}{square interaction matrix with winner in rows and losers in columns, for example the output from \code{\link{creatematrix}}}
 
 \item{loops}{numeric, the number of randomizations to perform (by default: 1000)}
 }
