@@ -114,8 +114,3 @@ transitivity <- function(m, runs = 2000, returnfig = FALSE) {
   return(round(res, 3))
 }
 
-
-# data("bonobos")
-
-# transitivity(bonobos, returnfig = T)
-

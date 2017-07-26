@@ -5,7 +5,7 @@
 #' @param eloobject output from \code{\link{elo.seq}} or a matrix, e.g. from \code{\link{creatematrix}}
 #' @param daterange date range to be considered (character or Date of length 2), by default considers the entire date range of the sequence. In case the function works on a matrix this is ignored.
 #'
-#' @return numeric, proportion of unknown relationships (and total N) when considering all possible dyads, and the same after accounting for co-residency. For matrices, considering co-residency is ignored (not possible...)
+#' @return numeric, proportion of unknown relationships (and total N) when considering all possible dyads, and the same after accounting for co-residency. For matrices, considering co-residency is ignored.
 #'
 #' @author Christof Neumann
 #'
@@ -90,8 +90,8 @@ prunk <- function(eloobject, daterange=NULL) {
   if(class(eloobject)=="matrix") {
     up <- eloobject[upper.tri(eloobject)]
     lo <- t(eloobject)[upper.tri(eloobject)]
-    res <- c(round(sum(up + lo == 0) / length(lo), 3), length(lo))
-    names(res) <- c("pu.all", "dyads.all")
+    res <- c(round(sum(up + lo == 0) / length(lo), 3), length(lo), NA, NA)
+    names(res) <- c("pu.all", "dyads.all", "pu.cores", "dyads.cores")
   }
 
   return(res)

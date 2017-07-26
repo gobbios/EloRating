@@ -9,10 +9,10 @@
 #' @param interactionmatrix square interaction matrix with winner in rows and losers in columns, for example the output from \code{\link{creatematrix}}
 #' @param runs number of randomly generated sequences based on the interactions in the \code{interactionmatrix}
 #' @param normprob logical (by default \code{TRUE}). Should a normal curve be assumed for calculating the winning/losing probablities, or a logistic curve. See \code{\link{winprob}} for details
+#' @param progressbar logical, should progress bars be displayed, by default \code{progressbar=TRUE}
+#' @param k numeric, factor \emph{k} that determines the maximum change in ratings. By default \code{k=100}
 #'
 #' @return list of length 2. The first element contains a matrix with the final ratings of each individual from each random sequence. IDs are in the columns, each run is represented as one row. The second element of the list contains the original interaction matrix.
-#'
-#' @details For now runs only with \code{k=100}.
 #'
 #' @author Christof Neumann
 #'
@@ -25,7 +25,7 @@
 #' res <- randomelo(mat, 10)
 #' data.frame(ID=colnames(res[[1]]), avg=round(colMeans(res[[1]]),1))
 
-randomelo <- function(interactionmatrix, runs=2000, normprob=TRUE) {
+randomelo <- function(interactionmatrix, runs = 2000, normprob = TRUE, k = 100, progressbar = FALSE) {
   # create a sequence from the matrix
   winner <- c()
   loser <- c()
@@ -42,16 +42,16 @@ randomelo <- function(interactionmatrix, runs=2000, normprob=TRUE) {
   xdata <- data.frame(Date, winner, loser)
   rm(i, j, winner, loser, Date)
 
-  res <- matrix(ncol=length(unique(c(levels(xdata$winner), levels(xdata$loser)))), nrow=runs, 0)
+  res <- matrix(ncol = length(unique(c(levels(xdata$winner), levels(xdata$loser)))), nrow = runs, 0)
   colnames(res) <- unique(c(levels(xdata$winner), levels(xdata$loser)))
 
-  progbar <- txtProgressBar(min = 0, max = runs, style = 3, char=".")
+  if(progressbar) progbar <- txtProgressBar(min = 0, max = runs, style = 3, char = ".")
 
   for(i in 1:runs) {
     tempdata <- xdata[sample(1:nrow(xdata)), ]; rownames(tempdata) <- NULL
-    tempres <- elo.seq(tempdata$winner, tempdata$loser, tempdata$Date, progressbar=FALSE, runcheck=FALSE, normprob=normprob)
+    tempres <- elo.seq(tempdata$winner, tempdata$loser, tempdata$Date, progressbar = FALSE, runcheck = FALSE, normprob = normprob, k = k)
     res[i, ] <- extract_elo(tempres)[colnames(res)]
-    setTxtProgressBar(progbar, i)
+    if(progressbar) setTxtProgressBar(progbar, i)
   }
 
   outp <- list()

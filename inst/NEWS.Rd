@@ -5,6 +5,7 @@
 	\itemize{
 		\item added \code{\link{transitivity}} function to calculate triangle transitivity
 		\item \code{\link{creatematrix}} now works also with vectors of winners and losers
+		\item added \code{\link{ISIranks}} function to directly return ranks of ISI ranking(s)
 		\item added some more published data sets (\code{\link{dommats}})
 	}
 }

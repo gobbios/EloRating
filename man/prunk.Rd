@@ -12,7 +12,7 @@ prunk(eloobject, daterange = NULL)
 \item{daterange}{date range to be considered (character or Date of length 2), by default considers the entire date range of the sequence. In case the function works on a matrix this is ignored.}
 }
 \value{
-numeric, proportion of unknown relationships (and total N) when considering all possible dyads, and the same after accounting for co-residency. For matrices, considering co-residency is ignored (not possible...)
+numeric, proportion of unknown relationships (and total N) when considering all possible dyads, and the same after accounting for co-residency. For matrices, considering co-residency is ignored.
 }
 \description{
 unknown relationships
