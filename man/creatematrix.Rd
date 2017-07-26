@@ -5,7 +5,7 @@
 \title{create a dominance matrix}
 \usage{
 creatematrix(eloobject, daterange = NULL, drawmethod = "omit",
-  onlyinteracting = FALSE)
+  onlyinteracting = FALSE, winners, losers, draw = NULL)
 }
 \arguments{
 \item{eloobject}{output from \code{\link{elo.seq}}}
@@ -18,6 +18,12 @@ creatematrix(eloobject, daterange = NULL, drawmethod = "omit",
 \code{"1"} = each undecided interaction is counted twice, i.e. as win for both individuals}
 
 \item{onlyinteracting}{logical, indicating whether all individuals that were present (default, \code{TRUE}) are shown in the matrix, or only those that were involved in an interaction in the specified date period. If no presence data was supplied to \code{\link{elo.seq}}, it is assumed that all individuals were present at all times}
+
+\item{winners}{vector of winners (see details)}
+
+\item{losers}{vector of losers (see details)}
+
+\item{draw}{logical vector (currently not doing anything)}
 }
 \value{
 square matrix with dominance interactions (winner in rows, loser in columns)
@@ -25,8 +31,14 @@ square matrix with dominance interactions (winner in rows, loser in columns)
 \description{
 create a dominance matrix from the underlying observed sequence
 }
+\details{
+The function works with either the output of \code{\link{elo.seq}}, or with two vectors of winners/losers. If you use winner and loser vectors, their arguments need to be named, and also the remaining arguments (\code{daterange=} and \code{onlyinteracting=}) are ignored. The function does not yet allow to include draws if you supply winner/loser vectors. If you go via the \code{\link{elo.seq}}-route, the function can handle draws (via the \code{drawmethod=} argument).
+}
 \examples{
 data(adv)
+# from winner/loser sequence directly
+creatematrix(winners=adv$winner, losers=adv$loser)
+# via an eloobject
 SEQ <- elo.seq(winner=adv$winner, loser=adv$loser, Date=adv$Date)
 # create dyadic matrix over the entire period of data collection
 creatematrix(SEQ)

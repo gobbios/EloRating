@@ -1,5 +1,3 @@
-
-
 #' prints its argument
 #'
 #' prints its argument
