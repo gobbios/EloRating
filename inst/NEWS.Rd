@@ -1,6 +1,19 @@
 \name{NEWS}
 \title{News for Package \pkg{EloRating2}}
 
+\section{Changes in version 0.45-0 (2017-07-29)}{
+	\itemize{
+	  \item added dependency to \code{\link[Rcpp]{}}, which in turn means that the package needs development tools available if it is installed from GitHub (or from source)
+		\item added \code{\link{elo.seq.customstart}} which allows incorporating prior knowledge of ordinal ranks and different k-values
+		\item added \code{\link{createstartvalues}} which translates known ranks into starting Elo-ratings
+		\item added \code{\link{mat2seq}} which transforms a matrix into a sequence
+		\item added \code{\link{steepness}} which calculates hierarchy steepness based on David's scores
+		\item added some more published data sets (\code{\link{baboons}})
+	}
+}
+
+
+
 \section{Changes in version 0.0.0.9914 (2017-07-26)}{
 	\itemize{
 		\item added \code{\link{transitivity}} function to calculate triangle transitivity

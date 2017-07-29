@@ -16,3 +16,6 @@ vignettes/*.toc
 vignettes/tutorial-blx.bib
 testlab/
 R/_new.R
+src/*.o
+src/*.so
+src/*.dll

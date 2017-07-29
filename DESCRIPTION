@@ -1,8 +1,8 @@
 Package: EloRating2
 Type: Package
 Title: Animal Dominance Hierarchies by Elo Rating
-Version: 0.0.0.9914
-Date: 2017-07-26
+Version: 0.45-0
+Date: 2017-07-29
 Author: Christof Neumann & Lars Kulik
 Maintainer: <christofneumann1@gmail.com>
 Description: Calculate Elo ratings as means to describe animal dominance hierarchies.
@@ -11,3 +11,6 @@ LazyData: true
 RoxygenNote: 6.0.1
 Depends: zoo, sna, network
 Suggests: testthat
+LinkingTo: Rcpp, RcppArmadillo
+Imports: Rcpp
+NeedsCompilation: yes
