@@ -4,7 +4,7 @@ Title: Animal Dominance Hierarchies by Elo Rating
 Version: 0.46
 Date: 2017-07-30
 Author: Christof Neumann & Lars Kulik
-Maintainer: <christofneumann1@gmail.com>
+Maintainer: Christof Neumann <christofneumann1@gmail.com>
 Description: Calculate Elo ratings as means to describe animal dominance hierarchies.
 License: GPL (>= 2)
 LazyData: true
