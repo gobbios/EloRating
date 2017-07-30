@@ -1,6 +1,12 @@
 \name{NEWS}
-\title{News for Package \pkg{EloRating2}}
+\title{News for Package \pkg{EloRating}}
 
+\section{Changes in version 0.45.02 (2017-07-30)}{
+	\itemize{
+	  renamed the package back to \code{EloRating}
+	  removed vignette to avoid conflicts
+	}
+}
 
 \section{Changes in version 0.45.01 (2017-07-30)}{
 	\itemize{

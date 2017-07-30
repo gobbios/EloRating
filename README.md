@@ -1,5 +1,5 @@
 
-# EloRating2
+# EloRating
 
 currently on CRAN:
 
