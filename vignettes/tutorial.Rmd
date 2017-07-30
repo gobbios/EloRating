@@ -1,7 +1,7 @@
 ---
-title: "`EloRating` - a brief tutorial \\ version 0.45.03"
+title: "`EloRating` - a brief tutorial"
 author: "Christof Neumann & Lars Kulik"
-date: "2017-07-30"
+date: "2017-07-30 (v. 0.45.03)"
 output:
   pdf_document:
     fig_caption: yes
@@ -22,10 +22,6 @@ knitr::opts_chunk$set(echo = TRUE)
 options(width = 110)
 ```
 
-
-```{r, message=FALSE, warning=FALSE}
-library(EloRating)
-```
 
 
 # Preliminary remarks
@@ -67,9 +63,14 @@ We assume that you store your data on dominance interactions in some sort of spr
 Start by loading the package and reading the raw data.\footnote{The example files are in the above described tab-delimited text format and can be found in the package directory. If you don't know where that is check \texttt{.libPaths()}}
 
 \small
+```{r, warning=FALSE, message=FALSE}
+library(EloRating)
+```
+\normalsize
+
+\small
 ```{r}
-library(EloRating2)
-xdata <- read.table(system.file("ex-sequence.txt", package = 'EloRating2'), header = TRUE)
+xdata <- read.table(system.file("ex-sequence.txt", package = "EloRating"), header = TRUE)
 ```
 \normalsize
 
@@ -146,7 +147,7 @@ This section demonstrates how to incorporate presence data and undecided interac
 
 \small
 ```{r}
-xpres <- read.table(system.file("ex-presence.txt", package = "EloRating2"), header = TRUE)
+xpres <- read.table(system.file("ex-presence.txt", package = "EloRating"), header = TRUE)
 xpres[,1] <- as.Date(as.character(xpres[, 1]))
 head(xpres)
 ```
@@ -377,7 +378,7 @@ And this is just a fun exercise, in which we repeat the same as above, i.e. calc
 
 \small
 ```{r, echo=FALSE, fig.width=9, fig.height=3.3, fig.align='center', fig.cap="\\small Elo-ratings from a group of ten individuals. On the left without prior knowledge and in the center with prior knowledge (here: the ordinal ranking at the end of the sequence without prior knowledge). The right panel shows the ratings as they develop if we use some obviously wrong prior ranking. Code to produce the figure is in the \\nameref{sec:appendix}. \\label{fig:prior2}"}
-xdata <- read.table(system.file("ex-sequence.txt", package = 'EloRating2'), header = TRUE)
+xdata <- read.table(system.file("ex-sequence.txt", package = 'EloRating'), header = TRUE)
 # no prior knowledge
 s1 <- elo.seq(winner = xdata$winner, loser = xdata$loser, Date = xdata$Date)
 
@@ -564,13 +565,13 @@ Also note that if you work with vectors directly, there is no way to take into a
 
 ## `randomsequence()`
 
-`randomsequence()` creates random data sets, which can be used for simulations for example. It returns a list with two `data.frame`s (named `seqdat` and `pres` for the actual sequence and presence data, respectively). By default, it creates a sequence of 100 interactions between 10 individuals. All IDs are present the entire time and there are no undecided interactions. Also by default, IDs are simply single letters and in order to produce realistic data, IDs that appear earlier in alphabetic order are more likely to win any given interaction (`alphabet = TRUE`). The proportion of reversals (against that order) is by default set to `reversals = 0.1`}.
+`randomsequence()` creates random data sets, which can be used for simulations for example. It returns a list with two `data.frame`s (named `seqdat` and `pres` for the actual sequence and presence data, respectively). By default, it creates a sequence of 100 interactions between 10 individuals. All IDs are present the entire time and there are no undecided interactions. Also by default, IDs are simply single letters and in order to produce realistic data, IDs that appear earlier in alphabetic order are more likely to win any given interaction (`alphabet = TRUE`). The proportion of reversals (against that order) is by default set to `reversals = 0.1`.
 
 \small
 ```{r}
 rdata <- randomsequence()
 xres <- elo.seq(winner = rdata$seqdat$winner, loser = rdata$seqdat$loser, Date = rdata$seqdat$Date, 
-                presence = rdata$pres, progressbar = F)
+                presence = rdata$pres)
 summary(xres)
 ```
 \normalsize
@@ -610,8 +611,7 @@ This function lets you determine how large the proportion of dyads in your data 
 \small
 ```{r}
 data(adv); data(advpres)
-x <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date, presence = advpres, 
-             progressbar = F)
+x <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date, presence = advpres)
 prunk(x, daterange = c("2010-01-01", "2010-01-15"))
 mat <- creatematrix(x, daterange = c("2010-01-01", "2010-01-15"))
 prunk(mat)
@@ -755,8 +755,7 @@ This section gives a few hints on how to plot Elo-ratings in case your not satis
 \small
 ```{r}
 data(adv); data(advpres)
-SEQ <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date, presence = advpres, 
-               progressbar = F)
+SEQ <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date, presence = advpres)
 ratings <- SEQ$cmat
 head(ratings)
 ```
@@ -960,7 +959,7 @@ box()
 This code produces figure \ref{fig:prior2}.
 \footnotesize
 ```{r, eval=FALSE}
-xdata <- read.table(system.file("ex-sequence.txt", package = 'EloRating2'), header = TRUE)
+xdata <- read.table(system.file("ex-sequence.txt", package = 'EloRating'), header = TRUE)
 # no prior knowledge
 s1 <- elo.seq(winner = xdata$winner, loser = xdata$loser, Date = xdata$Date)
 
