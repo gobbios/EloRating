@@ -918,7 +918,7 @@ legend("topright", lty = 1, col = xcols, legend = shapes, lwd = 2, title = "shap
 ```
 \normalsize
 
-
+\paragraph{}
 This code produces figure \ref{fig:prior}.
 \footnotesize
 ```{r, eval=FALSE}
@@ -956,6 +956,7 @@ box()
 ```
 \normalsize
 
+\paragraph{}
 This code produces figure \ref{fig:prior2}.
 \footnotesize
 ```{r, eval=FALSE}
@@ -1012,6 +1013,7 @@ box()
 \normalsize
 
 
+\paragraph{}
 This code produces figure \ref{fig:differentprobs}.
 \footnotesize
 ```{r, eval=FALSE}
