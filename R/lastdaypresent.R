@@ -1,6 +1,3 @@
-# determines the last day an individual was present with respect to a reference date...
-
-
 #' last day an individual was present
 #'
 #' last day an individual was present with respect to a reference date
@@ -24,8 +21,8 @@
 #' lastdaypresent(SEQ, "f", refdate="2010-02-02")
 
 
-lastdaypresent <- function(x, ID="all", refdate=NULL) {
-  if(class(x)=="elo") pm <- x$pmat else stop("so far 'x' must be of class 'elo'...", call.=FALSE)
+lastdaypresent <- function(x, ID = "all", refdate = NULL) {
+  if(class(x) == "elo") pm <- x$pmat else stop("so far 'x' must be of class 'elo'...", call. = FALSE)
   if(is.null(refdate)) refdate <- max(x$truedates)
 
   pm <- pm[x$truedates <= refdate, ]
@@ -33,13 +30,13 @@ lastdaypresent <- function(x, ID="all", refdate=NULL) {
   # check for IDs that were never present and remove them from the presence data...
   # might happen if the refdate is early in the sequence and not yet all imigrants have arrived yet...
   if(0 %in% colSums(pm)) {
-      pids <- names(pm)[colSums(pm)==0]
-      pm <- pm[, colSums(pm)>0]
+      pids <- names(pm)[colSums(pm) == 0]
+      pm <- pm[, colSums(pm) > 0]
     } else {
       pids <- NA
     }
 
-  res <- x$truedates[apply(pm, 2, function(z)max(which(z==1)))]
+  res <- x$truedates[apply(pm, 2, function(z)max(which(z == 1)))]
   names(res) <- colnames(pm)
 
   # and add ids that were not present yet (if any)
@@ -49,13 +46,8 @@ lastdaypresent <- function(x, ID="all", refdate=NULL) {
   }
 
   if(ID!="all") {
-    if(ID %in% names(res)) res <- as.Date(as.character(res[ID])) else { res <- NA; warning("ID not found...", call.=FALSE)}
+    if(ID %in% names(res)) res <- as.Date(as.character(res[ID])) else { res <- NA; warning("ID not found...", call. = FALSE)}
   }
 
   return(res)
 }
-
-# lastdaypresent(x, "all", refdate="2010-01-02")
-# lastdaypresent(x, "xx", refdate="2010-01-02")
-#
-

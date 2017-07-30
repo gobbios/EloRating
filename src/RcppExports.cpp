@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // mat2seqint
 List mat2seqint(NumericMatrix mat);
-RcppExport SEXP EloRating2_mat2seqint(SEXP matSEXP) {
+RcppExport SEXP _EloRating2_mat2seqint(SEXP matSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -19,7 +19,7 @@ END_RCPP
 }
 // steepint
 NumericVector steepint(NumericMatrix mat, IntegerVector nrand, bool Dij);
-RcppExport SEXP EloRating2_steepint(SEXP matSEXP, SEXP nrandSEXP, SEXP DijSEXP) {
+RcppExport SEXP _EloRating2_steepint(SEXP matSEXP, SEXP nrandSEXP, SEXP DijSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -29,4 +29,15 @@ BEGIN_RCPP
     rcpp_result_gen = Rcpp::wrap(steepint(mat, nrand, Dij));
     return rcpp_result_gen;
 END_RCPP
+}
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_EloRating2_mat2seqint", (DL_FUNC) &_EloRating2_mat2seqint, 1},
+    {"_EloRating2_steepint", (DL_FUNC) &_EloRating2_steepint, 3},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_EloRating2(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }

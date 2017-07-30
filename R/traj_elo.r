@@ -40,7 +40,7 @@ traj_elo <- function(eloobject, ID, from = min(eloobject$stability$date), to = m
 
   # get lines that correspond to date range
   DR <- seq(from = as.Date(eloobject$misc["minDate"]), to = as.Date(eloobject$misc["maxDate"]), by = "day")
-  if((as.Date(from) %in% DR & as.Date(to) %in% DR) == FALSE) stop("one of the dates is out of data range")
+  if((as.Date(from) %in% DR & as.Date(to) %in% DR) == FALSE) stop("one of the dates is out of date range")
   DR <- which(DR == as.Date(from)) : which(DR == as.Date(to))
 
   # check whether IDs are among individuals
@@ -67,9 +67,6 @@ traj_elo <- function(eloobject, ID, from = min(eloobject$stability$date), to = m
       if(res$Nobs[i] <= 1 ) warning(paste("no (or only one) observation for", ID[i], "during specified date range\n"))
     }
   }
-
-  # create output object
-  #res <- data.frame(ID=ID, fromDate=as.Date(from), toDate=as.Date(to), slope=slo, Nobs=N)
 
   return(res)
 }

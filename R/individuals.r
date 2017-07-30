@@ -1,5 +1,3 @@
-# individuals 14_07_24
-
 #' individuals present in the group
 #'
 #' returns IDs, number or IDs, or CV of number of present individuals
@@ -50,7 +48,7 @@ individuals <- function(eloobject, from=eloobject$misc["maxDate"], to=NULL, outp
   outp <- match.arg(outp)
 
   if(!is.null(to)) {
-    if(to==from) to <- NULL
+    if(to == from) to <- NULL
     #  if(as.Date(to)<as.Date(from)) stop("the 'to' date lies before the starting ('from') date")
   }
 
@@ -63,18 +61,18 @@ individuals <- function(eloobject, from=eloobject$misc["maxDate"], to=NULL, outp
 
   # if no 'to' date is given, i.e. only one day (also the case if 'to' is the same as 'from')
   if(is.null(to)) {
-    l <- which(DR==as.Date(from))
-    if(outp=="N")   { res <- sum(pmat[l, ]) }
-    if(outp=="CV")  { res <- NA }
-    if(outp=="IDs") { res <- names(pmat[l, which(pmat[l, ]==1)]) }
+    l <- which(DR == as.Date(from))
+    if(outp == "N")   { res <- sum(pmat[l, ]) }
+    if(outp == "CV")  { res <- NA }
+    if(outp == "IDs") { res <- names(pmat[l, which(pmat[l, ] == 1)]) }
   }
 
   # date range is given, i.e. 'to' is other than NULL (and other than 'from')
   if(!is.null(to)) {
     l <- which(DR %in% seq(from=as.Date(from), to=as.Date(to), by="day"))
-    if(outp=="N")   { res <- mean(rowSums(pmat[l, ])) }
-    if(outp=="CV")  { res <- sd(rowSums(pmat[l, ]))/mean(rowSums(pmat[l, ])) }
-    if(outp=="IDs") { res <- names(which(colSums(pmat[l, ]) >= 1)) }
+    if(outp == "N")   { res <- mean(rowSums(pmat[l, ])) }
+    if(outp == "CV")  { res <- sd(rowSums(pmat[l, ])) / mean(rowSums(pmat[l, ])) }
+    if(outp == "IDs") { res <- names(which(colSums(pmat[l, ]) >= 1)) }
   }
 
 
