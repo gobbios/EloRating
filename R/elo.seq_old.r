@@ -54,7 +54,6 @@
 #' data(adv)
 #' SEQ <- .elo.seq_old(winner=adv$winner, loser=adv$loser, Date=adv$Date)
 #' summary(SEQ)
-#' @export
 #'
 
 

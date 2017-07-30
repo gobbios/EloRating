@@ -1,4 +1,4 @@
 library(testthat)
-library(EloRating2)
+library(EloRating)
 
-test_check("EloRating2")
+test_check("EloRating")

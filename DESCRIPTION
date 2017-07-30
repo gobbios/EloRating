@@ -1,7 +1,7 @@
 Package: EloRating
 Type: Package
 Title: Animal Dominance Hierarchies by Elo Rating
-Version: 0.45.02
+Version: 0.45.03
 Date: 2017-07-30
 Author: Christof Neumann & Lars Kulik
 Maintainer: <christofneumann1@gmail.com>

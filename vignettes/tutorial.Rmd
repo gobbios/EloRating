@@ -1,0 +1,1063 @@
+---
+title: "`EloRating` - a brief tutorial \\ version 0.45.03"
+author: "Christof Neumann & Lars Kulik"
+date: "2017-07-30"
+output:
+  pdf_document:
+    fig_caption: yes
+    toc: yes
+    toc_depth: 1
+csl: animal-behaviour.csl
+bibliography: elotutrefs.bib
+link-citations: true
+linkcolor: red
+vignette: >
+  %\VignetteIndexEntry{EloRating_tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(width = 110)
+```
+
+
+```{r, message=FALSE, warning=FALSE}
+library(EloRating)
+```
+
+
+# Preliminary remarks
+
+The `EloRating` package is work in progress. If you have any criticism, suggestions or bugs to report, please let us know.
+
+We describe here the main functionality of the `EloRating` package.\footnote{Note that one additional package (\texttt{zoo}) has to be installed to make our package functional (e.g. by \texttt{install.packages("zoo")})} Note that for the sake of this tutorial, we first present an example with the minimal amount of data required: a sequence of decided dominance interactions along with the dates\footnote{Dealing with calendar dates in `R` is prone to unexpected behavior. We decided to stick to a specific format ("YYYY-MM-DD") and the functions assume that dates appear in this format in the objects from which the functions work.} of these interactions. Even though the package is capable of dealing with undecided interactions (in fact the example file contains this information), we decided to omit this aspect for the sake of clarity in the first part (section [Using `EloRating`](#using-elorating)). In addition, this first example is not linked to `presence' data. In other words, here we assume that all individuals that occur in the data set were present over the entire study period. For the same example utilizing information about presence/absence of individuals and undecided interactions/draws see section on [presence data and undecided interactions](#incorporating-presence-data-and-undecided-interactions).
+
+In the section [Further notes on the stability index](#further-notes-on-the-stability-index), we present a detailed description of the updated stability index $S$.
+
+The fictional data set presented here comprises 250 dominance interactions of 10 individuals.
+
+# Package installation and data preparation
+
+To install the package, just use (given you have a working internet connection):
+
+```{r, eval=FALSE}
+install.packages("EloRating")
+```
+
+If you want the latest development version you can install from GitHub. For this to work, you need
+
++ **Windows**: Rtools from  https://cran.r-project.org/bin/windows/Rtools/
+
++ **Mac**: Xcode from the App Store
+
+```{r, eval=FALSE}
+library(devtools)
+install_github("gobbios/EloRating")
+install_github("gobbios/EloRating", build_vignettes=TRUE) # with pdf tutorial
+```
+
+
+We assume that you store your data on dominance interactions in some sort of spreadsheet software. While it is possible to read data directly from Excel files (.xls or .xlsx) or SPSS files (.sav),\footnote{see the R packages \texttt{gdata}, \texttt{xlsx}, \texttt{readxl} and \texttt{foreign}} we suggest that you store your data in simple (tab-separated) text files. For example, from Excel this is possible via File>Save as... and then choosing `tab-delimited text file' as file format.\footnote{you may also save your file as comma delimited or something similar, but note that you then may need to modify the arguments to \texttt{read.table()} or use \texttt{read.csv()}}
+
+
+# Using `EloRating`
+
+Start by loading the package and reading the raw data.\footnote{The example files are in the above described tab-delimited text format and can be found in the package directory. If you don't know where that is check \texttt{.libPaths()}}
+
+\small
+```{r}
+library(EloRating2)
+xdata <- read.table(system.file("ex-sequence.txt", package = 'EloRating2'), header = TRUE)
+```
+\normalsize
+
+Keep in mind that as soon as you use your own data it might be necessary to include absolute paths with the file name.\footnote{see also \texttt{?setwd}} For example:
+
+\small
+```{r, eval=FALSE}
+# on Windows
+xdata <- read.table("c:\\temp\\ex-sequence.txt", header = TRUE, sep = "\t")
+# on Mac
+xdata <- read.table("~/Documents/ex-sequence.txt", header = TRUE, sep = "\t")
+```
+\normalsize
+
+## Data checks
+
+We then go on and check whether the data meet the formatting requirements for the remaining functions of the package to work. If there is something appearing not quite right with your data, this function will tell you. 'Warnings' can sometimes be ignored (see below), whereas 'errors' need to be fixed before the next step. More details on the possible warning and error messages can be found in the help files (\texttt{?seqcheck}).
+
+\small
+```{r}
+seqcheck(winner = xdata$winner, loser = xdata$loser, Date = xdata$Date)
+```
+\normalsize
+
+## Elo-rating calculations
+
+This doesn't give any error message, and so we can go on and calculate the actual Elo-ratings and store the results of the calculations in an object we name \texttt{res}. Note that in order to ignore possible 'warnings' from \texttt{seqcheck()} the argument \texttt{runcheck = FALSE} has to be set.
+
+\small
+```{r}
+res <- elo.seq(winner = xdata$winner, loser = xdata$loser, Date = xdata$Date, runcheck = TRUE)
+summary(res)
+```
+\normalsize
+
+## Extract Elo-ratings
+
+The most obvious task perhaps is to obtain Elo-ratings of all or specific set of individuals on a specific date. This can be achieved by running the function `extract.elo()` on the object `res` that we just created. In the output, individuals are ordered by descending Elo-ratings.
+
+\small
+```{r}
+extract_elo(res, "2000-05-28")
+extract_elo(res, "2000-05-28", IDs = c("s", "a", "c", "k"))
+```
+\normalsize
+
+## Plotting Elo-ratings
+
+`eloplot()` produces quick plots that visualize the development of Elo-ratings over time. Note that the example data set contains a rather modest number of interactions and individuals. With larger data sets (both in terms of interactions and individuals), such plots can become messy quickly. Even though it is possible to restrict plotting to date ranges and subsets of individuals, we recommend to create custom plots by directly accessing the `res` object. Specifically, `res$mat` contains raw Elo-ratings in a day-by-ID matrix, while the original dates can be found in `res$truedates`. You can find more details on how to proceed with custom figures in the [section on custom figures](#sec:customplots).
+
+The following code produces figure \ref{fig:one}.
+
+\small
+```{r, fig.width=4.8, fig.height=3.5, fig.align='center', fig.cap="\\small Elo-ratings of 10 individuals over the entire study period. \\label{fig:one}"}
+eloplot(res)
+```
+
+\normalsize
+
+Restricting the date range and selecting only a subset of individuals results in figure \ref{fig:two}.
+
+\small
+```{r, fig.width=4.8, fig.height=3.5, fig.align='center', fig.cap="\\small Elo-ratings of 5 individuals over a month. \\label{fig:two}"}
+eloplot(res, ids = c("s", "a", "w", "k", "c"), from = "2000-06-05", to = "2000-07-04")
+```
+
+\normalsize
+
+Please note, `eloplot()` will plot a maximum of 20 individuals. This is because we meant the plotting function to be an exploratory tool, but you can also select `ids="random.20"` if you have more than 20 individuals. Please note also that individuals for which you have observed interactions on only one day in the selected date range (regardless of how many interactions on that day!), such individuals will be omitted from the plot. If you wish to plot such individuals as single points in the graph, you will have to use the approach mentioned above, i.e. use the `res$mat` and `res$truedates` objects. If you need help with that, please get in touch with us or have a look at the section on [customizing figures](#sec:customplots).
+
+# Incorporating presence data and undecided interactions
+
+This section demonstrates how to incorporate presence data and undecided interactions. Please note that the presence data needs to cover *every* day during your data collection, i.e. also those days on which no interactions were observed. We start by reading the additional 'presence matrix', followed by reformatting the date column in this object to a date format that `R` is capable of dealing with. And then, just to get a feeling for how these data are supposed to look like, we look at first few lines.
+
+\small
+```{r}
+xpres <- read.table(system.file("ex-presence.txt", package = "EloRating2"), header = TRUE)
+xpres[,1] <- as.Date(as.character(xpres[, 1]))
+head(xpres)
+```
+\normalsize
+
+Next, we rerun `seqcheck()` and `elo.seq()` with the additional `presence=` argument as well as incorporating the information about undecided interactions `draw=` into the latter function.
+
+\small
+```{r}
+seqcheck(winner = xdata$winner, loser = xdata$loser, Date = xdata$Date, presence = xpres, 
+         draw = xdata$Draw)
+res2 <- elo.seq(winner = xdata$winner, loser = xdata$loser, Date = xdata$Date, presence = xpres, 
+               draw = xdata$Draw)
+```
+\normalsize
+
+Extracting Elo-ratings takes advantage of the presence data by either omitting absent IDs from the output or returning them as `NA`. The differences in ratings stem from incorporating undecided interactions.
+
+\small
+```{r}
+extract_elo(res2, extractdate = "2000-05-28")
+# note that "s" is absent and omitted
+extract_elo(res2, extractdate = "2000-05-28", IDs = c("s", "a", "c", "k"))
+# note that "s" is absent and returned as NA
+```
+\normalsize
+
+Likewise, `eloplot()` omits absent IDs from the resulting plots (figure \ref{fig:three} and figure \ref{fig:four}).
+
+\small
+```{r, fig.width=4.8, fig.height=3.5, fig.align='center', fig.cap="\\small Elo-ratings of 10 individuals over the entire study period. Note that several individuals were absent during parts of the date range and therefore appear with gaps in the plot (e.g. \\textit{c} and \\textit{f}). Compare to figure \\ref{fig:one}. \\label{fig:three}"}
+eloplot(res2)
+```
+
+\normalsize
+
+\small
+```{r, fig.width=4.8, fig.height=3.5, fig.align='center', fig.cap="\\small Elo-ratings of 5 individuals over a month. Note that individual \\textit{c} is not displayed in the plot, since it has not been present during the date range supplied to \\texttt{eloplot()}. Compare to figure \\ref{fig:two}. \\label{fig:four}"}
+eloplot(res2, ids = c("s", "a", "w", "k", "c"), from = "2000-06-05", to = "2000-07-04")
+```
+
+\normalsize
+
+# Customizing Elo-rating with prior knowledge and adjusting *k*
+
+## Prior knowledge
+
+In this section, we describe how to incorporate prior knowledge of individual status [@newton-fisher2017a]. This prior knowledge may come in several forms. You may have information on prior ordinal ranks of your individuals or you may know rank classes of individuals. Theoretically, you could also know prior Elo-ratings, but in that case it seems likely that you could actually also obtain the actual interaction data from which these ratings are derived. In the latter case it seems more convenient to actually include these data in your interaction sequence and simply proceed from there, rather than incorporate ratings from a prior analysis as starting point.
+
+The essential idea is that you calculate custom starting values (on the scale of Elo-ratings) in a first step, and then supply this information to the `elo.seq()` function. Your prior information can be either ordinal ranks, or rank classes. We start by using ordinal ranks. Here you need to create a numeric vector with names, where the numbers reflect the ranks and the names the individual IDs. For example:
+
+\small
+```{r}
+myranks <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+# vector needs to have names!
+names(myranks) <- c("a", "c", "d", "f", "g", "k", "n", "s", "w", "z")
+myranks
+```
+\normalsize
+
+The `createstartvalues()` function then takes these ranks and translates them into Elo-ratings. The crucial point here is the `shape=` parameter that determines how differentiated these ranks are in terms of magnitude of differences between individuals (figure \ref{fig:shapes}). The code to produce the figure is in the [appendix](#appendix).
+
+\small
+```{r, echo=FALSE, fig.width=7, fig.height=5, out.width = "4in", fig.align='center', fig.cap="\\small Different shape parameters supplied to the \\texttt{createstartvalues()} function. Code to produce the figure is in the \\nameref{sec:appendix}. \\label{fig:shapes}"}
+plot(0, 0, "n", xlim = c(1,10), ylim = c(500, 1500), xlab = "prior ordinal rank", 
+     ylab = "custom startvalue", cex.axis = 0.8, cex.lab = 0.8, las = 1)
+shapes <- c(0, 0.1, 0.3, 0.5, 1)
+xcols <- c("black", "grey", "red", "yellow", "blue")
+for(i in 1:length(shapes)) {
+  points(myranks, createstartvalues(ranks = myranks, shape = shapes[i])$res, type = "l", 
+         col = xcols[i], lwd = 2)
+}
+legend("topright", lty = 1, col = xcols, legend = shapes, lwd = 2, title = "shape", bty = "n", 
+       cex = 0.7)
+```
+
+\normalsize
+
+
+In the next example, we first calculate Elo-ratings without prior knowledge, i.e. like in the examples above. But then we use the final ratings of this step to calculate ranks and based on these ranks, we calculate Elo-ratings again but now with this 'prior' knowledge. Now, this is a somewhat circular approach we use here, but it serves well to show how prior information can flatten El-rating trajectories (figure \ref{fig:prior}). For this example, we use a smaller data set to have less cluttered figures.
+
+\small
+```{r}
+data(adv2)
+# no prior knowledge
+res1 <- elo.seq(winner = adv2$winner, loser = adv2$loser, Date = adv2$Date)
+extract_elo(res1)
+
+# use the above calculated ratings as known 'ranks'
+myranks <- 1:length(extract_elo(res1))
+names(myranks) <- names(extract_elo(res1))
+mystart <- createstartvalues(myranks, startvalue = 1000, k = 100)
+res2 <- elo.seq(winner = adv2$winner, loser = adv2$loser, Date = adv2$Date,
+               startvalue = mystart$res)
+extract_elo(res2)
+```
+\normalsize
+
+```{r, echo=FALSE}
+e1 <- extract_elo(res1); e1 <- e1[sort(names(e1))]
+e2 <- extract_elo(res2); e2 <- e2[sort(names(e2))]
+```
+
+
+\small
+```{r, echo=FALSE, fig.width=9, fig.height=3.3, fig.align='center', fig.cap="\\small Elo-ratings from a group of seven individuals. On the left without prior knowledge and in the center with prior knowledge (here: the ordinal ranking at the end of the sequence without prior knowledge). The right panel shows the correlation between ratings on each date between the two runs. Code to produce the figure is in the \\nameref{sec:appendix}. \\label{fig:prior}"}
+par(mfrow = c(1, 3))
+
+dates <- res1$truedates
+mycols <- c("red", "blue", "gold", "black", "grey", "green", "darkred")
+
+
+ratings1 <- res1$cmat
+ratings1 <- ratings1[, sort(colnames(ratings1))]
+plot(0, 0, type = "n", xlim = range(dates), ylim = c(600, 1400), axes = FALSE, xlab = "Date", 
+     ylab = "Elo-ratings", cex.lab = 0.7)
+for(i in 1:ncol(ratings1)) points(dates, ratings1[, i], type = "l", col = mycols[i])
+axis.Date(1, x = dates, cex.axis = 0.7)
+axis(2, las = 1, cex.axis = 0.7)
+box()
+
+ratings2 <- res2$cmat
+ratings2 <- ratings2[, sort(colnames(ratings2))]
+plot(0, 0, type = "n", xlim = range(dates), ylim = c(600, 1400), axes = FALSE, xlab = "Date", 
+     ylab = "Elo-ratings", cex.lab = 0.7)
+for(i in 1:ncol(ratings2)) points(dates, ratings2[, i], type = "l", col = mycols[i])
+axis.Date(1, x = dates, cex.axis = 0.7)
+axis(2, las = 1, cex.axis = 0.7)
+box()
+
+
+plot(0, 0, type = "n", xlim = range(dates), ylim = c(0, 1), axes = FALSE, xlab = "Date", 
+     ylab = "correlation coefficient", cex.lab = 0.7)
+for(i in 1:nrow(ratings1)) points(dates[i], cor(ratings1[i, ], ratings2[i, ]), pch = 16)
+axis.Date(1, x = dates, cex.axis = 0.7)
+axis(2, las = 1, cex.axis = 0.7)
+box()
+```
+
+\normalsize
+
+When we look at figure \ref{fig:prior} we can see several things. First, the actual order of individuals at the end of both runs is identical and final ratings are highly correlated ($r= `r sprintf("%.2f", cor(e1, e2))`$). Further, several patterns among the final ratings are very similar, e.g. gold and blue are close to each other, as are green and grey\footnote{my apologies to color blind people}, while the two red individuals are relatively further spaced apart. The only major difference is the black individual which is close to blue and gold in the left panel but further away from them in the center panel. Equally interesting are the correlation coefficients for each day between the two approaches (figure \ref{fig:prior}, right panel). Not surprisingly, correlations become close over time (keep in mind that on the first day, there was only one interaction observed and as such, in the left panel, only two individuals (blue and gold) had ratings different from 1000).
+
+You can also supply rank classes. These rank classes will then be transformed into intermediate 'ranks', which then are transformed into custom start values according to the same principal as above with regards to the shape parameter. The major caveat here is that currently you have to specify **four** rank classes. If you have less, two for example, you still need to specify all four, but leave unused classes `NULL`. The class-rank conversion is done via the following formula: class=1: 1; class=2: $N/4$; class=3: $N/2$; class=4: $N - N/4$, where $N$ is the group size. Please note that rank classes have to be given in descending order, i.e. the first class is the highest class (e.g. 'high-ranking'), but the actual labels of the rank classes are meaningless and are simply used for illustration.
+
+\small
+```{r}
+# with four rank classes
+myrankclasses <- list(alpha = "a", high = c("b", "c"), mid = c("d", "e"), low = c("f", "g"))
+createstartvalues(rankclasses = myrankclasses)$res
+
+# with two rank classes
+myrankclasses2 <- list(class1 = NULL, high = c("a", "b", "c"), class3 = NULL,
+                       low = c("d", "e", "f", "g"))
+createstartvalues(rankclasses = myrankclasses2)$res
+
+# with two rank classes
+myrankclasses3 <- list(high = c("a", "b", "c"), mid = NULL,
+                       low = c("d", "e", "f", "g"), superlow = NULL)
+createstartvalues(rankclasses = myrankclasses3)$res
+```
+\normalsize
+
+These start values can be saved as above and then be used in `elo.seq()`. Please note that currently all individuals that are part of the sequence have to have an entry in the prior ranks, otherwise `the elo.seq()` function will fail. For example, the following will result in an error, because only two out of ten individuals have prior ratings:
+
+
+\small
+```{r, eval=FALSE}
+mypriors <- c(2000, 0); names(mypriors) <- c("a", "g")
+elo.seq(winner = adv2$winner, loser = adv2$loser, Date = adv2$Date, 
+                    startvalue = mypriors)
+```
+\normalsize
+
+In future package versions it hopefully will be allowed to include subsets of individuals in the context of prior ratings (such that the above example would work).
+
+In general, I (CN) am still unsure about the general validity of this approach. It adds information without much apparent justification: from an ordinal ranking (or rank classes) with meaningless differences to cardinal scores where the differences between any two pairs of individuals can be compared in terms of magnitude. For example, in an ordinal ranking no distinction can be made between the difference of rank 1 versus rank 2 or rank 11 versus rank 12. In a cardinal system (like David's score), such differences are meaningful, such that rank 1 and rank 2 can be relatively more close to each other than rank 11 and 12, or the other way around. That being said, if there is some knowledge of the species in this respect, i.e. how pronounced are power differentials between individuals (compare also to steepness), the approach may be justified. Otherwise, for the moment I would advise either to set the shape parameter to 0 (which implies that differences between all adjacent pairs of individuals are identical, steepness = 1) or to refrain from incorporating ordinal ranks altogether. A better founded reasoning for the approach is needed in my opinion, and also it would be really interesting to achieve the inclusion of cardinal scores into the system, for example prior knowledge of David's scores.
+
+
+## Adjusting *k*
+
+Here we describe how to set different *k* values to different types of interactions. Typically, setting *k* would allow to differentiate interactions of different intensity. Similarly, we can envision that *k* could be set according to the value of the resource that is contested in a given interaction. Larger *k*s would be set for interactions of higher intensity or higher resource value.
+
+In our small example of 33 interactions between 7 individuals, we have observed interactions of two different intensities: displace (threat/leave) interactions and fights (fight/flee interactions). For the sake of this example, we consider that displacing another individual is milder and should have less of an effect on dominance status, hence we assign such interactions a relatively low *k* value, here $k=50$. In contrast, `real' fights should be much more consequential, hence we chose $k=200$. Please note that a objective way for how to choose varying *k* is still unknown, and currently guided mostly by intuition. Future work could explore whether and how it is possible to optimize varying $k$ akin to the approach of @franz2015a and @foerster2016b.
+
+In the current implementation, different *k* have to be supplied as a named list, where the names have to correspond to the intensity specified. In our example we need a list with two items:
+
+
+\small
+```{r}
+table(adv2$intensity)
+
+myk <- list(displace = 50, fight = 200)
+
+res3 <- elo.seq(winner = adv2$winner, loser = adv2$loser, Date = adv2$Date, 
+                            intensity = adv2$intensity, k = myk)
+extract_elo(res3)
+```
+\normalsize
+
+
+Finally, we compare the final ratings from the different approaches (figure \ref{fig:custom}).
+
+
+\small
+```{r, eval=TRUE, echo=TRUE, fig.width=7, fig.height=4, out.width="4in", fig.align='center', fig.cap="\\small Final ratings of 7 individuals when calculated without any prior knowledge (red), prior knowledge of `ranks' (blue) and accounting for different interaction intensities (gold). \\label{fig:custom}"}
+plot(0, 0, "n", xlim = c(1, 7), ylim = c(600, 1400), xlab = "individual", ylab = "Elo-rating", 
+     axes = FALSE)
+axis(1, at = 1:7, labels = res1$allids, lwd = NA); axis(2, las = 1)
+
+x <- extract_elo(res1); x <- x[sort(names(x))]
+points(1:7, x, pch = 16, col = "red")
+
+x <- extract_elo(res2); x <- x[sort(names(x))]
+points(1:7, x, pch = 16, col = "blue")
+
+x <- extract_elo(res3); x <- x[sort(names(x))]
+points(1:7, x, pch = 16, col = "gold")
+box()
+legend(4, 1400, legend = c("no prior knowledge", "prior ranks", "custom k"), lwd = 1, 
+       col = c("red", "blue", "gold"), ncol = 3, xpd = TRUE, xjust = 0.5, yjust = 0, 
+       cex = 0.8, bg = "white")
+```
+
+\normalsize
+
+And this is just a fun exercise, in which we repeat the same as above, i.e. calculate ratings (1) without prior information, (2) with prior information but also (3) with a completely wrong prior rank order (we reverse the order). We use the bigger data set here. The code for the figure is in the [appendix](#appendix).
+
+\small
+```{r, echo=FALSE, fig.width=9, fig.height=3.3, fig.align='center', fig.cap="\\small Elo-ratings from a group of ten individuals. On the left without prior knowledge and in the center with prior knowledge (here: the ordinal ranking at the end of the sequence without prior knowledge). The right panel shows the ratings as they develop if we use some obviously wrong prior ranking. Code to produce the figure is in the \\nameref{sec:appendix}. \\label{fig:prior2}"}
+xdata <- read.table(system.file("ex-sequence.txt", package = 'EloRating2'), header = TRUE)
+# no prior knowledge
+s1 <- elo.seq(winner = xdata$winner, loser = xdata$loser, Date = xdata$Date)
+
+# use the above calculated ratings as known 'ranks'
+myranks <- 1:length(extract_elo(s1))
+names(myranks) <- names(extract_elo(s1))
+mystart <- createstartvalues(myranks, startvalue = 1000, k = 100)
+s2 <- elo.seq(winner = xdata$winner, loser = xdata$loser, Date = xdata$Date,
+               startvalue = mystart$res)
+
+# reverse
+myranks[1:10] <- 10:1
+mystart <- createstartvalues(myranks, startvalue = 1000, k = 100)
+s3 <- elo.seq(winner = xdata$winner, loser = xdata$loser, Date = xdata$Date,
+               startvalue = mystart$res)
+
+par(mfrow = c(1, 3))
+
+dates <- s1$truedates
+mycols <- c("red", "blue", "gold", "black", "grey", "green", "darkred", "darkblue", "pink", "cyan")
+
+# do the plots
+ratings1 <- s1$cmat
+ratings1 <- ratings1[, sort(colnames(ratings1))]
+plot(0, 0, type = "n", xlim = range(dates), ylim = c(400, 1600), axes = FALSE, xlab = "Date",
+     ylab = "Elo-ratings", cex.lab = 0.7)
+for(i in 1:ncol(ratings1)) points(dates, ratings1[, i], type = "l", col = mycols[i])
+axis.Date(1, x = dates, cex.axis = 0.7)
+axis(2, las = 1, cex.axis = 0.7)
+box()
+
+ratings2 <- s2$cmat
+ratings2 <- ratings2[, sort(colnames(ratings2))]
+plot(0, 0, type = "n", xlim = range(dates), ylim = c(400, 1600), axes = FALSE, xlab = "Date",
+     ylab = "Elo-ratings", cex.lab = 0.7)
+for(i in 1:ncol(ratings2)) points(dates, ratings2[, i], type = "l", col = mycols[i])
+axis.Date(1, x = dates, cex.axis = 0.7)
+axis(2, las = 1, cex.axis = 0.7)
+box()
+
+ratings3 <- s3$cmat
+ratings3 <- ratings3[, sort(colnames(ratings3))]
+plot(0, 0, type = "n", xlim = range(dates), ylim = c(400, 1600), axes = FALSE, xlab = "Date",
+     ylab = "Elo-ratings", cex.lab = 0.7)
+for(i in 1:ncol(ratings3)) points(dates, ratings3[, i], type = "l", col = mycols[i])
+axis.Date(1, x = dates, cex.axis = 0.7)
+axis(2, las = 1, cex.axis = 0.7)
+box()
+```
+
+\normalsize
+
+
+
+
+## Optimizing *k*
+
+Another approach of adjusting $k$ is to optimize its value with a likelihood approach. See the very cool articles by @franz2015a and @foerster2016b.
+
+
+# More functions related to Elo-rating
+
+In addition to calculate, extract and display/plot Elo-ratings, our package also provides some more functions that may be useful in some contexts.
+
+## Hierarchy stability with `stab.elo()`
+
+`stab.elo()` can be used to calculate an index of hierarchy stability [$S$, see @neumann2011] and @mcdonald2013a). Please note that in contrast to the original publication, $S$ now is limited to a range between 0 and 1, where 1 indicates a stable hierarchy in which no rank changes occurred (see [this section](#further-notes-on-the-stability-index) for more information).
+
+\small
+```{r}
+res2 <- elo.seq(winner = xdata$winner, loser = xdata$loser, Date = xdata$Date, presence = xpres, 
+               draw = xdata$Draw)
+stab_elo(res2, from = "2000-05-05", to = "2000-06-05")
+```
+\normalsize
+
+## Individual rating trajectories with `traj.elo()`
+
+`traj.elo()` provides information about Elo-rating trajectories of individuals over time. These trajectories are simply regression slopes of ratings as a function of days. To calculate these slopes we use ratings per day, which may differ from those ratings that would be returned by `extract_elo()`. For `extract_elo()`, we return ratings on a given day regardless of whether there were actually observed interactions for a given individual (i.e. the most recent rating). For `traj_elo()`, we use  only ratings from days *with* observed interactions. As a consequence, we need at least two days with interactions to calculate a slope. If there was no or only one day with observed interactions, the slope is returned as `NA` in the output and a warning message is produced (*s* and *n* in the example).
+
+\small
+```{r}
+traj_elo(res2, ID = c("s", "f", "n", "z"), from = "2000-05-05", to = "2000-06-05")
+traj_elo(res2, ID = c("s", "f", "n", "z"), from = "2000-06-05", to = "2000-07-05")
+```
+\normalsize
+
+## `individuals()`
+
+`individuals()` provides information about which/how many individuals were present on specific dates. When applied over a date *range*, the average number of individuals can be returned as can the coefficient of variation of the number of individuals present on each date. Note that this function has little relevance if the calculation of Elo-ratings (see above) is *not* supplemented by presence data.
+
+\small
+```{r}
+individuals(res2, from = "2000-05-05", to = "2000-05-05", outp = "N")
+individuals(res2, from = "2000-05-05", to = "2000-06-05", outp = "N")
+individuals(res2, from = "2000-05-05", to = "2000-06-05", outp = "CV")
+individuals(res2, from = "2000-05-05", to = "2000-06-05", outp = "IDs")
+```
+\normalsize
+
+
+## `winprob()`
+
+`winprob()` simply returns the expected probability of an individual winning given its own rating and that of its opponent. Note that there are two major ways of calculating these probabilities. Without going into details too much: the package default assumes a normal distribution (following @albers2001), the alternative being based on an exponential distribution.
+
+\small
+```{r}
+winprob(1000, 1200)
+winprob(1000, 1200, normprob = FALSE)
+winprob(1200, 1000)
+winprob(1200, 1000, normprob = FALSE)
+winprob(1200, 1200)
+winprob(1200, 1200, normprob = FALSE)
+```
+\normalsize
+
+@elo1978 discussed both, but it turns out both approaches produce very similar results (figure \ref{fig:differentprobs}), specifically when rating differences are relatively small (up to about 200 points difference). The code to produce this figure is in the [appendix](#appendix).
+
+```{r, eval=TRUE, echo=FALSE, fig.width=7, fig.height=6, out.width="4in", fig.align='center', fig.cap="\\small Two ways of calculating winning probabilities. Up to a rating difference of 200 points, the two curves are virtually indistinguishable. The step-wise curves are taken from Elo 1978 and Albers and de Vries 2001, which provide tables in intervals, for example, the winning probability is 0.5 if the rating difference is between 0 and 3. Code to produce the figure is in the \\nameref{sec:appendix}. \\label{fig:differentprobs}"}
+elotable <- list(0:3, 4:10, 11:17, 18:24, 25:31, 32:38, 39:45, 46:52, 53:59, 60:66, 67:74, 75:81, 82:88, 89:96, 97:103, 104:111, 112:119, 120:127, 128:135, 136:143, 144:151, 152:159, 160:168, 169:177, 178:186, 187:195, 196:205, 206:214, 215:224, 225:235, 236:246, 247:257, 258:269, 270:281, 282:294, 295:308, 309:323, 324:338, 339:354, 355:372, 373:391, 392:412, 413:436, 437:463, 464:494, 495: 530, 531:576, 577:636, 637:726, 727:920, 921:1000)
+alberstable <- list(0:3, 4:10, 11:17, 18:25, 26:32, 33:39, 40:46, 47:53, 54:61, 62:68, 69:76, 77:83, 84:91, 92:98, 99:106, 107:113, 114:121, 122:129, 130:137, 138:145, 146:153, 154:162, 163:170, 171:179, 180:188, 189:197, 198:206, 207:215, 216:225, 226:235, 236:245, 246:256, 257:267, 268:278, 279:290, 291:302, 303:315, 316:328, 329:344, 345:357, 358:374, 375:391, 392:411, 412:432, 433:456, 457:484, 485:517, 518:559, 560:619, 620:735, 736:1000)
+
+elotable <- data.frame(rtgdiff=unlist(elotable), P = rep(seq(0.5, 1, by=0.01), unlist(lapply(elotable, length))))
+alberstable <- data.frame(rtgdiff=unlist(alberstable), P = rep(seq(0.5, 1, by=0.01), unlist(lapply(alberstable, length))))
+
+w <- rep(0, 1001) # winner rating: constant
+l <- w - 0:1000 # loser rating: varying
+
+elonorm <- numeric(length(w))
+eloexpo <- numeric(length(w))
+
+i=100
+for(i in 1:length(w)) {
+  elonorm[i] <- winprob(w[i], l[i], normprob = TRUE)
+  eloexpo[i] <- winprob(w[i], l[i], normprob = FALSE)
+}
+
+plot(0, 0, "n", xlim = c(0, 1000), ylim = c(0.5, 1), xlab="rating difference", ylab="winning probability", las=1)
+points(abs(l), elonorm, "l", col = "red") 
+points(abs(l), eloexpo, "l", col = "gold")
+
+
+points(alberstable$rtgdiff, alberstable$P, type="l", col="red")
+points(elotable$rtgdiff, elotable$P, type="l", col="gold")
+legend("bottomright", legend = c("normal", "exponential"), col = c("red", "gold"), lwd = 2, cex = 0.9)
+```
+
+
+## From sequence to matrix with `creatematrix()`
+
+`creatematrix()` returns a square matrix which can be used with other, matrix-based algorithms to calculate dominance scores or ranks [e.g. I\&SI @devries1998] or David's score [@david1987; @gammell2003; @devries2006], see sections on [David's scores](#davids-scores-with-ds) and [I&SI](#sec:ISI)). 
+
+The function works either from the results of `elo.seq()` or from vectors of winners and losers. First, we look at creating matrices from the results from `elo.seq`. If undecided interactions (ties/draws) are present in the data, you can decide on how to treat them (either 0.5 or 1 for both individuals, or they are omitted (default)). Individuals that were absent during the specified date range are excluded from the matrix by default. In addition, the matrix can be restricted to individuals that had interactions (i.e. *observed* interactions) in the date range.
+
+\small
+```{r}
+creatematrix(res2)
+sum(creatematrix(res2))
+creatematrix(res2, drawmethod = "0.5")
+sum(creatematrix(res2, drawmethod = "0.5"))
+# "c" and "n" are omitted
+creatematrix(res2, daterange = c("2000-06-10", "2000-06-16"))
+creatematrix(res2, daterange = c("2000-06-10", "2000-06-16"), onlyinteracting = TRUE)
+```
+\normalsize
+
+If you want to create a matrix directly from winner and loser vectors, you need to take care that both the `winners=` and the `losers=` arguments are named. So the following will work:
+
+\small
+```{r}
+creatematrix(winners = xdata$winner, losers = xdata$loser)
+```
+\normalsize
+
+But this one will not work:
+
+\small
+```{r, eval=FALSE}
+creatematrix(xdata$winner, xdata$loser)
+```
+\normalsize
+
+Also note that if you work with vectors directly, there is no way to take into account date ranges and hence co-residency. If you want to make sure that your matrices adhere to presence, you need to run `elo.seq()` first and then create the matrix from its results.
+
+## `randomsequence()`
+
+`randomsequence()` creates random data sets, which can be used for simulations for example. It returns a list with two `data.frame`s (named `seqdat` and `pres` for the actual sequence and presence data, respectively). By default, it creates a sequence of 100 interactions between 10 individuals. All IDs are present the entire time and there are no undecided interactions. Also by default, IDs are simply single letters and in order to produce realistic data, IDs that appear earlier in alphabetic order are more likely to win any given interaction (`alphabet = TRUE`). The proportion of reversals (against that order) is by default set to `reversals = 0.1`}.
+
+\small
+```{r}
+rdata <- randomsequence()
+xres <- elo.seq(winner = rdata$seqdat$winner, loser = rdata$seqdat$loser, Date = rdata$seqdat$Date, 
+                presence = rdata$pres, progressbar = F)
+summary(xres)
+```
+\normalsize
+
+
+## From dominance matrix to sequence with `randomelo()`
+
+This is an experimental function to generate a set of random sequences based on an interaction matrix. Based on the randomly generated sequences, Elo-ratings are calculated (in the example 5 times, `runs = 5`)\footnote{Typically, you would want to set a substantially higher number, for example 1000}. For inspection, we save the average Elo-ratings across all the randomized sequences in a new object called `res`. If you plan to use this function, you may want to have a look at the [`EloChoice`](https://cran.r-project.org/web/packages/EloChoice/index.html) package, which does the same, but is substantially faster.
+
+\small
+```{r}
+data(bonobos)
+xdata <- randomelo(bonobos, runs = 5)
+res <- data.frame(ID = colnames(xdata[[1]]), avg = round(colMeans(xdata[[1]]), 1))
+```
+\normalsize
+
+Now, compare that to [David's scores](#davids-scores-and-steepness) (figure \ref{fig:five}).\footnote{Note, the plot you will get will differ because the generation of Elo-ratings is based on \textit{random} sequences}
+
+\small
+```{r, fig.width=6, fig.height=4.3, out.width="4in", fig.align='center', fig.cap="David's scores and average randomized Elo-ratings from seven bonobos (data from de Vries et al 2006).\\label{fig:five}"}
+ds <- DS(bonobos)
+ds <- ds[order(ds$ID), ]
+plot(ds$normDS, res$avg, xlab = "David's score", ylab = "randomized average Elo-rating", las = 1,
+     xlim=c(0, 6))
+```
+
+\normalsize
+
+# Utilities 
+
+
+## Proportion of unknown relationships with `prunk()`
+
+This function lets you determine how large the proportion of dyads in your data set is for which no interactions have been observed. You can use this function on both the results of `elo.seq()` or an interaction matrix. If used on an `eloobject`, you will see as a result the unknown relationships for all dyads that were found in the date range, and additionally restricted to those dyads that were actually co-resident at some point during the date range. In the example, this results in the identical output since all dyads were co-resident at some point. Of course, the accuracy of the second part of the output depends on presence data being supplied. Note for matrices, we cannot control for co-residency, so the second part of the output is returned as `NA` if `prunk()` is used with a matrix.
+
+\small
+```{r}
+data(adv); data(advpres)
+x <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date, presence = advpres, 
+             progressbar = F)
+prunk(x, daterange = c("2010-01-01", "2010-01-15"))
+mat <- creatematrix(x, daterange = c("2010-01-01", "2010-01-15"))
+prunk(mat)
+```
+\normalsize
+
+## David's scores and steepness
+
+With the `DS()` function you can calculate David's scores [@david1987; @gammell2003; @devries2006]. Note that this function only works on square matrices (see  [`creatematrix()`](#from-sequence-to-matrix-with-creatematrix) for how to create a matrix from a sequence).
+
+\small
+```{r}
+data(bonobos)
+DS(bonobos)
+```
+\normalsize
+
+With the `steepness()` function we can calculate steepness based on David's scores [@devries2006]. 
+
+\small
+```{r}
+steepness(bonobos, nrand = 1000)
+```
+\normalsize
+
+
+However, you may want to be somewhat careful about its interpretation because steepness is known to depend on matrix sparseness (proportion of unknown relationships, @klass2011, figure \ref{fig:steepness}):
+
+\small
+```{r, fig.width=6, fig.height=4.3, out.width="4in", fig.align='center', fig.cap="Relationship between sparseness and steepness (data from 100 random matrices). \\label{fig:steepness}"}
+plot(0, 0, "n", xlab = "sparseness", ylab = "steepness", las = 1, xlim = c(0, 1), ylim = c(0, 1))
+for(i in 1:100) {
+  x <- randomsequence(nID = 15, avgIA = 40)
+  xmat <- creatematrix(winners = x$seqdat$winner, losers = x$seqdat$loser)
+  # remove a random number of cells (replace by 0)
+  xmat[sample(1:225, sample(0:200, 1))] <- 0
+  # calculate and plot sparseness and steepness
+  points(prunk(xmat)[1], steepness(xmat)[1])
+}
+```
+
+\normalsize
+
+
+## Directional consistency with `DCindex()` {#sec:DCindex}
+You can also calculate the Directional Consistency Index [cf. @vanhooff1987].
+
+\small
+```{r}
+DCindex(devries98)
+DCindex(bonobos)
+```
+\normalsize
+
+# Linearity, transitivity and ordinal ranks
+
+
+## Linearity with `h.index()`
+
+The function `h.index()` allows calculating the linearity indices $h$ and $h'$ [@appleby1983; @devries1995]. The significance test as described by @devries1995 is also included. In order to get it to work, you need to extract a matrix from your eloobject (see [`creatematrix`](#from-sequence-to-matrix-with-creatematrix)). 
+
+
+\small
+```{r}
+mat <- creatematrix(winners = adv$winner, losers = adv$loser)
+h.index(mat, loops = 1000)
+```
+\normalsize
+
+Or you can use a matrix directly, as with the matrix of seven bonobos that is included in this package (data from @devries2006).
+
+\small
+```{r}
+data(bonobos)
+h.index(bonobos, loops = 1000)
+```
+\normalsize
+
+
+
+## Triangle transitivity (`transitivity()`)
+
+@shizuka2012 suggested an alternative measure to quantify the degree of linearity in dominance networks.
+
+\small
+```{r}
+data(devries98)
+set.seed(123)
+transitivity(devries98, runs = 1000)
+```
+\normalsize
+
+\small
+```{r}
+data(adv)
+mat <- creatematrix(winners = adv$winner, losers = adv$loser)
+set.seed(123)
+transitivity(mat, runs = 1000)
+```
+\normalsize
+
+## Linear hierarchy with the I&SI algorithm (`ISI()`) {#sec:ISI}
+It is also possible to order the individuals in a matrix according to a linear hierarchy [@appleby1983; @devries1995; @devries1998]. This is implemented in the function `ISI()` that re-orders the matrix according to the I\&SI algorithm suggested by @devries1998). Strictly speaking, applying this algorithm is only justified if there is linearity in the matrix in the first place. This can be tested with `h.index()` function (see above). For illustration, I also present an example for a non-linear hierarchy. Note that the application of the I\&SI method does *not* necessarily result in a unique solution. This is likely related to the assumption that actually the matrix has to be linear. In other words, we can apply the I\&SI algorithm to any matrix, but whether this reflects a linear ordering depends on whether there actually is such a linear order in the first place. Let's start with de Vries' [-@devries1998] example, which can be ordered linearly according to de Vries' randomization test [@devries1995].
+
+\small
+```{r}
+data(devries98)
+set.seed(123)
+h.index(devries98)
+ISI(devries98)
+```
+\normalsize
+
+Now let's look at an example for which the linearity assumption is not met. Incidentally, these data come from the Elo-rating example given by @albers2001.\footnote{Remember, this is exactly the point of Elo-rating, i.e. it does not assume a linear order across the entire time period, but rather handles temporal changes and assigns individual scores, not ranks.} We first bring the sequence into matrix form, then test for linearity and run the `ISI()` function. Note that here we get three possible orderings that equally well fit a linear hierarchy (though that linear ranking is actually not justified). All three possibilities contain one inconsistency with a strength of 2.
+
+\small
+```{r}
+data(adv)
+mat <- creatematrix(winners = adv$winner, losers = adv$loser)
+h.index(mat)
+set.seed(123)
+res <- ISI(mat)
+```
+\normalsize
+
+With `ISIranks()` we can have the actual ranks returned in a more readable format. The actual sorting (either by ID or average rank) can be controlled via `sortbyID=`. The results here indicate that four individuals had the same rank assigned in each of the three rankings (*a*, *b*, *c* and *d*). Three others held different ranks in each of the three possible solutions (*e*, *f* and *g*).
+
+\small
+```{r}
+ISIranks(res, sortbyID = TRUE)
+```
+\normalsize
+
+
+
+
+# Custom plots of Elo-ratings {#sec:customplots}
+
+This section gives a few hints on how to plot Elo-ratings in case your not satisfied with the results of the standard `eloplot()` function. The main thing to know is that the ratings for each individual are stored in the results of `elo.seq()`, specifically in the list item `cmat`.\footnote{list items can be accessed with the \texttt{\$} character} The actual object is a matrix, and contains a column for each individual and a row for each date. For example:
+
+\small
+```{r}
+data(adv); data(advpres)
+SEQ <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date, presence = advpres, 
+               progressbar = F)
+ratings <- SEQ$cmat
+head(ratings)
+```
+\normalsize
+
+Note that this approach is illustrated in case you use the default Elo-ratings, i.e. when `init="average"` is set in the `elo.seq()` step (which it is by default). I have not tested it, but this plotting approach should in principle also work for the two other modes of `init=`.
+
+The only thing left that we need for creating our plot are the actual dates, which are not part of the `\$cmat` matrix. The dates can be found in the item `truedates`, which again is part of the output of `elo.seq()` (which we stored in the object `SEQ`).
+
+\small
+```{r}
+dates <- SEQ$truedates
+head(dates)
+```
+\normalsize
+
+So now we can do the plot. We start by setting up an empty plot,\footnote{The main reason for this seemingly complicated way is that we want custom axes. There might be a more straightforward way of doing this, but I am not aware of it.} which we subsequently fill with our data, specifically looping through each individual (i.e. columns in `ratings`). Then we add the axes and draw a box around the plot.
+
+\small
+```{r, fig.width=4, fig.height=3.3, fig.cap='\\small Elo-ratings of 7 individuals across one month. \\label{fig:adv1}'}
+plot(0, 0, xlim = range(dates), ylim = range(ratings, na.rm = T), axes = FALSE, xlab = "Date", 
+     ylab = "Elo-ratings")
+for(i in 1:ncol(ratings)) points(dates, ratings[, i], type = "l")
+axis.Date(1, x = dates, cex.axis = 0.8)
+axis(2, las = 1, cex.axis = 0.8)
+box()
+```
+
+\normalsize
+
+Now, we can modify the colors for individuals. Note that I will also change the line types, just so the logic becomes clear. The important thing here is that you need as many colors/line types as you have individuals (here seven) and you need to specify the colors in the order in which individual occur in `ratings`.
+
+\small
+```{r, fig.width=4, fig.height=3.3, fig.cap='\\small Elo-ratings of 7 individuals across one month. Individuals are coded by color and line type. \\label{fig:adv2}'}
+plot(0, 0, xlim = range(dates), ylim = range(ratings, na.rm = T), axes = FALSE, xlab = "Date", 
+     ylab = "Elo-ratings")
+mycols <- c("red", "green", "blue", "gold", "black", "grey", "darkred")
+myltys <- c(1, 2, 3, 1, 2, 3, 1)
+for(i in 1:ncol(ratings)) points(dates, ratings[, i], type = "l", col = mycols[i], lty = myltys[i])
+axis.Date(1, x = dates, cex.axis = 0.8)
+axis(2, las = 1, cex.axis = 0.8)
+box()
+```
+
+\normalsize
+
+If we want to have a legend it gets a bit more tricky. For this, we need to set up a plot layout, which basically creates two plotting areas, the first (left) of which we use for the plot, and the other (right) for the legend. Setting up the exact location for the legend is the actual tricky part, and requires a little trial and error in my experience because the way your final figure looks like depends how your plotting system is set up. Specifically, you may want to experiment with the `x` and `y` values in the `legend(x=<...>, y=<...>)` call.
+
+\small
+```{r, fig.width=5, fig.height=3.3, fig.cap='\\small Elo-ratings of 7 individuals across one month. Individuals are coded by color and line type, which are noted in the legend. \\label{fig:adv3}'}
+layout(matrix(c(1, 2), ncol = 2), heights = c(5, 5), widths = c(4, 1))
+plot(0, 0, xlim = range(dates), ylim = range(ratings, na.rm = T), axes = FALSE, xlab = "Date", 
+     ylab = "Elo-ratings")
+mycols <- c("red", "green", "blue", "gold", "black", "grey", "darkred")
+myltys <- c(1, 2, 3, 1, 2, 3, 1)
+for(i in 1:ncol(ratings)) points(dates, ratings[, i], type = "l", col = mycols[i], lty = myltys[i])
+axis.Date(1, x = dates, cex.axis = 0.8)
+axis(2, las = 1, cex.axis = 0.8)
+box()
+# set margins for legend plot
+par(mar = c(5, 0.5, 3.8, 0.5))
+plot(1:2, 1:2, xaxt = "n", yaxt = "n", type = "n", bty = "n", ylab = "", xlab = "")
+legend(x = 1, y = 2.04, colnames(ratings), cex = 0.8, bty = "n", pch = 16, pt.cex = 1, col = mycols, 
+       lty = myltys)
+```
+
+\normalsize
+
+Finally, we may want to add symbols on top of the lines so that distinction between individuals becomes clearer in addition or replacing the color approach. Because putting symbols on for each single interaction may clutter the plot, I find it useful to use only every X\textsuperscript{th} data point. In the example we use every 3rd point (`stp <- 3`). The data come from yet another list item in the results (`$nmat`).
+
+
+\small
+```{r, fig.width=5, fig.height=3.3, fig.cap='\\small Elo-ratings of 7 individuals across one month. Individuals are coded by color and line type, which are noted in the legend. For each individual, ratings after every third interaction are highlighted. \\label{fig:adv4}'}
+ias <- apply(SEQ$nmat, 2, cumsum)
+stp <- 3
+layout(matrix(c(1, 2), ncol = 2), heights = c(5, 5), widths = c(4, 1))
+plot(0, 0, xlim = range(dates), ylim = range(ratings, na.rm = T), axes = FALSE, xlab = "Date", 
+     ylab = "Elo-ratings")
+mycols <- c("red", "green", "blue", "gold", "black", "grey", "darkred")
+myltys <- c(1, 2, 3, 1, 2, 3, 1)
+mysymbs <- c(15:21)
+for(i in 1:ncol(ratings)) {
+  points(dates, ratings[, i], type = "l", col = mycols[i], lty = myltys[i])
+  pos <- sapply(unique(ias[, i] %/% stp),
+                function(X)min(which(ias[, i] %/% stp == X))
+                )[-1]
+  points(dates[pos], ratings[pos, i], pch = mysymbs[i], col = mycols[i])
+}
+axis.Date(1, x = dates, cex.axis = 0.8)
+axis(2, las = 1, cex.axis = 0.8)
+box()
+par(mar = c(5, 0.5, 3.8, 0.5))
+plot(1:2, 1:2, xaxt = "n", yaxt = "n", type = "n", bty = "n", ylab = "", xlab = "")
+legend(1, 2.04, colnames(ratings), cex = 0.8, bty="n", pch = mysymbs, pt.cex = 1, col = mycols,
+       lty = myltys)
+```
+
+\normalsize
+
+# Further notes on the stability index
+
+Originally, @neumann2011 defined the stability index $S$ as:
+
+
+\begin{equation} 
+S = \frac{ \sum_{i=1}^{d} (C_i \times w_i)}  {\sum_{i=1}^{d} (N_i)}
+\label{eq:EQ1}
+\end{equation}
+
+with:
+\begin{description}
+	\item[$C_i$:] the sum of absolute differences between rankings of two consecutive days
+	\item[$w_i$:] a weighting factor determined as the standardized Elo-rating of the highest-ranked individual involved in a rank change
+	\item[$N_i$:] the number of individuals present on both days
+	\item[$d$:] the number of days
+\end{description}
+
+This approach was (justifiably so) criticized by @mcdonald2013a, who pointed out that (1) $S$ is coded against intuition, i.e., $S=0$ indicates a stable hierarchy and larger values unstable situations, and (2) $S$ is not standardized, i.e., its maximal value depends on the number of individuals present.
+
+@mcdonald2013a suggested the following modification:
+
+\begin{equation}
+\label{eq:EQ2}
+S_t = 1 - \frac{S}{2n}
+\end{equation}
+
+where $S$ is the stability index as defined above (equation \ref{eq:EQ1}) and $n$ is the group size. 
+
+As far as I can see, this approach only applies to situations in which group size is stable, and as such does not do justice to one of the major advantages of Elo-rating, i.e., its ability to work on data sets in which group size changes.
+
+A stability index that includes the suggestions of @mcdonald2013a but preserves the ability to deal with varying group sizes can be defined as follows:
+
+\begin{equation}
+\label{eq:EQ3}
+S = 1 - \frac{ \sum_{i=2}^{d} (C_i \times w_i)}  {\sum_{i=2}^{d} (M_i)}
+\end{equation}
+
+where $C_i$ and $w_i$ are defined as above and $M_i$ is the sum of absolute rank changes per day if the hierarchy completely reversed.\footnote{In a group of three animals this would amount to 4, if $n=4$ $M_i = 8$, if $n=5$ $M_i = 12$, if $n=6$ $M_i = 18$, etc. In other words, this is maximally possible magnitude of the sum of rank changes. $M_i$ will always be positive and $M_i \geq C_i$.  } This index now ranges between 0 and 1, where 1 indicates total stability (no changes) and 0 indicates total instability (complete reversal of rank order every other day). Note that $M_i$ depends on group size, but can take into account varying group sizes because it is calculated for each single day. Note also that the index can only be calculated from the second day onward (see the index $i$), because it is based on changes between two consecutive days (it does not make sense to calculate $S$ for the first day of a study because there is no day before from which rank changes can be assessed). This was incorrectly displayed in the original equation \ref{eq:EQ1}, but was correctly implemented in the functions supplied in the supplementary material for the Animal Behaviour paper [@neumann2011].
+
+A final note. I did not change the symbol for the modified index, i.e., I kept it as '$S$' for now. The functions in the current version of the `EloRating`-package (v. 0.43) calculate $S$ following equation \ref{eq:EQ3}, i.e., $S$ is standardized between 0 and 1, and 1 indicates a stable hierarchy.
+
+\clearpage
+
+# Appendix
+\label{sec:appendix}
+
+This code produces figure \ref{fig:shapes}.
+\footnotesize
+```{r, eval=FALSE}
+plot(0, 0, "n", xlim = c(1,10), ylim = c(500, 1500), xlab = "prior ordinal rank", 
+     ylab = "custom startvalue", cex.axis = 0.8, cex.lab = 0.8, las = 1)
+shapes <- c(0, 0.1, 0.3, 0.5, 1)
+xcols <- c("black", "grey", "red", "yellow", "blue")
+for(i in 1:length(shapes)) {
+  points(myranks, createstartvalues(ranks = myranks, shape = shapes[i])$res, type = "l", 
+         col = xcols[i], lwd = 2)
+}
+legend("topright", lty = 1, col = xcols, legend = shapes, lwd = 2, title = "shape", bty = "n", 
+       cex = 0.7)
+```
+\normalsize
+
+
+This code produces figure \ref{fig:prior}.
+\footnotesize
+```{r, eval=FALSE}
+par(mfrow = c(1, 3))
+
+dates <- res1$truedates
+mycols <- c("red", "blue", "gold", "black", "grey", "green", "darkred")
+
+
+ratings1 <- res1$cmat
+ratings1 <- ratings1[, sort(colnames(ratings1))]
+plot(0, 0, type = "n", xlim = range(dates), ylim = c(600, 1400), axes = FALSE, xlab = "Date", 
+     ylab = "Elo-ratings", cex.lab = 0.7)
+for(i in 1:ncol(ratings1)) points(dates, ratings1[, i], type = "l", col = mycols[i])
+axis.Date(1, x = dates, cex.axis = 0.7)
+axis(2, las = 1, cex.axis = 0.7)
+box()
+
+ratings2 <- res2$cmat
+ratings2 <- ratings2[, sort(colnames(ratings2))]
+plot(0, 0, type = "n", xlim = range(dates), ylim = c(600, 1400), axes = FALSE, xlab = "Date", 
+     ylab = "Elo-ratings", cex.lab = 0.7)
+for(i in 1:ncol(ratings2)) points(dates, ratings2[, i], type = "l", col = mycols[i])
+axis.Date(1, x = dates, cex.axis = 0.7)
+axis(2, las = 1, cex.axis = 0.7)
+box()
+
+
+plot(0, 0, type = "n", xlim = range(dates), ylim = c(0, 1), axes = FALSE, xlab = "Date", 
+     ylab = "correlation coefficient", cex.lab = 0.7)
+for(i in 1:nrow(ratings1)) points(dates[i], cor(ratings1[i, ], ratings2[i, ]), pch = 16)
+axis.Date(1, x = dates, cex.axis = 0.7)
+axis(2, las = 1, cex.axis = 0.7)
+box()
+```
+\normalsize
+
+This code produces figure \ref{fig:prior2}.
+\footnotesize
+```{r, eval=FALSE}
+xdata <- read.table(system.file("ex-sequence.txt", package = 'EloRating2'), header = TRUE)
+# no prior knowledge
+s1 <- elo.seq(winner = xdata$winner, loser = xdata$loser, Date = xdata$Date)
+
+# use the above calculated ratings as known 'ranks'
+myranks <- 1:length(extract_elo(s1))
+names(myranks) <- names(extract_elo(s1))
+mystart <- createstartvalues(myranks, startvalue = 1000, k = 100)
+s2 <- elo.seq(winner = xdata$winner, loser = xdata$loser, Date = xdata$Date,
+               startvalue = mystart$res)
+
+# reverse
+myranks[1:10] <- 10:1
+mystart <- createstartvalues(myranks, startvalue = 1000, k = 100)
+s3 <- elo.seq(winner = xdata$winner, loser = xdata$loser, Date = xdata$Date,
+               startvalue = mystart$res)
+
+par(mfrow = c(1, 3))
+
+dates <- s1$truedates
+mycols <- c("red", "blue", "gold", "black", "grey", "green", "darkred", "darkblue", "pink", "cyan")
+
+# do the plots
+ratings1 <- s1$cmat
+ratings1 <- ratings1[, sort(colnames(ratings1))]
+plot(0, 0, type = "n", xlim = range(dates), ylim = c(400, 1600), axes = FALSE, xlab = "Date",
+     ylab = "Elo-ratings", cex.lab = 0.7)
+for(i in 1:ncol(ratings1)) points(dates, ratings1[, i], type = "l", col = mycols[i])
+axis.Date(1, x = dates, cex.axis = 0.7)
+axis(2, las = 1, cex.axis = 0.7)
+box()
+
+ratings2 <- s2$cmat
+ratings2 <- ratings2[, sort(colnames(ratings2))]
+plot(0, 0, type = "n", xlim = range(dates), ylim = c(400, 1600), axes = FALSE, xlab = "Date",
+     ylab = "Elo-ratings", cex.lab = 0.7)
+for(i in 1:ncol(ratings2)) points(dates, ratings2[, i], type = "l", col = mycols[i])
+axis.Date(1, x = dates, cex.axis = 0.7)
+axis(2, las = 1, cex.axis = 0.7)
+box()
+
+ratings3 <- s3$cmat
+ratings3 <- ratings3[, sort(colnames(ratings3))]
+plot(0, 0, type = "n", xlim = range(dates), ylim = c(400, 1600), axes = FALSE, xlab = "Date",
+     ylab = "Elo-ratings", cex.lab = 0.7)
+for(i in 1:ncol(ratings3)) points(dates, ratings3[, i], type = "l", col = mycols[i])
+axis.Date(1, x = dates, cex.axis = 0.7)
+axis(2, las = 1, cex.axis = 0.7)
+box()
+```
+\normalsize
+
+
+This code produces figure \ref{fig:differentprobs}.
+\footnotesize
+```{r, eval=FALSE}
+elotable <- list(0:3, 4:10, 11:17, 18:24, 25:31, 32:38, 39:45, 46:52, 53:59, 60:66, 67:74, 75:81, 82:88, 89:96, 
+                 97:103, 104:111, 112:119, 120:127, 128:135, 136:143, 144:151, 152:159, 160:168, 169:177,
+                 178:186, 187:195, 196:205, 206:214, 215:224, 225:235, 236:246, 247:257, 258:269, 270:281, 
+                 282:294, 295:308, 309:323, 324:338, 339:354, 355:372, 373:391, 392:412, 413:436, 437:463, 
+                 464:494, 495: 530, 531:576, 577:636, 637:726, 727:920, 921:1000)
+alberstable <- list(0:3, 4:10, 11:17, 18:25, 26:32, 33:39, 40:46, 47:53, 54:61, 62:68, 69:76, 77:83, 84:91, 
+                    92:98, 99:106, 107:113, 114:121, 122:129, 130:137, 138:145, 146:153, 154:162, 163:170, 
+                    171:179, 180:188, 189:197, 198:206, 207:215, 216:225, 226:235, 236:245, 246:256, 257:267, 
+                    268:278, 279:290, 291:302, 303:315, 316:328, 329:344, 345:357, 358:374, 375:391, 392:411, 
+                    412:432, 433:456, 457:484, 485:517, 518:559, 560:619, 620:735, 736:1000)
+
+elotable <- data.frame(rtgdiff = unlist(elotable), 
+                       P = rep(seq(0.5, 1, by=0.01), unlist(lapply(elotable, length))))
+alberstable <- data.frame(rtgdiff = unlist(alberstable), 
+                          P = rep(seq(0.5, 1, by=0.01), unlist(lapply(alberstable, length))))
+
+w <- rep(0, 1001) # winner rating: constant
+l <- w - 0:1000 # loser rating: varying
+
+elonorm <- numeric(length(w))
+eloexpo <- numeric(length(w))
+
+i=100
+for(i in 1:length(w)) {
+  elonorm[i] <- winprob(w[i], l[i], normprob = TRUE)
+  eloexpo[i] <- winprob(w[i], l[i], normprob = FALSE)
+}
+
+plot(0, 0, "n", xlim = c(0, 1000), ylim = c(0.5, 1), xlab = "rating difference",
+     ylab = "winning probability", las = 1)
+points(abs(l), elonorm, "l", col = "red") 
+points(abs(l), eloexpo, "l", col = "gold")
+
+points(alberstable$rtgdiff, alberstable$P, type = "l", col = "red")
+points(elotable$rtgdiff, elotable$P, type = "l", col = "gold")
+legend("bottomright", legend = c("normal", "exponential"), col = c("red", "gold"), lwd = 2, cex = 0.9)
+```
+\normalsize
+
+
+\clearpage
+
+# References
+
+

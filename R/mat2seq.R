@@ -20,7 +20,7 @@
 #' mat2seq(mat)
 #'
 #' @importFrom Rcpp evalCpp
-#' @useDynLib EloRating2
+#' @useDynLib EloRating
 
 
 mat2seq <- function(mat) {

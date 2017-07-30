@@ -2,10 +2,10 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 mat2seqint <- function(mat) {
-    .Call('_EloRating2_mat2seqint', PACKAGE = 'EloRating2', mat)
+    .Call('_EloRating_mat2seqint', PACKAGE = 'EloRating', mat)
 }
 
 steepint <- function(mat, nrand, Dij = TRUE) {
-    .Call('_EloRating2_steepint', PACKAGE = 'EloRating2', mat, nrand, Dij)
+    .Call('_EloRating_steepint', PACKAGE = 'EloRating', mat, nrand, Dij)
 }
 

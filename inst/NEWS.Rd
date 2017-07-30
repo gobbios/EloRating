@@ -1,6 +1,13 @@
 \name{NEWS}
 \title{News for Package \pkg{EloRating}}
 
+\section{Changes in version 0.45.03 (2017-07-30)}{
+	\itemize{
+	  added new vignette (tutorial) based on R markdown
+    minor fixes related to package renaming
+	}
+}
+
 \section{Changes in version 0.45.02 (2017-07-30)}{
 	\itemize{
 	  renamed the package back to \code{EloRating}

@@ -1,20 +1,17 @@
-\name{EloRating2-package}
-\alias{EloRating2-package}
-\alias{EloRating2}
+\name{EloRating-package}
+\alias{EloRating-package}
+\alias{EloRating}
 \docType{package}
 \title{
-\packageTitle{EloRating2}
+\packageTitle{EloRating}
 }
 \description{
-\packageDescription{EloRating2}
-}
-\details{
-An overview of how to use the package, including the most important functions.
+\packageDescription{EloRating}
 }
 \author{
-\packageAuthor{EloRating2}
+\packageAuthor{EloRating}
 
-Maintainer: \packageMaintainer{EloRating2}
+Maintainer: \packageMaintainer{EloRating}
 }
 \references{
 Elo, A. E. 1978. The Rating of Chess Players, Past and Present. New York: Arco.
