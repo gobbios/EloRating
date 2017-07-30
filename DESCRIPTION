@@ -10,7 +10,8 @@ License: GPL (>= 2)
 LazyData: true
 RoxygenNote: 6.0.1
 Depends: zoo, sna, network
-Suggests: testthat
+Suggests: testthat, knitr
 LinkingTo: Rcpp, RcppArmadillo
 Imports: Rcpp
 NeedsCompilation: yes
+VignetteBuilder: knitr
