@@ -4,6 +4,7 @@
 #'
 #' @param mat square interaction matrix with winner in rows and losers in columns, for example the output from \code{\link{creatematrix}}
 #' @param runs numeric, number of iterations, by default \code{5000}
+#' @param printmessages logical, should the number of I and SI be printed (as well as if there is more than one solution). By default \code{TRUE}.
 #'
 #' @return integer, the summed strength of inconsistencies in the matrix
 #'
@@ -34,11 +35,11 @@
 #'
 #' @export
 
-ISI <- function(mat, runs=5000) {
+ISI <- function(mat, runs = 5000, printmessages = TRUE) {
   # used functions
   {
     makena <- function(mat) {
-      newmat <- mat; #newmat[,] <- NA
+      newmat <- mat
       newmat[newmat - t(newmat) == 0] <- NA
       return(newmat)
     }
@@ -169,7 +170,7 @@ ISI <- function(mat, runs=5000) {
 
   res2 <- unique(lapply(res, colnames))
   if(length(res2) > 1) {
-    message("more than 1 solution")
+    if(printmessages) message("more than 1 solution")
 
     temp <- matrix(ncol=length(res), nrow = nrow(mat))
     rownames(temp) <- colnames(mat)
@@ -178,8 +179,11 @@ ISI <- function(mat, runs=5000) {
     }
   }
 
-  cat("I =", .incon(res[[1]]), "\n")
-  cat("SI =", .sincon(res[[1]]), "\n")
+  if(printmessages) {
+    cat("I =", .incon(res[[1]]), "\n")
+    cat("SI =", .sincon(res[[1]]), "\n")
+  }
+
 
   return(res)
 

@@ -4,12 +4,14 @@
 \alias{ISI}
 \title{de Vries' I&SI ranking}
 \usage{
-ISI(mat, runs = 5000)
+ISI(mat, runs = 5000, printmessages = TRUE)
 }
 \arguments{
 \item{mat}{square interaction matrix with winner in rows and losers in columns, for example the output from \code{\link{creatematrix}}}
 
 \item{runs}{numeric, number of iterations, by default \code{5000}}
+
+\item{printmessages}{logical, should the number of I and SI be printed (as well as if there is more than one solution). By default \code{TRUE}.}
 }
 \value{
 integer, the summed strength of inconsistencies in the matrix

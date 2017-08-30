@@ -10,7 +10,7 @@ To install the current development version from GitHub, use the following comman
 
 `devtools::install_github("gobbios/EloRating")`
 
-Since version 0.45-0, the package contains C++ code, which means that you need to have some extra tools installed if you want to install from GitHub:
+Since version 0.45-0, the package contains C++ code, which means that you need to have some extra tools installed on your system if you want to install the package directly from GitHub:
 
 + **Windows**: Rtools from  https://cran.r-project.org/bin/windows/Rtools/
 
