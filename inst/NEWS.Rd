@@ -1,6 +1,12 @@
 \name{NEWS}
 \title{News for Package \pkg{EloRating}}
 
+\section{Changes in version 0.46.2 (2018-02-17)}{
+	\itemize{
+	  removed makevars
+	}
+}
+
 \section{Changes in version 0.45.03 (2017-07-30)}{
 	\itemize{
 	  added new vignette (tutorial) based on R markdown
