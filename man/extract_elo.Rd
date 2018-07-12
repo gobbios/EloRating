@@ -23,10 +23,13 @@ extract_elo(eloobject, extractdate = eloobject$misc["maxDate"],
 \code{extractdate - 1}. By default (\code{daterange = 1}), the ratings of the single \code{extractdate} are returned. \code{daterange = 2} produces average ratings from \code{extractdate} and the day after, and so on...}
 }
 \value{
-named (IDs) vector of (average) Elo ratings
+named (IDs) vector of (average) Elo ratings, or an unnamed vector of ratings (if length of \code{extracte} is larger than 1)
 }
 \description{
 extract Elo ratings from elo object
+}
+\details{
+\code{extractdate} can be also a vector of dates. In this case, the \code{IDs} argument has to be either a vector of length 1 (i.e. a single individual) or a vector of the same length as \code{extractdate}. In the first case, the ratings for the same individual are returned on the dates specified in \code{extractdate}. In the second case, dates and IDs are matched, i.e. the rating of the individual on that date is returned in the same order as the dates/IDs vectors.
 }
 \examples{
 data(adv)
@@ -49,6 +52,16 @@ extract_elo(SEQ, "2010-01-30", IDs="g", NA.interpolate=TRUE)
 
 extract_elo(SEQ, "2010-01-10", daterange=5)
 extract_elo(SEQ, "2010-01-10", daterange=5, NA.interpolate=TRUE)
+
+# and for multiple dates and IDs
+dates <- sample(adv$Date, size = 10, replace = TRUE)
+ids <- sample(colnames(advpres)[2:8], size = 10, replace = TRUE)
+extract_elo(eloobject = SEQ, extractdate = dates, standardize = FALSE, IDs = ids)
+
+# and for multiple dates for a single IDs
+dates <- sample(adv$Date, size = 10, replace = TRUE)
+ids <- "b"
+extract_elo(eloobject = SEQ, extractdate = dates, standardize = FALSE, IDs = ids)
 }
 \author{
 Christof Neumann

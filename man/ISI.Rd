@@ -11,10 +11,10 @@ ISI(mat, runs = 5000, printmessages = TRUE)
 
 \item{runs}{numeric, number of iterations, by default \code{5000}}
 
-\item{printmessages}{logical, should the number of I and SI be printed (as well as if there is more than one solution). By default \code{TRUE}.}
+\item{printmessages}{logical, should the number of I and SI be printed (as well as a message if there is more than one solution). By default \code{TRUE}.}
 }
 \value{
-integer, the summed strength of inconsistencies in the matrix
+a list with the best possible matrix (or matrices if there is more than one best solution)
 }
 \description{
 de Vries' I&SI ranking
@@ -42,6 +42,9 @@ The I&SI algorithm (c.f. de Vries 1998) does not necessarily result in a unique 
 }
 \references{
 de Vries, H. 1998. Finding a dominance order most consistent with a linear hierarchy: a new procedure and review. Animal Behaviour, 55, 827-843. (\href{https://dx.doi.org/10.1006/anbe.1997.0708}{DOI: 10.1006/anbe.1997.0708})
+}
+\seealso{
+\code{\link{ISIranks}}
 }
 \author{
 Christof Neumann

@@ -4,9 +4,9 @@
 #'
 #' @param mat square interaction matrix with winner in rows and losers in columns, for example the output from \code{\link{creatematrix}}
 #' @param runs numeric, number of iterations, by default \code{5000}
-#' @param printmessages logical, should the number of I and SI be printed (as well as if there is more than one solution). By default \code{TRUE}.
+#' @param printmessages logical, should the number of I and SI be printed (as well as a message if there is more than one solution). By default \code{TRUE}.
 #'
-#' @return integer, the summed strength of inconsistencies in the matrix
+#' @return a list with the best possible matrix (or matrices if there is more than one best solution)
 #'
 #' @author Christof Neumann
 #'
@@ -17,6 +17,7 @@
 #' @details The I&SI algorithm (c.f. de Vries 1998) does not necessarily result in a unique order (see example below). If such a case occurs, all (equally good) solutions are returned as a list.
 #'
 #' @importFrom stats na.omit
+#' @seealso \code{\link{ISIranks}}
 #'
 #' @examples
 #' \dontrun{

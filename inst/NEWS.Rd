@@ -1,6 +1,12 @@
 \name{NEWS}
 \title{News for Package \pkg{EloRating}}
 
+\section{Changes in version 0.46.3 (2018-07-13)}{
+	\itemize{
+	  added possibility to \code{extract_elo()} to input vectors of dates and IDs
+	}
+}
+
 \section{Changes in version 0.46.2 (2018-02-17)}{
 	\itemize{
 	  removed makevars
