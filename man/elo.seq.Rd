@@ -6,7 +6,8 @@
 \usage{
 elo.seq(winner, loser, Date, draw = NULL, presence = NULL,
   startvalue = 1000, k = 100, normprob = TRUE, init = "average",
-  intensity = NULL, iterate = 0, runcheck = TRUE, progressbar = FALSE)
+  intensity = NULL, iterate = 0, runcheck = TRUE,
+  progressbar = FALSE)
 }
 \arguments{
 \item{winner}{either a factor or character vector with winner IDs of dyadic dominance interactions}

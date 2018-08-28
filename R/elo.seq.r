@@ -530,7 +530,8 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL, startvalu
                    "IAmedian", round(median(table(c(winner, loser))), 1),
                    "nIA", length(winner),
                    "IAperDay", round(mean(rowSums(nmat) / 2), 1),
-                   "draws", round(sum(draw) / length(draw), 2)
+                   "draws", round(sum(draw) / length(draw), 2),
+                   "normprob", as.numeric(normprob)
   ), ncol = 2, byrow = TRUE)
   rownames(misc) <- misc[, 1]; misc <- misc[, 2]
 
