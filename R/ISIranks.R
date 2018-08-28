@@ -25,18 +25,19 @@
 
 
 ISIranks <- function(x, sortbyID = TRUE) {
-
-  temp <- lapply(x, function(X) data.frame(id = colnames(X), ISIrank = 1:length(colnames(X))) )
-  temp <- lapply(temp, function(X) X[order(X[,1]), ] )
+  foo <- function(X) data.frame(id = colnames(X),
+                                ISIrank = 1:length(colnames(X)))
+  temp <- lapply(X = x, FUN = foo)
+  temp <- lapply(temp, function(X) X[order(X[, 1]), ] )
 
   res <- data.frame(ID = temp[[1]][, 1], avg = NA)
-  for(i in 1:length(temp)) {
+  for (i in 1:length(temp)) {
     res <- cbind(res, temp[[i]][, 2])
     colnames(res)[ncol(res)] <- paste0("rnkg", i)
   }
   res$avg <- rowMeans(res[, 3:ncol(res), drop = FALSE])
 
-  if(!sortbyID) res <- res[order(res$avg), ]
+  if (!sortbyID) res <- res[order(res$avg), ]
 
   rownames(res) <- NULL
 

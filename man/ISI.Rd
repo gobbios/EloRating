@@ -32,11 +32,11 @@ The I&SI algorithm (c.f. de Vries 1998) does not necessarily result in a unique 
 
  ##
  data(adv)
- # SEQ <- elo.seq(winner=adv$winner, loser=adv$loser, Date=adv$Date)
- # mat <- creatematrix(SEQ)
- # res <- ISI(mat)
+ SEQ <- elo.seq(winner=adv$winner, loser=adv$loser, Date=adv$Date)
+ mat <- creatematrix(SEQ)
+ res <- ISI(mat)
  # note that this matrix is not sufficiently linear to justify such ordering
- # h.index(mat)}
+ h.index(mat)}
 
 
 }

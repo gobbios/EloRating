@@ -14,11 +14,9 @@
 #'
 #' @examples
 #' data(bonobos)
-#' .incon(bonobos)
+#' EloRating:::.incon(bonobos)
 #'
 
-
 .incon <- function(mat) {
-  sum((mat - t(mat))[upper.tri(mat)] < 0, na.rm=T)
+  sum( (mat - t(mat))[upper.tri(mat)] < 0, na.rm = TRUE)
 }
-

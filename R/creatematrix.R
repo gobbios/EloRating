@@ -48,20 +48,20 @@
 
 creatematrix <- function(eloobject, daterange=NULL, drawmethod="omit", onlyinteracting=FALSE, winners, losers, draw=NULL) {
   # decide which data were supplied (elo object or winners/losers)
-  if(missing(eloobject)) {
-    if(!missing(winners) & !missing(losers)) funcmode <- "vec"
-    if(missing(winners) | missing(losers)) funcmode <- "incomplete"
+  if (missing(eloobject)) {
+    if (!missing(winners) & !missing(losers)) funcmode <- "vec"
+    if (missing(winners) | missing(losers)) funcmode <- "incomplete"
   }
-  if(!missing(eloobject)) {
-    if(!missing(winners) & !missing(losers)) funcmode <- "incomplete2"
-    if(missing(winners) | missing(losers)) funcmode <- "elo"
+  if (!missing(eloobject)) {
+    if (!missing(winners) & !missing(losers)) funcmode <- "incomplete2"
+    if (missing(winners) | missing(losers)) funcmode <- "elo"
   }
 
   # construct matrix depending on data supplied
 
-  if(funcmode == "elo") {
+  if (funcmode == "elo") {
     # set the date range in case it's not specified...
-    if(is.null(daterange[1])) {
+    if (is.null(daterange[1])) {
       daterange <- c(min(eloobject$truedates), max(eloobject$truedates))
     } else {
       daterange <- as.Date(daterange)
@@ -92,18 +92,18 @@ creatematrix <- function(eloobject, daterange=NULL, drawmethod="omit", onlyinter
     mat[rownames(xdata), colnames(xdata)] <- xdata
 
     # add ties/draws, but separate depending on how they were specified to be treated (if present in the data)
-    if(sum(dataseq$draw) > 0) {
+    if (sum(dataseq$draw) > 0) {
 
       xdata <- dataseq[dataseq$draw == TRUE, ]
       xdata <- table(xdata$winner, xdata$loser)
-      if(drawmethod == "0.5") {
-        xdata <- xdata/2
+      if (drawmethod == "0.5") {
+        xdata <- xdata / 2
         mat1[rownames(xdata), colnames(xdata)] <- xdata
         mat1 <- mat1 + t(mat1)
         mat <- mat + mat1
       }
 
-      if(drawmethod == "1") {
+      if (drawmethod == "1") {
         mat1[rownames(xdata), colnames(xdata)] <- xdata
         mat1 <- mat1 + t(mat1)
         mat <- mat + mat1
@@ -112,15 +112,15 @@ creatematrix <- function(eloobject, daterange=NULL, drawmethod="omit", onlyinter
     }
 
     # if "only interacting" was selected: remove those individuals from the matrix that have not interacted
-    if(onlyinteracting) {
+    if (onlyinteracting) {
       empty <- as.numeric(which(colSums(mat) + rowSums(mat) == 0))
-      if(length(empty) > 0) mat <- mat[-empty, -empty]
+      if (length(empty) > 0) mat <- mat[-empty, -empty]
     }
 
     return(mat)
   }
 
-  if(funcmode == "vec") {
+  if (funcmode == "vec") {
     # all individuals in data
     allids <- sort(unique(c(as.character(winners), as.character(losers))))
 
@@ -134,7 +134,7 @@ creatematrix <- function(eloobject, daterange=NULL, drawmethod="omit", onlyinter
     xt$losers <- as.character(xt$losers)
 
     # fill matrix
-    for(i in 1:nrow(xt)) {
+    for (i in 1:nrow(xt)) {
       mat[xt$winners[i], xt$losers[i]] <- xt$Freq[i]
     }
 
@@ -143,10 +143,10 @@ creatematrix <- function(eloobject, daterange=NULL, drawmethod="omit", onlyinter
   }
 
   # or return errors if data was supplied in incomplete or false way
-  if(funcmode == "incomplete") {
+  if (funcmode == "incomplete") {
     stop("you need supply either an elobject OR two vectors with winners and losers")
   }
-  if(funcmode == "incomplete2") {
+  if (funcmode == "incomplete2") {
     stop("you need supply either an elobject OR two vectors with winners and losers, not both at the same time")
   }
 

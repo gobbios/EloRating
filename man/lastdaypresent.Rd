@@ -24,9 +24,10 @@ the function can result in \code{NA} for two reasons. 1) the ID is not found in 
 }
 \examples{
 data(adv); data(advpres)
-SEQ <- elo.seq(winner=adv$winner, loser=adv$loser, Date=adv$Date, presence=advpres)
-lastdaypresent(SEQ, "all", refdate="2010-01-02")
-lastdaypresent(SEQ, "f", refdate="2010-02-02")
+SEQ <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date,
+               presence = advpres)
+lastdaypresent(SEQ, ID = "all", refdate = "2010-01-02")
+lastdaypresent(SEQ, ID = "f", refdate = "2010-02-02")
 }
 \author{
 Christof Neumann

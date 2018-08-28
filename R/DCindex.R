@@ -26,5 +26,5 @@ DCindex <- function(interactionmatrix) {
   lotri <- t(interactionmatrix)[upper.tri(interactionmatrix)]
   x <- cbind(uptri, lotri)
   x <- t(apply(x, 1, sort, decreasing = TRUE))
-  return((sum(x[, 1]) - sum(x[, 2])) / sum(x))
+  return( (sum(x[, 1]) - sum(x[, 2]) ) / sum(x))
 }

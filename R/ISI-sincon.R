@@ -16,13 +16,12 @@
 #'
 #' @examples
 #' data(bonobos)
-#' .sincon(bonobos)
+#' EloRating:::.sincon(bonobos)
 #'
 
 
 .sincon <- function(mat) {
   dmat <- .diffmat(mat)
-  sum(dmat[upper.tri(mat)][mat[upper.tri(mat)] < t(mat)[upper.tri(mat)]], na.rm=T)
+  sum(dmat[upper.tri(mat)][mat[upper.tri(mat)] < t(mat)[upper.tri(mat)]],
+      na.rm = TRUE)
 }
-
-

@@ -62,55 +62,54 @@ h.index <- function(interactionmatrix, loops = 1000){
 
 
   # diverge depending on existence of unknown relationships
-  if(unknown > 0) {
-    for(i in 1:loops) {
+  if (unknown > 0) {
+    for (i in 1:loops) {
       rmat <- ozmat #ozmat2
-      rmat[mu][up] <- sample(s, unknown, replace=TRUE)
+      rmat[mu][up] <- sample(s, unknown, replace = TRUE)
       rmat <- t(rmat)
       rmat[mu] <- (onemat - t(rmat))[mu]
-      h_0[i] <- (12 / (N^3 - N)) * sum((rowSums(rmat) - (0.5 * (N - 1)))^2)
+      h_0[i] <- (12 / (N ^ 3 - N)) * sum( (rowSums(rmat) - (0.5 * (N - 1))) ^ 2 )
 
       rmat <- zeromat
       rmat[mu] <- sample(s, d, replace = TRUE)
       rmat <- t(rmat)
       rmat[mu] <- (onemat - t(rmat))[mu]
-      h_r[i] <- (12 / (N^3 - N)) * sum((rowSums(rmat) - (0.5 * (N - 1)))^2)
+      h_r[i] <- (12 / (N ^ 3 - N)) * sum( (rowSums(rmat) - (0.5 * (N - 1))) ^ 2 )
 
     }
 
     pval <- sum(h_r >= h_0) / loops
-
   }
 
-  if(unknown == 0) {
-    h_0[] <- (12 / (N^3 - N)) * sum((rowSums(ozmat) - (0.5 * (N - 1)))^2)
+  if (unknown == 0) {
+    h_0[] <- (12 / (N ^ 3 - N)) * sum( (rowSums(ozmat) - (0.5 * (N - 1))) ^ 2 )
     for (i in 1:loops) {
       rmat <- zeromat
       rmat[mu] <- sample(s, d, replace = TRUE)
       rmat <- t(rmat)
       rmat[mu] <- (onemat - t(rmat))[mu]
-      h_r[i] <- (12 / (N^3 - N)) * sum((rowSums(rmat) - (0.5 * (N - 1)))^2)
+      h_r[i] <- (12 / (N ^ 3 - N)) * sum( (rowSums(rmat) - (0.5 * (N - 1))) ^ 2 )
 
     }
-    pval <- sum(h_r >= h_0)/loops #; mean(h_0); mean(h_r)
-
+    pval <- sum(h_r >= h_0) / loops
   }
 
   ozmat[mat - tmat == 0] <- 0.5
   diag(ozmat) <- 0
-  temp <- (rowSums(ozmat) - (0.5 * (N - 1)))^2
+  temp <- (rowSums(ozmat) - (0.5 * (N - 1))) ^ 2
 
-  h_Index <- (12 / (N^3 - N)) * sum(temp)
+  h_Index <- (12 / (N ^ 3 - N)) * sum(temp)
 
-  ifelse(unknown < 1, h_index_devries <- h_Index, h_index_devries <- h_Index + ((6 * unknown) / (N^3 - N)))
+  ifelse(unknown < 1, h_index_devries <- h_Index, h_index_devries <- h_Index + ( (6 * unknown) / (N ^ 3 - N)) )
 
   expected_h <- mean(h_r)
 
-  results <- data.frame(c("N", "h index", "h' index","expected h", "p right", "randomizations", "tied", "unknown"), c(N,round(h_Index,4),round(h_index_devries,4),round(expected_h,4),round(pval,4),loops, tied, unknown)); colnames(results)<-c("variable", "value")
+  results <- data.frame(c("N", "h index", "h' index", "expected h", "p right", "randomizations", "tied", "unknown"),
+                        c(N, round(h_Index, 4), round(h_index_devries, 4), round(expected_h, 4), round(pval, 4), loops, tied, unknown))
+  colnames(results) <- c("variable", "value")
 
 
-  if(results$value[5] == 0) results$value[5] <- 1 / loops
+  if (results$value[5] == 0) results$value[5] <- 1 / loops
 
   return(results)
 }
-

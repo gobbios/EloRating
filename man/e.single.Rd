@@ -24,17 +24,17 @@ integer vector of length 2 with updated ratings of first and second individual a
 calculate/update Elo ratings for a single dyadic interaction
 }
 \examples{
-e.single(ELO1old=1200, ELO2old=1000, outcome=1, k=100)
+e.single(ELO1old = 1200, ELO2old = 1000, outcome = 1, k = 100)
 # same as before
-e.single(ELO1old=1000, ELO2old=1200, outcome=2, k=100)
+e.single(ELO1old = 1000, ELO2old = 1200, outcome = 2, k = 100)
 # an undecided interaction
-e.single(ELO1old=1200, ELO2old=1000, outcome=0, k=100)
+e.single(ELO1old = 1200, ELO2old = 1000, outcome = 0, k = 100)
 # if rating differences are too big, no change occurs
 # if higher-rated individual wins
-e.single(ELO1old=2000, ELO2old=1000, outcome=1, k=100)
+e.single(ELO1old = 2000, ELO2old = 1000, outcome = 1, k = 100)
 # same as before but lower-rated individual wins and
 # therefore wins maximum number of points possible (i.e. k)
-e.single(ELO1old=2000, ELO2old=1000, outcome=2, k=100)
+e.single(ELO1old = 2000, ELO2old = 1000, outcome = 2, k = 100)
 
 }
 \references{

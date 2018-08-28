@@ -4,8 +4,9 @@
 \alias{randomsequence}
 \title{random dominance interaction sequence}
 \usage{
-randomsequence(nID = 10, avgIA = 20, startdate = as.Date("2000-01-01"),
-  alphabet = T, reversals = 0.1, ties = NULL, presence = NULL)
+randomsequence(nID = 10, avgIA = 20,
+  startdate = as.Date("2000-01-01"), alphabet = TRUE,
+  reversals = 0.1, ties = NULL, presence = NULL)
 }
 \arguments{
 \item{nID}{integer, number of IDs, must be less than 2601}
@@ -32,13 +33,14 @@ create a random dominance sequence for testing or simulations
 }
 \examples{
 IA <- randomsequence()
-# SEQ <- elo.seq(winner=IA$seqdat$winner, loser=IA$seqdat$loser, Date=IA$seqdat$Date)
-# stab.elo(SEQ)
+SEQ <- elo.seq(winner = IA$seqdat$winner, loser = IA$seqdat$loser, Date = IA$seqdat$Date,
+               runcheck = FALSE, progressbar = FALSE)
+stab.elo(SEQ)
 #
-IA <- randomsequence(presence=c(0.5,0.5))
-# SEQ <- elo.seq(winner=IA$seqdat$winner, loser=IA$seqdat$loser, Date=IA$seqdat$Date,
-# presence=IA$pres)
-# stab.elo(SEQ)
+IA <- randomsequence(presence = c(0.5, 0.5))
+SEQ <- elo.seq(winner = IA$seqdat$winner, loser = IA$seqdat$loser, Date = IA$seqdat$Date,
+               presence = IA$pres, runcheck = FALSE, progressbar = FALSE)
+stab.elo(SEQ)
 
 }
 \author{

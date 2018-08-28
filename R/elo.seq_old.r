@@ -52,7 +52,7 @@
 #'
 #' @examples
 #' data(adv)
-#' SEQ <- .elo.seq_old(winner=adv$winner, loser=adv$loser, Date=adv$Date)
+#' SEQ <- EloRating:::.elo.seq_old(winner=adv$winner, loser=adv$loser, Date=adv$Date)
 #' summary(SEQ)
 #'
 

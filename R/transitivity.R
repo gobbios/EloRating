@@ -24,14 +24,16 @@ transitivity <- function(m, runs = 2000, returnfig = FALSE) {
   # requires statnet package
   # one modification: for randomizations, also the weighting vector is used
 
-  int.to.dom <- function(x) { ((x > t(x)) & (x + t(x) > 0)) + 0 }
+  int.to.dom <- function(x) {
+    ( (x > t(x) ) & ( x + t(x) > 0) ) + 0
+  }
 
   res <- rep(NA, 4)
   names(res) <- c("Pt", "ttri", "p", "runs")
   res[4] <- runs
 
-  weightfac <- c(0,0,0,0,0,0,0,0,1,0,0,1,1,0.5,0.75,0.75)
-  sumfac <- c(0,0,0,0,0,0,0,0,1,1,0,1,1,1,1,1)
+  weightfac <- c(0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0.5, 0.75, 0.75)
+  sumfac <- c(0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1)
 
   tri <- triad.census(network(int.to.dom(m), directed = TRUE))
 
@@ -58,18 +60,20 @@ transitivity <- function(m, runs = 2000, returnfig = FALSE) {
   Pt <- sum(triads * weightfac) / sum(triads * sumfac)
   rPt <- numeric(runs)
 
-  j=0
-  while(j < runs){
+  # j=0
+  while (j < runs){
     r <- rguman(1, nv = n, mut = dyads[1], asym = dyads[2], null = dyads[3])
     r.triad <- triad.census(r)
     rPt[j + 1] <- sum(r.triad * weightfac) / sum(r.triad * sumfac)
-    if(is.na(rPt[j + 1])) next else j <- j + 1
+    if (is.na(rPt[j + 1])) next else j <- j + 1
   }
   res[3] <- length(rPt[rPt >= Pt]) / runs
 
-  if(returnfig) {
+  if (returnfig) {
     x <- hist(rPt, plot = FALSE)
-    hist(rPt, main = "expected triangle transitivity", xlab = "triangle transitivity", yaxs = "i", las = 1, xlim = c(-0.01, 1.01), xaxs = "i", ylim = c(0, max(x$counts) * 1.05))
+    hist(rPt, main = "expected triangle transitivity", xlab = "triangle transitivity",
+         yaxs = "i", las = 1, xlim = c(-0.01, 1.01), xaxs = "i",
+         ylim = c(0, max(x$counts) * 1.05))
     box()
     axis(1, at = Pt, col = "red", labels = NA, lwd.ticks = 5, tcl = 2)
   }
@@ -113,4 +117,3 @@ transitivity <- function(m, runs = 2000, returnfig = FALSE) {
 
   return(round(res, 3))
 }
-

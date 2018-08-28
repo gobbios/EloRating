@@ -20,7 +20,7 @@
 
 prunk <- function(eloobject, daterange=NULL) {
 
-  if(class(eloobject) == "elo") {
+  if (class(eloobject) == "elo") {
     # get all ids, the sequence, and the presence matrix
     xd <- eloobject$logtable
     xd$Date <- as.Date(eloobject$truedates[xd[, 1]])
@@ -28,11 +28,11 @@ prunk <- function(eloobject, daterange=NULL) {
     pres2 <- eloobject$pmat
 
     # and set the date range in case it's not specified...
-    if(is.null(daterange[1])) {
+    if (is.null(daterange[1])) {
       daterange <- c(min(xd$Date), max(xd$Date))
     } else {
       daterange <- as.Date(daterange)
-      }
+    }
 
     # and limit the data sets accordingly
     xd <- xd[xd$Date <= daterange[2] & xd$Date >= daterange[1], ]
@@ -40,7 +40,7 @@ prunk <- function(eloobject, daterange=NULL) {
     pres <- pres[pres$Date <= daterange[2] & pres$Date >= daterange[1], ]
 
     # and remove columns of IDs that were not yet present
-    if(0 %in% colSums(pres2)) {
+    if (0 %in% colSums(pres2)) {
       pres2 <- pres2[, -c(which(colSums(pres2) == 0))]
       ids <- colnames(pres2)
       pres <- pres[, c("Date", ids)]
@@ -54,9 +54,9 @@ prunk <- function(eloobject, daterange=NULL) {
 
     # create the matrix, and make sure also IDs that didn't interact but were present are included
     mat <- creatematrix(eloobject, drawmethod = "omit")
-    if(length(intersect(colnames(pres2), colnames(mat))) < length(colnames(pres2))) {
+    if (length(intersect(colnames(pres2), colnames(mat))) < length(colnames(pres2))) {
       add <- colnames(pres2)[which(!colnames(pres2) %in% colnames(mat))]
-      for(i in 1:length(add)) {
+      for (i in 1:length(add)) {
         mat <- cbind(mat, 0); colnames(mat)[ncol(mat)] <- add[i]
         mat <- rbind(mat, 0); rownames(mat)[nrow(mat)] <- add[i]
       }
@@ -65,8 +65,8 @@ prunk <- function(eloobject, daterange=NULL) {
     mat2 <- mat
     # create table of dyads and check which of the possible dyads were never coresident...
     co <- cbind(t(combn(colnames(mat), 2)), NA)
-    for(i in 1:nrow(co)) {
-      if(max(rowSums(pres[, co[i, 1:2]])) < 2) {
+    for (i in 1:nrow(co)) {
+      if (max(rowSums(pres[, co[i, 1:2]])) < 2) {
         mat2[co[i, 1], co[i, 2]] <- mat2[co[i, 2], co[i, 1]] <- NA
       }
     }
@@ -87,7 +87,7 @@ prunk <- function(eloobject, daterange=NULL) {
 
   }
 
-  if(class(eloobject)=="matrix") {
+  if (class(eloobject) == "matrix") {
     up <- eloobject[upper.tri(eloobject)]
     lo <- t(eloobject)[upper.tri(eloobject)]
     res <- c(round(sum(up + lo == 0) / length(lo), 3), length(lo), NA, NA)
@@ -95,6 +95,4 @@ prunk <- function(eloobject, daterange=NULL) {
   }
 
   return(res)
-
 }
-
