@@ -51,15 +51,3 @@ List fastelo(CharacterVector WINNER, CharacterVector LOSER, CharacterVector ALLI
 }
 
 
-/*** R
-set.seed(123)
-winners <- sample(letters[1:5], 20, replace = TRUE)
-losers <- sample(letters[1:5], 20, replace = TRUE)
-allids <- letters[1:5]
-stvals <- rep(1000, 5)
-
-fastelo(WINNER = winners, LOSER = losers, ALLIDS = allids, KVALS = rep(100, length(winners)), STARTVALUES = rep(1000, 5),
-        NORMPROB = TRUE)
-fastelo(WINNER = winners, LOSER = losers, ALLIDS = allids, KVALS = rep(100, length(winners)), STARTVALUES = rep(1000, 5),
-        NORMPROB = FALSE)
-*/

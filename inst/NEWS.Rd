@@ -1,35 +1,43 @@
 \name{NEWS}
 \title{News for Package \pkg{EloRating}}
 
+\section{Changes in version 0.46.4 (2018-08-30)}{
+	\itemize{
+	  \item added reference management with \code{Rdpack}
+	  \item added multiple functions to optimize k parameter (\code{\link{fastelo}}, \code{\link{likelo}}, \code{\link{optimizek}})
+	}
+}
+
+
 \section{Changes in version 0.46.3 (2018-07-13)}{
 	\itemize{
-	  added possibility to \code{extract_elo()} to input vectors of dates and IDs
+	  \item added possibility to \code{\link{extract_elo}} to input vectors of dates and IDs
 	}
 }
 
 \section{Changes in version 0.46.2 (2018-02-17)}{
 	\itemize{
-	  removed makevars
+	  \item removed makevars
 	}
 }
 
 \section{Changes in version 0.45.03 (2017-07-30)}{
 	\itemize{
-	  added new vignette (tutorial) based on R markdown
-    minor fixes related to package renaming
+	  \item added new vignette (tutorial) based on R markdown
+    \item minor fixes related to package renaming
 	}
 }
 
 \section{Changes in version 0.45.02 (2017-07-30)}{
 	\itemize{
-	  renamed the package back to \code{EloRating}
-	  removed vignette to avoid conflicts
+	  \item renamed the package back to \code{EloRating}
+	  \item removed vignette to avoid conflicts
 	}
 }
 
 \section{Changes in version 0.45.01 (2017-07-30)}{
 	\itemize{
-	  merged \code{\link{elo.seq.customstart}} into \code{\link{elo.seq}} (the previous version is available via \code{EloRating:::.elo.seq_old})
+	  \item merged \code{\link{elo.seq.customstart}} into \code{\link{elo.seq}} (the previous version is available via \code{EloRating:::.elo.seq_old})
 	}
 }
 
