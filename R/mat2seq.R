@@ -27,10 +27,10 @@ mat2seq <- function(mat) {
   # create sequence
   res <- mat2seqint(mat)
   # return data frame either with ID names (if there are column names) or with indices
-  if(is.null(colnames(mat))) {
-    res <- data.frame(winner=res[[1]], loser=res[[2]])
+  if (is.null(colnames(mat))) {
+    res <- data.frame(winner = res[[1]], loser = res[[2]])
   } else {
-    res <- data.frame(winner=colnames(mat)[res[[1]]], loser=colnames(mat)[res[[2]]])
+    res <- data.frame(winner = colnames(mat)[res[[1]]], loser = colnames(mat)[res[[2]]])
   }
   return(res)
 }

@@ -2,12 +2,13 @@
 % Please edit documentation in R/elo.seq.R
 \name{elo.seq}
 \alias{elo.seq}
+\alias{fastelo}
 \title{calculate Elo ratings}
 \usage{
-elo.seq(winner, loser, Date, draw = NULL, presence = NULL,
-  startvalue = 1000, k = 100, normprob = TRUE, init = "average",
-  intensity = NULL, iterate = 0, runcheck = TRUE,
-  progressbar = FALSE)
+elo.seq(winner, loser, Date, draw = NULL, presence = NULL, startvalue = 1000,
+               k = 100, normprob = TRUE, init = "average", intensity = NULL,
+               iterate = 0, runcheck = TRUE, progressbar = FALSE)
+fastelo(WINNER, LOSER, ALLIDS, KVALS, STARTVALUES, NORMPROB)
 }
 \arguments{
 \item{winner}{either a factor or character vector with winner IDs of dyadic dominance interactions}
@@ -38,6 +39,18 @@ elo.seq(winner, loser, Date, draw = NULL, presence = NULL,
 \item{runcheck}{logical, should several checks regarding data integrety be performed, by default \code{TRUE}. See \code{\link{seqcheck}}}
 
 \item{progressbar}{logical, should progress bars be displayed, by default \code{progressbar=TRUE}}
+
+\item{WINNER}{same as \code{winner} for use in \code{fastelo()}}
+
+\item{LOSER}{same as \code{loser} for use in \code{fastelo()}}
+
+\item{ALLIDS}{character vector, contains all the indivuals IDS}
+
+\item{KVALS}{numeric vector of the same length \code{WINNER}, i.e. one k value for each interaction}
+
+\item{STARTVALUES}{numeric vector of the same length as \code{ALLIDS}, i.e. one start value for each individual}
+
+\item{NORMPROB}{logical, same as \code{normprob} for use in \code{fastelo()}}
 }
 \value{
 An object of class \code{elo}, which is list with 10 items that serves as basis to extract relevant information:
@@ -51,44 +64,70 @@ An object of class \code{elo}, which is list with 10 items that serves as basis 
 \item{truedates}{vector of class \code{Date} covering the ranges of dates in the dataset}
 \item{misc}{various}
 \item{allids}{a (sorted) character vector with all IDs that occur in the dataset}
+
+\code{fastelo()} returns a list with two items:
+\item{1}{numeric vector of the final ratings in the same order as \code{ALLIDS}}
+\item{2}{numeric vector with winning probabilities in the same order as the interactions were supplied}
 }
 \description{
 calculate Elo ratings from a sequence of dominance interactions
 }
 \details{
-the presence 'matrix' is actually an object of class \code{data.frame} containing information about wether an individual was present on a given day or not. The first column represents the dates, running at least from the date of the earliest interaction until at least the date of the last interaction with one line per day (regardless of whether there were actually interactions observed on each day). Further, each individual is represented as a column in which "1" indicates an individual was present on the row-date and a "0" indicates the individuals absence on this date. \code{NA}s are not allowed. See \code{\link{advpres}} for an example.
+The presence 'matrix' is actually an object of class \code{data.frame} containing information about wether an individual was present on a given day or not. The first column represents the dates, running at least from the date of the earliest interaction until at least the date of the last interaction with one line per day (regardless of whether there were actually interactions observed on each day). Further, each individual is represented as a column in which "1" indicates an individual was present on the row-date and a "0" indicates the individuals absence on this date. \code{NA}s are not allowed. See \code{\link{advpres}} for an example.
+
+The function \code{fastelo()} is a stripped-down version of \code{elo.seq()}, which performs only the most basic calculations while ignoring anything that is date and presence related. Neither does it perform data checks. In other words, it just calculates ratings based on the sequence. It's most useful in simulations, for example when estimating optimal k parameters. Its main advantage is its speed, which is substantially faster than \code{elo.seq()}. Note that currently there is no support for tied interactions. The main difference to note is that both, start values and k values have to be supplied as vectors with one value for each individual and interaction respectively.
 }
 \examples{
 data(adv)
-SEQ <- elo.seq(winner=adv$winner, loser=adv$loser, Date=adv$Date)
-summary(SEQ)
+res <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date)
+summary(res)
 
 # with custom k
 data(adv2)
 table(adv2$intensity)
 
-myks <- list(displace=20, fight=200)
-SEQ <- elo.seq(winner=adv2$winner, loser=adv2$loser, Date=adv2$Date,
-                           k = myks, intensity = adv2$intensity)
-extract_elo(SEQ)
-summary(SEQ)
+myks <- list(displace = 20, fight = 200)
+res <- elo.seq(winner = adv2$winner, loser = adv2$loser, Date = adv2$Date,
+               k = myks, intensity = adv2$intensity)
+extract_elo(res)
+summary(res)
 
 # with custom start values
 # if we know prior ranks:
-myranks <- 1:7; names(myranks) <- letters[1:7]
+myranks <- 1:7
+names(myranks) <- letters[1:7]
 mypriors <- createstartvalues(myranks, shape = 0.3)
-SEQ <- elo.seq(winner=adv2$winner, loser=adv2$loser, Date=adv2$Date,
-                           k = myks, intensity = adv2$intensity, startvalue = mypriors$res)
-extract_elo(SEQ)
+res <- elo.seq(winner = adv2$winner, loser = adv2$loser, Date = adv2$Date,
+               k = myks, intensity = adv2$intensity, startvalue = mypriors$res)
+extract_elo(res)
+
+# compare elo.seq and fastelo
+xdata <- randomsequence(10, 500)
+allids <- colnames(xdata$pres)[2:ncol(xdata$pres)]
+winner <- xdata$seqdat$winner
+loser <- xdata$seqdat$loser
+Date <- xdata$seqdat$Date
+k <- rep(100, length(winner))
+svals <- rep(1000, length(allids))
+
+res1 <- fastelo(WINNER = winner, LOSER = loser, ALLIDS = allids, KVALS = k,
+                STARTVALUES = svals, NORMPROB = TRUE)[[1]]
+names(res1) <- allids
+res1 <- sort(res1, decreasing = TRUE)
+res2 <- extract_elo(elo.seq(winner = winner, loser = loser, Date = Date,
+                            startvalue = 1000, k = 100, normprob = TRUE,
+                            runcheck = FALSE))
+res1
+res2
 }
 \references{
-Elo, A. E. 1978. The Rating of Chess Players, Past and Present. New York: Arco.
+\insertRef{elo1978}{EloRating}
 
-Albers, P. C. H. & de Vries, H. 2001. Elo-rating as a tool in the sequential estimation of dominance strengths. Animal Behaviour, 61, 489-495. (\href{https://doi.org/10.1006/anbe.2000.1571}{DOI: 10.1006/anbe.2000.1571})
+\insertRef{albers2001}{EloRating}
 
-Neumann, C., Duboscq, J., Dubuc, C., Ginting, A., Irwan, A. M., Agil, M., Widdig, A. & Engelhardt, A. 2011. Assessing dominance hierarchies: validation and advantages of progressive evaluation with Elo-rating. Animal Behaviour, 82, 911-921. (\href{https://doi.org/10.1016/j.anbehav.2011.07.016}{DOI: 10.1016/j.anbehav.2011.07.016})
+\insertRef{neumann2011}{EloRating}
 
-Newton-Fisher, N. 2017.  Modeling social dominance: Elo-ratings, prior history, and the intensity of aggression. International Journal of Primatology, 38, 427-447. (\href{https://doi.org/10.1007/s10764-017-9952-2}{DOI: 10.1007/s10764-017-9952-2})
+\insertRef{newton-fisher2017a}{EloRating}
 }
 \author{
 Christof Neumann and Lars Kulik

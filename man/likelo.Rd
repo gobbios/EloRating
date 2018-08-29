@@ -2,7 +2,7 @@
 % Please edit documentation in R/likelo.R
 \name{likelo}
 \alias{likelo}
-\title{Title (log) likelihood of Elo-rating model}
+\title{(log) likelihood of Elo-rating model}
 \usage{
 likelo(eloobject, daterange = NULL, burnin = NULL, ll = TRUE)
 }
@@ -19,7 +19,7 @@ likelo(eloobject, daterange = NULL, burnin = NULL, ll = TRUE)
 numeric of length 1, the log likelihood
 }
 \description{
-Title (log) likelihood of Elo-rating model
+(log) likelihood of Elo-rating model
 }
 \details{
 This function returns the (log) likelihood of a dominance interaction sequence. The likelihood is the product of all winning probabilities (for each interaction).

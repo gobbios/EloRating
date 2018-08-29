@@ -60,7 +60,7 @@ transitivity <- function(m, runs = 2000, returnfig = FALSE) {
   Pt <- sum(triads * weightfac) / sum(triads * sumfac)
   rPt <- numeric(runs)
 
-  # j=0
+  j <- 0
   while (j < runs){
     r <- rguman(1, nv = n, mut = dyads[1], asym = dyads[2], null = dyads[3])
     r.triad <- triad.census(r)

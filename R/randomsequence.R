@@ -33,12 +33,12 @@
 #' IA <- randomsequence()
 #' SEQ <- elo.seq(winner = IA$seqdat$winner, loser = IA$seqdat$loser, Date = IA$seqdat$Date,
 #'                runcheck = FALSE, progressbar = FALSE)
-#' stab.elo(SEQ)
+#' stab_elo(SEQ)
 #' #
 #' IA <- randomsequence(presence = c(0.5, 0.5))
 #' SEQ <- elo.seq(winner = IA$seqdat$winner, loser = IA$seqdat$loser, Date = IA$seqdat$Date,
 #'                presence = IA$pres, runcheck = FALSE, progressbar = FALSE)
-#' stab.elo(SEQ)
+#' stab_elo(SEQ)
 #'
 #' @export
 

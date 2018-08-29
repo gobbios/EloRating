@@ -1,7 +1,11 @@
 #' calculate Elo ratings
 #'
 #' calculate Elo ratings from a sequence of dominance interactions
-#'
+#' @aliases fastelo
+#' @usage elo.seq(winner, loser, Date, draw = NULL, presence = NULL, startvalue = 1000,
+#'                k = 100, normprob = TRUE, init = "average", intensity = NULL,
+#'                iterate = 0, runcheck = TRUE, progressbar = FALSE)
+#' fastelo(WINNER, LOSER, ALLIDS, KVALS, STARTVALUES, NORMPROB)
 #' @param winner either a factor or character vector with winner IDs of dyadic dominance interactions
 #' @param loser either a factor or character vector with loser IDs of dyadic dominance interactions
 #' @param Date character vector of form "YYYY-MM-DD" with the date of the respective interaction
@@ -18,8 +22,15 @@
 #' @param iterate not yet implemented
 #' @param runcheck logical, should several checks regarding data integrety be performed, by default \code{TRUE}. See \code{\link{seqcheck}}
 #' @param progressbar logical, should progress bars be displayed, by default \code{progressbar=TRUE}
+#' @param WINNER same as \code{winner} for use in \code{fastelo()}
+#' @param LOSER same as \code{loser} for use in \code{fastelo()}
+#' @param ALLIDS character vector, contains all the indivuals IDS
+#' @param KVALS numeric vector of the same length \code{WINNER}, i.e. one k value for each interaction
+#' @param STARTVALUES numeric vector of the same length as \code{ALLIDS}, i.e. one start value for each individual
+#' @param NORMPROB logical, same as \code{normprob} for use in \code{fastelo()}
+#' @details The presence 'matrix' is actually an object of class \code{data.frame} containing information about wether an individual was present on a given day or not. The first column represents the dates, running at least from the date of the earliest interaction until at least the date of the last interaction with one line per day (regardless of whether there were actually interactions observed on each day). Further, each individual is represented as a column in which "1" indicates an individual was present on the row-date and a "0" indicates the individuals absence on this date. \code{NA}s are not allowed. See \code{\link{advpres}} for an example.
 #'
-#' @details the presence 'matrix' is actually an object of class \code{data.frame} containing information about wether an individual was present on a given day or not. The first column represents the dates, running at least from the date of the earliest interaction until at least the date of the last interaction with one line per day (regardless of whether there were actually interactions observed on each day). Further, each individual is represented as a column in which "1" indicates an individual was present on the row-date and a "0" indicates the individuals absence on this date. \code{NA}s are not allowed. See \code{\link{advpres}} for an example.
+#' The function \code{fastelo()} is a stripped-down version of \code{elo.seq()}, which performs only the most basic calculations while ignoring anything that is date and presence related. Neither does it perform data checks. In other words, it just calculates ratings based on the sequence. It's most useful in simulations, for example when estimating optimal k parameters. Its main advantage is its speed, which is substantially faster than \code{elo.seq()}. Note that currently there is no support for tied interactions. The main difference to note is that both, start values and k values have to be supplied as vectors with one value for each individual and interaction respectively.
 #'
 #' @return An object of class \code{elo}, which is list with 10 items that serves as basis to extract relevant information:
 #' \item{mat}{a date by ID-\code{matrix} with raw Elo ratings}
@@ -33,13 +44,18 @@
 #' \item{misc}{various}
 #' \item{allids}{a (sorted) character vector with all IDs that occur in the dataset}
 #'
-#' @references Elo, A. E. 1978. The Rating of Chess Players, Past and Present. New York: Arco.
+#' \code{fastelo()} returns a list with two items:
+#' \item{1}{numeric vector of the final ratings in the same order as \code{ALLIDS}}
+#' \item{2}{numeric vector with winning probabilities in the same order as the interactions were supplied}
 #'
-#' Albers, P. C. H. & de Vries, H. 2001. Elo-rating as a tool in the sequential estimation of dominance strengths. Animal Behaviour, 61, 489-495. (\href{https://doi.org/10.1006/anbe.2000.1571}{DOI: 10.1006/anbe.2000.1571})
+#' @references
+#' \insertRef{elo1978}{EloRating}
 #'
-#' Neumann, C., Duboscq, J., Dubuc, C., Ginting, A., Irwan, A. M., Agil, M., Widdig, A. & Engelhardt, A. 2011. Assessing dominance hierarchies: validation and advantages of progressive evaluation with Elo-rating. Animal Behaviour, 82, 911-921. (\href{https://doi.org/10.1016/j.anbehav.2011.07.016}{DOI: 10.1016/j.anbehav.2011.07.016})
+#' \insertRef{albers2001}{EloRating}
 #'
-#' Newton-Fisher, N. 2017.  Modeling social dominance: Elo-ratings, prior history, and the intensity of aggression. International Journal of Primatology, 38, 427-447. (\href{https://doi.org/10.1007/s10764-017-9952-2}{DOI: 10.1007/s10764-017-9952-2})
+#' \insertRef{neumann2011}{EloRating}
+#'
+#' \insertRef{newton-fisher2017a}{EloRating}
 #'
 #' @author Christof Neumann and Lars Kulik
 #'
@@ -48,33 +64,56 @@
 #' @importFrom zoo na.approx
 #' @importFrom utils setTxtProgressBar
 #' @importFrom utils txtProgressBar
+#' @importFrom Rdpack reprompt
 #'
 #' @examples
 #' data(adv)
-#' SEQ <- elo.seq(winner=adv$winner, loser=adv$loser, Date=adv$Date)
-#' summary(SEQ)
+#' res <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date)
+#' summary(res)
 #'
 #' # with custom k
 #' data(adv2)
 #' table(adv2$intensity)
 #'
-#' myks <- list(displace=20, fight=200)
-#' SEQ <- elo.seq(winner=adv2$winner, loser=adv2$loser, Date=adv2$Date,
-#'                            k = myks, intensity = adv2$intensity)
-#' extract_elo(SEQ)
-#' summary(SEQ)
+#' myks <- list(displace = 20, fight = 200)
+#' res <- elo.seq(winner = adv2$winner, loser = adv2$loser, Date = adv2$Date,
+#'                k = myks, intensity = adv2$intensity)
+#' extract_elo(res)
+#' summary(res)
 #'
 #' # with custom start values
 #' # if we know prior ranks:
-#' myranks <- 1:7; names(myranks) <- letters[1:7]
+#' myranks <- 1:7
+#' names(myranks) <- letters[1:7]
 #' mypriors <- createstartvalues(myranks, shape = 0.3)
-#' SEQ <- elo.seq(winner=adv2$winner, loser=adv2$loser, Date=adv2$Date,
-#'                            k = myks, intensity = adv2$intensity, startvalue = mypriors$res)
-#' extract_elo(SEQ)
-#' @export
+#' res <- elo.seq(winner = adv2$winner, loser = adv2$loser, Date = adv2$Date,
+#'                k = myks, intensity = adv2$intensity, startvalue = mypriors$res)
+#' extract_elo(res)
 #'
+#' # compare elo.seq and fastelo
+#' xdata <- randomsequence(10, 500)
+#' allids <- colnames(xdata$pres)[2:ncol(xdata$pres)]
+#' winner <- xdata$seqdat$winner
+#' loser <- xdata$seqdat$loser
+#' Date <- xdata$seqdat$Date
+#' k <- rep(100, length(winner))
+#' svals <- rep(1000, length(allids))
+#'
+#' res1 <- fastelo(WINNER = winner, LOSER = loser, ALLIDS = allids, KVALS = k,
+#'                 STARTVALUES = svals, NORMPROB = TRUE)[[1]]
+#' names(res1) <- allids
+#' res1 <- sort(res1, decreasing = TRUE)
+#' res2 <- extract_elo(elo.seq(winner = winner, loser = loser, Date = Date,
+#'                             startvalue = 1000, k = 100, normprob = TRUE,
+#'                             runcheck = FALSE))
+#' res1
+#' res2
+#' @export
 
-elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL, startvalue = 1000, k = 100, normprob = TRUE, init = "average", intensity = NULL, iterate = 0, runcheck = TRUE, progressbar = FALSE) {
+elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
+                    startvalue = 1000, k = 100, normprob = TRUE,
+                    init = "average", intensity = NULL, iterate = 0,
+                    runcheck = TRUE, progressbar = FALSE) {
 
   if(runcheck) {
     rc <- seqcheck(winner, loser, Date, draw, presence)
@@ -87,9 +126,9 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL, startvalu
   # save original k
   ok <- k
   # attribute k values to different intensities if specified
-  if(is.list(k) & is.null(intensity)) stop("no intensity column found, or no k-list supplied")
+  if (is.list(k) & is.null(intensity)) stop("no intensity column found, or no k-list supplied")
 
-  if(is.list(k) & !is.null(intensity)) {
+  if (is.list(k) & !is.null(intensity)) {
     k <- as.numeric(unlist(k)[match(intensity, names(k))])
   } else {
     k <- rep(k, length(winner))
@@ -168,7 +207,11 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL, startvalu
   ###########################
 
   # create the old log table (in a different layout)
-  logtable <- data.frame(Date = ndat, winner, loser, Apre = as.numeric(NA), Bpre = as.numeric(NA), Apost = as.numeric(NA), Bpost = as.numeric(NA), draw = draw)
+  logtable <- data.frame(Date = ndat, winner, loser,
+                         Apre = as.numeric(NA), Bpre = as.numeric(NA),
+                         Apost = as.numeric(NA), Bpost = as.numeric(NA),
+                         draw = draw)
+  if (!is.null(intensity)) logtable$intensity <- intensity
 
   # temporary elo log
   tempelo <- matrix(ncol = length(allids), nrow = 4, NA, dimnames = list(c("recelo", "present", "firstIA", "firstpres"), allids))
@@ -199,15 +242,16 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL, startvalu
     rm(m)
 
     # special case if there is only one imigrant in the data set
-    if(ncol(imiIDs) == 1) {
+    if (ncol(imiIDs) == 1) {
       imiIDs[2, ] <- min(which(pmat[, colnames(imiIDs)] == 1))
       tempelo[3:4, colnames(imiIDs)] <- imiIDs
     }
 
-    if(ncol(imiIDs) > 1) {
-      imiIDs[2, ] <- apply(pmat[, colnames(imiIDs)], 2, function(x){ min(which(x == 1)) })
+    if (ncol(imiIDs) > 1) {
+      imiIDs[2, ] <- apply(pmat[, colnames(imiIDs)], 2, function(x) min(which(x == 1)) )
       # sorting
-      imiIDs <- imiIDs[, names(sort(imiIDs[1, ]))]; imiIDs <- imiIDs[, names(sort(imiIDs[2, ]))]
+      imiIDs <- imiIDs[, names(sort(imiIDs[1, ]))]
+      imiIDs <- imiIDs[, names(sort(imiIDs[2, ]))]
       tempelo[3:4, colnames(imiIDs)] <- imiIDs
     }
   }
@@ -217,7 +261,7 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL, startvalu
   # reorder matrices (to fit same order of names of tempelo...)
   mat <- mat[, colnames(tempelo)]; pmat <- pmat[, colnames(tempelo)]
   # just checking whether first interaction occurred before first presence...
-  if(min(tempelo[3, ] - tempelo[4, ]) < 0){
+  if (min(tempelo[3, ] - tempelo[4, ]) < 0) {
     xx <- paste(names(which((tempelo[3, ] - tempelo[4, ]) < 0)), collapse = ", ")
     stop(c("for ID (", xx, ") the first interaction occurred before first presence"))
   }
@@ -229,13 +273,16 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL, startvalu
   ###########################
 
   # short versions for some objects (can maybe be removed later...)
-  W <- winner[1]; L <- loser[1]; D <- ndat[1]
+  W <- winner[1]
+  L <- loser[1]
+  D <- ndat[1]
+
   # the next two lines could be changed to refer to recelo but they might as well not...
   we <- startvalue[W] # most recent rating of winner, in this case = startingvalue
   le <- startvalue[W] # most recent rating of loser, in this case = startingvalue
 
   # calculate new ratings accounting for whether the interaction ended in a draw
-  if(draw[1]) {
+  if (draw[1]) {
     newrat <- e.single(we, le, outcome = 0, k = k[1], normprob = normprob)
   } else {
     newrat <- e.single(we, le, outcome = 1, k = k[1], normprob = normprob)
@@ -260,7 +307,7 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL, startvalu
 
   # loop for the remaining interactions seperated by init-type:
   log.entry.bottom <- cbind(1, "", "")
-  if(init == "bottom_low") {
+  if (init == "bottom_low") {
     # alle Tiere die am anfang 1000 bekamen bekommen nach der 1. IA wenn sie nicht interagiert haben das minimum
     id.im.min=names(which(tempelo["recelo", ] == startvalue))
     min.rec.elo <- min(tempelo[1,], na.rm=T)
@@ -269,7 +316,7 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL, startvalu
     log.entry.bottom=cbind(1,"",paste(id.im.min,collapse=", "))
   }
 
-  if(init == "bottom_low" | init == "bottom") {
+  if (init == "bottom_low" | init == "bottom") {
     # progress bar
     if(progressbar) {
       print("loop 1: Elo calculations")
@@ -540,21 +587,21 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL, startvalu
   #--------- END -----------#
   ###########################
 
-  if(length(imiIDs) == 0) {
-    logtable = logtable
+  if (length(imiIDs) == 0) {
+    logtable <- logtable
   } else {
-    if(init == "average") {
-      logtable = data.frame(logtable, new.entry=log.entry.bottom[, -1])
+    if (init == "average") {
+      logtable <- data.frame(logtable, new.entry = log.entry.bottom[, -1])
     } else {
-      logtable = data.frame(logtable, log.entry.bottom[, -1])
+      logtable <- data.frame(logtable, log.entry.bottom[, -1])
     }
   }
   # return and 'class' results
-  res <- list(mat=mat, lmat=lmat, cmat=cmat, pmat=pmat, nmat=nmat, logtable=logtable, stability=stability, truedates=truedates, misc=misc, allids=sort(allids))
+  res <- list(mat = mat, lmat = lmat, cmat = cmat, pmat = pmat, nmat = nmat,
+              logtable = logtable, stability = stability,
+              truedates = truedates, misc = misc, allids = sort(allids)
+              )
 
   class(res) <- "elo"
   return(res)
 }
-
-
-

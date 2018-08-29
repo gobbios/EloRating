@@ -64,5 +64,6 @@ optimizek(res, optimode = "loopfast", doplot = TRUE, resolution = 1000, krange =
 }
 \references{
 \insertRef{franz2015a}{EloRating}
+
 \insertRef{mcmahan1984}{EloRating}
 }

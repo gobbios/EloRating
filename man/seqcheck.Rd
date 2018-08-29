@@ -69,7 +69,6 @@ faultypres[5,2:8] <- 0
 # seqcheck(winner=adv$winner, loser=adv$loser, Date=adv$Date,
 #          presence=faultypres)
 }
-
 }
 \author{
 Christof Neumann
