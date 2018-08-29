@@ -1,4 +1,4 @@
-#' Title (log) likelihood of Elo-rating model
+#' (log) likelihood of Elo-rating model
 #'
 #' @param eloobject output from \code{\link{elo.seq}}
 #' @param daterange character or Date of length 2, gives the date range for which likelihood should be calculated. By default, the entire date range is considered.
@@ -22,15 +22,22 @@
 #' plot(ks, liks, type = "l")
 
 likelo <- function(eloobject, daterange = NULL, burnin = NULL, ll = TRUE) {
-  temp <- eloobject$logtable
-  normprob <- eloobject$misc["normprob"] == "1"
-  if (!is.null(daterange)) {
-    d1 <- which(eloobject$truedates == as.Date(daterange[1]))
-    d2 <- which(eloobject$truedates == as.Date(daterange[2]))
-    temp <- temp[temp$Date >= d1 & temp$Date <= d2, ]
+  if (class(eloobject) == "elo") {
+    temp <- eloobject$logtable
+    normprob <- eloobject$misc["normprob"] == "1"
+    if (!is.null(daterange)) {
+      d1 <- which(eloobject$truedates == as.Date(daterange[1]))
+      d2 <- which(eloobject$truedates == as.Date(daterange[2]))
+      temp <- temp[temp$Date >= d1 & temp$Date <= d2, ]
+    }
+    foo <- function(X) winprob(elo1 = X[1], elo2 = X[2], normprob = normprob)
+    winprobs <- apply(temp[, c("Apre", "Bpre")], MARGIN = 1, FUN = foo)
+    if (ll) res <- sum(log(winprobs)) else res <- prod(winprobs)
   }
-  foo <- function(X) winprob(elo1 = X[1], elo2 = X[2], normprob = normprob)
-  winprobs <- apply(temp[, c("Apre", "Bpre")], MARGIN = 1, FUN = foo)
-  if (ll) res <- log(prod(winprobs)) else res <- prod(winprobs)
+
+  if (class(eloobject) == "list") {
+    if (!is.null(daterange)) message("date range ignored for results from fastelo")
+    if (ll) res <- sum(log(eloobject[[2]])) else res <- prod(eloobject[[2]])
+  }
   return(res)
 }
