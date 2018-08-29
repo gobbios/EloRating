@@ -6,6 +6,22 @@
 
 using namespace Rcpp;
 
+// fastelo
+List fastelo(CharacterVector WINNER, CharacterVector LOSER, CharacterVector ALLIDS, NumericVector KVALS, NumericVector STARTVALUES, bool NORMPROB);
+RcppExport SEXP _EloRating_fastelo(SEXP WINNERSEXP, SEXP LOSERSEXP, SEXP ALLIDSSEXP, SEXP KVALSSEXP, SEXP STARTVALUESSEXP, SEXP NORMPROBSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type WINNER(WINNERSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type LOSER(LOSERSEXP);
+    Rcpp::traits::input_parameter< CharacterVector >::type ALLIDS(ALLIDSSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type KVALS(KVALSSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type STARTVALUES(STARTVALUESSEXP);
+    Rcpp::traits::input_parameter< bool >::type NORMPROB(NORMPROBSEXP);
+    rcpp_result_gen = Rcpp::wrap(fastelo(WINNER, LOSER, ALLIDS, KVALS, STARTVALUES, NORMPROB));
+    return rcpp_result_gen;
+END_RCPP
+}
 // mat2seqint
 List mat2seqint(NumericMatrix mat);
 RcppExport SEXP _EloRating_mat2seqint(SEXP matSEXP) {
@@ -32,6 +48,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_EloRating_fastelo", (DL_FUNC) &_EloRating_fastelo, 6},
     {"_EloRating_mat2seqint", (DL_FUNC) &_EloRating_mat2seqint, 1},
     {"_EloRating_steepint", (DL_FUNC) &_EloRating_steepint, 3},
     {NULL, NULL, 0}
