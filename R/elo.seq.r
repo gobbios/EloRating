@@ -115,9 +115,9 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
                     init = "average", intensity = NULL, iterate = 0,
                     runcheck = TRUE, progressbar = FALSE) {
 
-  if(runcheck) {
+  if (runcheck) {
     rc <- seqcheck(winner, loser, Date, draw, presence)
-    if(sum(rc$checksum[c("IDcheck", "selfinteractions", "startpresence1", "startpresence2", "endpresence1", "endpresence2", "IDmatch", "IA_presencematch", "presenceentries", "datecol", "length", "continouspres")]) > 0) stop("there appear to be some problems with your data, please consider running 'seqcheck()'\notherwise set runcheck=FALSE")
+    if (sum(rc$checksum[c("IDcheck", "selfinteractions", "startpresence1", "startpresence2", "endpresence1", "endpresence2", "IDmatch", "IA_presencematch", "presenceentries", "datecol", "length", "continouspres", "seqdatorder")]) > 0) stop("there appear to be some problems with your data, please consider running 'seqcheck()'\notherwise set runcheck=FALSE")
   }
 
   # handle startvalues
@@ -139,29 +139,30 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   loser  <- as.character(loser)
   Date   <- as.Date(as.character(Date))
   # check whether there is a column with draw/tie information
-  if(is.null(draw)) {
+  if (is.null(draw)) {
     draw <- rep(FALSE, length(Date))
-  }else{
+  } else {
     draw <- as.logical(as.character(draw))
   }
 
   # working with dates as integers (first date in sequence is set to 1) (more convenient?)
   ndat <- as.numeric(Date - min(Date) + 1)
   # keep dates for faster referencing (will not be used here but will be part of the output...)
-  truedates <- seq(min(Date), max(Date), by="day")
+  truedates <- seq(min(Date), max(Date), by = "day")
   # all IDs present in the data
   allids <- unique(c(winner, loser))
 
   # make sure that startvalues are sorted in the same way as allids
-  if(length(startvalue) > 1) {
-    if(length(startvalue) != length(allids)) stop("number of start values not matching number of individuals")
+  if (length(startvalue) > 1) {
+    if (length(startvalue) != length(allids)) stop("number of start values not matching number of individuals")
     startvalue <- startvalue[allids]
   } else {
-    startvalue <- rep(startvalue, length(allids)); names(startvalue) <- allids
+    startvalue <- rep(startvalue, length(allids))
+    names(startvalue) <- allids
   }
 
   # matrix with all dates (rows) and all ids (columns) (no rownames or special date-column set since working with numeric dates ('ndat'))
-  mat <- matrix(nrow = max(ndat), ncol=length(allids))
+  mat <- matrix(nrow = max(ndat), ncol = length(allids))
   colnames(mat) <- allids
 
   ###################################
@@ -170,22 +171,23 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   ###################################
 
   # first case, i.e. if nothing is supplied, assume that all individuals were present at all times
-  if(is.null(presence)) {
+  if (is.null(presence)) {
     pmat <- mat; pmat[, ] <- 1
   } else {
     # presence is supplied as presence matrix (i.e. actually a data.frame...)
-    if(nrow(mat) == nrow(presence)){
+    if (nrow(mat) == nrow(presence)){
       pmat <- presence[, allids]
     } else {
-      if(nrow(presence) < nrow(mat)) {
+      if (nrow(presence) < nrow(mat)) {
         stop("") #presence has fewer lines than date range of interaction sequence
       } else {
-        if(nrow(presence) > nrow(mat)) {
-          if("Date" %in% colnames(presence) == FALSE) {
+        if (nrow(presence) > nrow(mat)) {
+          if ("Date" %in% colnames(presence) == FALSE) {
             stop("") #your presence data goes beyond the interaction date range, but lacks a date column (named 'Date')
           } else {
             # if presence data goes beyond date range, cut the presence data accordingly
-            mindate <- min(truedates); maxdate <- max(truedates)
+            mindate <- min(truedates)
+            maxdate <- max(truedates)
             pmat <- presence[which(as.Date(as.character(presence$Date)) == mindate) : which(as.Date(as.character(presence$Date)) == maxdate), allids]
           }
         }
@@ -194,8 +196,8 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   }
 
   # make the function stop if there is anything else than 0 and 1 in the matrix
-  if(sum(apply(pmat, 2, function(x)(sum(is.na(x))))) > 0) stop("")
-  if(sum(apply(pmat, 2, function(x)(sum(x != 0 & x != 1, na.rm=TRUE))))) stop("")
+  if (sum(apply(pmat, 2, function(x) (sum(is.na(x))))) > 0) stop("")
+  if (sum(apply(pmat, 2, function(x) (sum(x != 0 & x != 1, na.rm = TRUE))))) stop("")
   ###################################
   #--- formatting presence input ---#
   #------------- END ---------------#
@@ -225,18 +227,18 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   tabx <- table(Date, loser)
   nmat[as.character(truedates) %in% rownames(tabx), colnames(tabx)] <- nmat[as.character(truedates) %in% rownames(tabx), colnames(tabx)] + as.matrix(tabx)
   # fill ratings of those individuals that were present at the beginning (i.e. the date of the first interaction/first day of date range) with the startvalue
-  startIDs <- colnames(pmat)[pmat[1, ]==1]
-  # tempelo["recelo", startIDs] <- startvalue
+  startIDs <- colnames(pmat)[pmat[1, ] == 1]
   tempelo["recelo", allids] <- startvalue[allids]
 
   tempelo["firstpres", startIDs] <- 1
 
-  for(m in startIDs) { tempelo["firstIA", m] <- ndat[min(which(winner == m | loser == m))] }; rm(m)
+  for (m in startIDs) tempelo["firstIA", m] <- ndat[min(which(winner == m | loser == m))]
+  rm(m)
   # immigrants and their first presence date and first interaction
   imiIDs <- allids[-c(which(allids %in% startIDs))]
-  if(length(imiIDs) > 0) {
+  if (length(imiIDs) > 0) {
     imiIDs <- matrix(ncol = length(imiIDs), nrow = 2, 0, dimnames = list(c("firstIA", "firstpres"), imiIDs))
-    for(m in colnames(imiIDs)) {
+    for (m in colnames(imiIDs)) {
       imiIDs[1, m] <- ndat[min(which(winner == m | loser == m))]
     }
     rm(m)
@@ -259,10 +261,11 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   tempelo <- tempelo[, names(sort(tempelo[3, ], na.last = TRUE))]
   tempelo <- tempelo[, names(sort(tempelo[4, ], na.last = TRUE))]
   # reorder matrices (to fit same order of names of tempelo...)
-  mat <- mat[, colnames(tempelo)]; pmat <- pmat[, colnames(tempelo)]
+  mat <- mat[, colnames(tempelo)]
+  pmat <- pmat[, colnames(tempelo)]
   # just checking whether first interaction occurred before first presence...
   if (min(tempelo[3, ] - tempelo[4, ]) < 0) {
-    xx <- paste(names(which((tempelo[3, ] - tempelo[4, ]) < 0)), collapse = ", ")
+    xx <- paste(names(which( (tempelo[3, ] - tempelo[4, ]) < 0) ), collapse = ", ")
     stop(c("for ID (", xx, ") the first interaction occurred before first presence"))
   }
   #}
@@ -309,40 +312,39 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   log.entry.bottom <- cbind(1, "", "")
   if (init == "bottom_low") {
     # alle Tiere die am anfang 1000 bekamen bekommen nach der 1. IA wenn sie nicht interagiert haben das minimum
-    id.im.min=names(which(tempelo["recelo", ] == startvalue))
-    min.rec.elo <- min(tempelo[1,], na.rm=T)
+    id.im.min <- names(which(tempelo["recelo", ] == startvalue))
+    min.rec.elo <- min(tempelo[1, ], na.rm = TRUE)
     tempelo["recelo", id.im.min] <- min.rec.elo
-    mat[D, id.im.min]<- min.rec.elo
-    log.entry.bottom=cbind(1,"",paste(id.im.min,collapse=", "))
+    mat[D, id.im.min] <- min.rec.elo
+    log.entry.bottom <- cbind(1, "", paste(id.im.min,collapse = ", "))
   }
 
   if (init == "bottom_low" | init == "bottom") {
     # progress bar
-    if(progressbar) {
+    if (progressbar) {
       print("loop 1: Elo calculations")
-      #flush.console()
       progbar <- txtProgressBar(min = 0, max = length(winner), style = 3, char = ".")
     }
 
-    for(i in 2:length(ndat)) {
-      if(progressbar) setTxtProgressBar(progbar, i)
+    for (i in 2:length(ndat)) {
+      if (progressbar) setTxtProgressBar(progbar, i)
       # grab minimum and who has the minimum
-      min.rec.elo <- min(tempelo[1,], na.rm = TRUE)
+      min.rec.elo <- min(tempelo[1, ], na.rm = TRUE)
       # short versions for some objects (can maybe be removed later...)
       W <- winner[i]; L <- loser[i]; D <- ndat[i]
       # update tempelo with immigrants indication
-      tempelo[2, ][colnames(tempelo)%in%names(pmat)[pmat[D, ]==1]]=D
+      tempelo[2, ][colnames(tempelo) %in% names(pmat)[pmat[D, ] == 1]] <- D
       # if at least one ID is present for the FIRST time: insert a the respective BOTTOM value
-      if(length(which(tempelo["firstpres", ] <= D & is.na(tempelo["recelo",]))) > 0) {
-        id.f=names(which(tempelo["firstpres", ] <= D & is.na(tempelo["recelo", ])))
+      if(length(which(tempelo["firstpres", ] <= D & is.na(tempelo["recelo", ]))) > 0) {
+        id.f <- names(which(tempelo["firstpres", ] <= D & is.na(tempelo["recelo", ])))
         tempelo["recelo", id.f] <- min.rec.elo
         mat[D, id.f] <- min.rec.elo
       }
-      if(!exists("id.f")) id.f=""
+      if (!exists("id.f")) id.f <- ""
       # current ratings
       we <- tempelo["recelo", W]; le <- tempelo["recelo", L]
       # calculate new ratings accounting for whether the interaction ended in a draw
-      if(draw[i]) {
+      if (draw[i]) {
         newrat <- e.single(we, le, outcome = 0, k = k[i], normprob = normprob)
       } else {
         newrat <- e.single(we, le, outcome = 1, k = k[i], normprob = normprob)
@@ -355,47 +357,46 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
       # fill the logtable as well
       logtable[i, 4:7] <- c(we, le, newrat)
       # all noninteracting animals and previously lowest rankers get the lowest updated lowest rank
-      who.min.rec.elo <- names(which(tempelo[1,]==min.rec.elo))
-      min.rec.elo <- min(tempelo[1,], na.rm=T)
-      id.min=setdiff(who.min.rec.elo,c(W, L))
-      tempelo[1,id.min]<- min.rec.elo
-      mat[D, id.min]<- min.rec.elo
-      if(!exists("id.min")){id.min=""}
-      log.entry.bottom=c(log.entry.bottom, cbind(D,paste(id.f,collapse=", "),paste(id.min,collapse=", ")))
-      rm(id.f,id.min)
+      who.min.rec.elo <- names(which(tempelo[1, ] == min.rec.elo))
+      min.rec.elo <- min(tempelo[1, ], na.rm = TRUE)
+      id.min <- setdiff(who.min.rec.elo, c(W, L))
+      tempelo[1, id.min] <- min.rec.elo
+      mat[D, id.min] <- min.rec.elo
+      if (!exists("id.min")) id.min <- ""
+      log.entry.bottom <- c(log.entry.bottom, cbind(D, paste(id.f, collapse = ", "), paste(id.min, collapse = ", ")))
+      rm(id.f, id.min)
     }
-    log.entry.bottom=as.data.frame(matrix(log.entry.bottom, ncol=3,nrow=(length(ndat)), byrow = T))
-    names(log.entry.bottom)=c("Date", "new.entry", "set.to.bottom.value")
+    log.entry.bottom <- as.data.frame(matrix(log.entry.bottom, ncol = 3, nrow = length(ndat), byrow = TRUE))
+    names(log.entry.bottom) <- c("Date", "new.entry", "set.to.bottom.value")
   }
   # 'bottom section' END
 
-  if(init == "average") {
+  if (init == "average") {
     # progress bar
-    if(progressbar) {
+    if (progressbar) {
       print("loop 1: Elo calculations")
-      #flush.console()
       progbar <- txtProgressBar(min = 0, max = length(winner), style = 3, char = ".")
     }
 
-    log.entry.bottom <- cbind(1,"")
-    for(i in 2:length(ndat)) {
-      if(progressbar) setTxtProgressBar(progbar, i)
+    log.entry.bottom <- cbind(1, "")
+    for (i in 2:length(ndat)) {
+      if (progressbar) setTxtProgressBar(progbar, i)
       # short versions for some objects (can maybe be removed later...)
       W <- winner[i]; L <- loser[i]; D <- ndat[i]
       # update tempelo with immigrants indication
-      tempelo[2,][colnames(tempelo)%in%names(pmat)[pmat[D, ]==1]]=D
+      tempelo[2, ][colnames(tempelo) %in% names(pmat)[pmat[D, ] == 1]] <- D
       # if at least one ID is present for the FIRST time: insert a the respective AVERAGE value
-      if(length(which(tempelo["firstpres", ] <= D & is.na(tempelo["recelo",]))) > 0) {
+      if (length(which(tempelo["firstpres", ] <= D & is.na(tempelo["recelo", ]))) > 0) {
         avg.elo <- round(mean(tempelo["recelo", tempelo["present", ] <= D], na.rm = TRUE))
         id.f <- names(which(tempelo["firstpres", ] <= D & is.na(tempelo["recelo", ])))
         tempelo["recelo", id.f] <- avg.elo
         mat[D, id.f] <- avg.elo
       }
-      if(!exists("id.f")) id.f <- ""
+      if (!exists("id.f")) id.f <- ""
       # current ratings
       we <- tempelo["recelo", W]; le <- tempelo["recelo", L]
       # calculate new ratings accounting for whether the interaction ended in a draw
-      if(draw[i]) {
+      if (draw[i]) {
         newrat <- e.single(we, le, outcome = 0, k = k[i], normprob = normprob)
       } else {
         newrat <- e.single(we, le, outcome = 1, k = k[i], normprob = normprob)
@@ -415,7 +416,7 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   }
   # 'average section' END
 
-  if(progressbar) close(progbar)
+  if (progressbar) close(progbar)
   #############################################
   #--- loop through remaining interactions ---#
   #----------------- END ---------------------#
@@ -427,15 +428,15 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   ################################
 
   # start with the original rating matrix
-  lmat <- rbind(rep(NA,ncol(mat)),mat)
+  lmat <- rbind(rep(NA, ncol(mat)), mat)
   lmat[1, startIDs] <- startvalue[startIDs]
   # fill ratings with an ID's rating from the day before if on a given day it is NA
-  for(i in 2:nrow(lmat)){
-    lmat[i, is.na(lmat[i, ])] <- lmat[i-1, is.na(lmat[i, ])]
+  for (i in 2:nrow(lmat)){
+    lmat[i, is.na(lmat[i, ])] <- lmat[i - 1, is.na(lmat[i, ])]
   }
   # remove ratings on days which IDs were not present (based on presence data)
-  lmat=lmat[-1,]
-  lmat[pmat==0] <- NA
+  lmat <- lmat[-1, ]
+  lmat[pmat == 0] <- NA
 
   ################################
   #--- matrix fill LARS style ---#
@@ -452,24 +453,24 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   # first: for those IDs that were present at the beginning (startIDs): backfill the first rating back up to day 1
   needtobefilled <- names(which(is.na(mat[1, startIDs])))
   if (length(needtobefilled) > 0) {
-    for(ID in needtobefilled) {
+    for (ID in needtobefilled) {
       cmat[1, ID] <- lmat[min(which(complete.cases(lmat[, ID]))), ID]
     }
   }
 
   # which IDs were observed only at first day
-  only.f <- as.numeric(which(apply(mat, 2, function(x) (length(unique(x))))==2 & apply(mat, 2, function(x) (!is.na(x[1])))))
+  only.f <- as.numeric(which(apply(mat, 2, function(x) (length(unique(x)))) == 2 & apply(mat, 2, function(x) (!is.na(x[1])))))
   # fill ratings with an ID's rating from the day before if on a given day it is NA
-  if(length(only.f) > 0){
-    for(i in only.f) {
-      for(j in 2:nrow(cmat)){
-        cmat[j, i] <- cmat[j-1, i]
+  if (length(only.f) > 0){
+    for (i in only.f) {
+      for (j in 2:nrow(cmat)){
+        cmat[j, i] <- cmat[j - 1, i]
       }
     }
   }
   # which IDs were observed (or 'guessed') at least twice
   morethan1 <- as.numeric(which(apply(lmat, 2, function(x) (length(unique(x)))) > 2) )
-  for(i in morethan1) {
+  for (i in morethan1) {
     cmat[, i] <- round(na.approx(cmat[, i], rule = 2))
   }
   cmat[pmat == 0] <- NA
@@ -492,30 +493,28 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   }
 
   # get the IDs of all individuals present in the data (and the total number of IDs)
-  # AllIDs <- colnames(drm); nIDs <- length(AllIDs)
   # create empty vectors for the three variables of interest
   rankdiffs <- c(); Idspresent <- c(); eloweights <- c()
 
   # progress bar
-  if(progressbar) {
+  if (progressbar) {
     print("loop 2: Stability calculations")
-    #flush.console()
     progbar <- txtProgressBar(min = 0, max = nrow(cmat), style = 3, char = ".")
   }
 
   # this loop calculates Ci for each day (except for the first one)
-  for(u in 2:nrow(cmat)) {
-    if(progressbar) setTxtProgressBar(progbar, u)
+  for (u in 2:nrow(cmat)) {
+    if (progressbar) setTxtProgressBar(progbar, u)
     # calculates the ranks the day before the actual day
-    r1 <- rank(cmat[u-1, ] * (-1), na.last = NA, ties.method = "average")
+    r1 <- rank(cmat[u - 1, ] * (-1), na.last = NA, ties.method = "average")
     # calculates the ranks on the test day
     r2 <- rank(cmat[u, ]   * (-1), na.last = NA, ties.method = "average")
     # which IDs were present on both days
     present <- c(names(r1), names(r2))[duplicated(c(names(r1), names(r2)))]
     # if one animal leaves, the index increases the ranks of all individuals below, i.e. if no other rank change occurs, the rankdifference will be zero in such a case
-    if(length(which(!names(r1) %in% names(r2))) > 0) {
+    if (length(which(!names(r1) %in% names(r2))) > 0) {
       leavers <- names(r1)[which(!names(r1) %in% names(r2))]
-      for(n in 1:length(leavers)) {
+      for (n in 1:length(leavers)) {
         r1[which(r1 > r1[leavers[n]])] <- r1[which(r1 > r1[leavers[n]])] - 1
       }
       r1 <- r1[-c(which(names(r1) %in% leavers))]
@@ -525,7 +524,7 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
     standardratings <- elo.stdz(cmat[u - 1, present])
     changers <- r1[r1[present] != r2[present]]
     stabweight <- 0
-    if(length(changers) > 0) {
+    if (length(changers) > 0) {
       stabweight <- as.numeric(standardratings[names(changers)[changers == min(changers)][1]])
       rm(changers)
     }
@@ -542,7 +541,7 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   dte <- seq(from = as.Date(min(Date)), to = as.Date(max(Date)), by = 1)
   stability <- data.frame(date = dte[2:length(dte)], Idspresent, rankdiffs, eloweights)
 
-  if(progressbar) close(progbar)
+  if (progressbar) close(progbar)
 
   ################################
   #--- stability calculations ---#
@@ -556,9 +555,9 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
 
   # get some more 'log' data...
 
-  if(length(unique(startvalue)) > 1) startvalue <- paste("custom values ranging between", range(startvalue)[1], "and", range(startvalue)[2])
-  if(!is.na(svl)) startvalue <- 1000
-  if(is.list(ok)) {
+  if (length(unique(startvalue)) > 1) startvalue <- paste("custom values ranging between", range(startvalue)[1], "and", range(startvalue)[2])
+  if (!is.na(svl)) startvalue <- 1000
+  if (is.list(ok)) {
     k <- paste("custom values ranging between", range(unlist(ok))[1], "and", range(unlist(ok))[2])
   } else {
     k <- ok

@@ -46,7 +46,7 @@ myranks <- 1:7; names(myranks) <- letters[1:7]
 createstartvalues(ranks = myranks)
 }
 \references{
-Newton-Fisher, N. 2017.  Modeling social dominance: Elo-ratings, prior history, and the intensity of aggression. International Journal of Primatology, 38, 427-447. (\href{https://doi.org/10.1007/s10764-017-9952-2}{DOI: 10.1007/s10764-017-9952-2})
+\insertRef{newton-fisher2017a}{EloRating}
 }
 \author{
 Christof Neumann

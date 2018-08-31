@@ -11,9 +11,10 @@
 #'
 #' @return a data.frame with with values for the number of individuals in the matrix (N), linearity indices (h, h' and expected h), p-value, number of randomizations, and number of unknown and tied relationships.
 #'
-#' @references Appleby, M. C. 1983. The probability of linearity in hierarchies. Animal Behaviour, 31, 600-608. (\href{https://dx.doi.org/10.1016/S0003-3472(83)80084-0}{DOI: 10.1016/S0003-3472(83)80084-0})
+#' @references
+#' \insertRef{appleby1983}{EloRating}
 #'
-#' de Vries, H. 1995. An improved test of linearity in dominance hierarchies containing unknown or tied relationships. Animal Behaviour, 50, 1375-1389. (\href{https://dx.doi.org/10.1016/0003-3472(95)80053-0}{DOI: 10.1016/0003-3472(95)80053-0})
+#' \insertRef{devries1995}{EloRating}
 #'
 #' @details Note that the expected value of \emph{h} can also be calculated as 3/(N+1).
 #' @author Christof Neumann

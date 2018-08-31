@@ -38,7 +38,9 @@ e.single(ELO1old = 2000, ELO2old = 1000, outcome = 2, k = 100)
 
 }
 \references{
-Albers, P. C. H. & de Vries, H. 2001. Elo-rating as a tool in the sequential estimation of dominance strengths. Animal Behaviour, 61, 489-495. (\href{https://dx.doi.org/10.1006/anbe.2000.1571}{DOI: 10.1006/anbe.2000.1571})
+\insertRef{elo1978}{EloRating}
+
+\insertRef{albers2001}{EloRating}
 }
 \author{
 Christof Neumann

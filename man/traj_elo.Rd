@@ -24,18 +24,18 @@ calculate individual Elo rating trajectory over time
 }
 \examples{
 data(adv)
-SEQ <- elo.seq(winner=adv$winner, loser=adv$loser, Date=adv$Date)
+SEQ <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date)
 traj_elo(SEQ, "a")
 
-traj_elo(SEQ, "a", from="2010-01-20", to="2010-01-30")
+traj_elo(SEQ, "a", from = "2010-01-20", to = "2010-01-30")
 
 # no slope available if ID was not observed interacting
 # inside the date range
-traj_elo(SEQ, "a", from="2010-01-17", to="2010-01-18")
+traj_elo(SEQ, "a", from = "2010-01-17", to = "2010-01-18")
 
 # no slope available if ID was only observed interacting
 # once within the date range
-traj_elo(SEQ, "a", from="2010-01-17", to="2010-01-19")
+traj_elo(SEQ, "a", from = "2010-01-17", to = "2010-01-19")
 
 # for several individuals
 traj_elo(SEQ, c("a", "b", "c"))

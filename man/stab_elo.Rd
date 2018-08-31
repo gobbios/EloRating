@@ -37,9 +37,9 @@ stab_elo(SEQ, from="2010-01-20", to="2010-01-30")
 stab_elo(SEQ, from="2010-01-20", to="2010-01-30", weight=FALSE)
 }
 \references{
-Neumann, C., Duboscq, J., Dubuc, C., Ginting, A., Irwan, A. M., Agil, M., Widdig, A. & Engelhardt, A. 2011. Assessing dominance hierarchies: validation and advantages of progressive evaluation with Elo-rating. Animal Behaviour, 82, 911-921. (\href{https://dx.doi.org/10.1016/j.anbehav.2011.07.016}{DOI: 10.1016/j.anbehav.2011.07.016})
+\insertRef{neumann2011}{EloRating}
 
-McDonald, D. B. & Shizuka, D. 2013. Comparative transitive and temporal orderliness in dominance networks. Behavior Ecology, 24, 511-520. (\href{https://dx.doi.org/10.1093/beheco/ars192}{DOI: 10.1093/beheco/ars192})
+\insertRef{mcdonald2013a}{EloRating}
 }
 \author{
 Christof Neumann

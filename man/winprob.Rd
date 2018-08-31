@@ -29,7 +29,7 @@ winprob(1000,1000)
 
 }
 \references{
-Elo, A. E. 1978. The Rating of Chess Players, Past and Present. New York: Arco.
+\insertRef{elo1978}{EloRating}
 }
 \author{
 Christof Neumann

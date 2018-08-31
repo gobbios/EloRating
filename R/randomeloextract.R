@@ -24,18 +24,18 @@
 #' randomeloextract(res, "a", "avg")
 
 randomeloextract <- function(x, ID, mode = c("obj", "samp", "avg")) {
-  if(!ID %in% colnames(x[[1]])) stop("selected ID is not in the matrix", call.=FALSE)
+  if (!ID %in% colnames(x[[1]])) stop("selected ID is not in the matrix", call. = FALSE)
 
-  if(mode == "obj") {
+  if (mode == "obj") {
     return(sample(x[[1]][, ID], 1))
   }
 
-  if(mode == "samp") {
-    rd <- rnorm(1000, mean(x[[1]][,ID]), sd(x[[1]][,ID]))
+  if (mode == "samp") {
+    rd <- rnorm(1000, mean(x[[1]][, ID]), sd(x[[1]][, ID]))
     return(round(sample(rd, 1), 1))
   }
 
-  if(mode == "avg") {
+  if (mode == "avg") {
     return(round(mean(x[[1]][, ID]), 1))
   }
 

@@ -12,7 +12,8 @@
 #' @author Christof Neumann
 #' @importFrom graphics abline
 #'
-#' @references de Vries, H., Stevens, J. M. G. & Vervaecke, H. 2006. Measuring and testing the steepness of dominance hierarchies. Animal Behaviour, 71, 585-592. (\href{https://doi.org/10.1016/j.anbehav.2005.05.015}{DOI: 10.1016/j.anbehav.2005.05.015})
+#' @references
+#' \insertRef{devries2006}{EloRating}
 #' @examples
 #' data(bonobos)
 #' steepness(bonobos) # no randomization test
@@ -21,7 +22,7 @@
 #' steepness(bonobos, nrand = 100)
 #'
 
-steepness <- function(mat, nrand=0, Dij=TRUE, returnfig=FALSE) {
+steepness <- function(mat, nrand = 0, Dij = TRUE, returnfig = FALSE) {
   temp <- steepint(mat, nrand = nrand, Dij = Dij)
 
   oristeep <- temp[1]

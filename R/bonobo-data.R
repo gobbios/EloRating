@@ -10,7 +10,8 @@
 #'
 #' @keywords datasets
 #'
-#' @references de Vries, H., Stevens, J. M. G. & Vervaecke, H. 2006. Measuring and testing the steepness of dominance hierarchies. Animal Behaviour, 71, 585-592. (\href{dx.doi.org/10.1016/j.anbehav.2005.05.015}{DOI: 10.1016/j.anbehav.2005.05.015})
+#' @references
+#' \insertRef{devries2006}{EloRating}
 #'
 #' @examples
 #' data(bonobos)

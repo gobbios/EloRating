@@ -48,9 +48,6 @@
 #' ids <- "b"
 #' extract_elo(eloobject = SEQ, extractdate = dates, standardize = FALSE, IDs = ids)
 
-
-
-
 extract_elo <- function(eloobject, extractdate = eloobject$misc["maxDate"],
                         standardize = FALSE, IDs = NULL, NA.interpolate = FALSE,
                         daterange = 1) {

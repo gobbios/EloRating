@@ -1,4 +1,3 @@
-
 #' matrix to sequence conversion
 #' @aliases mat2seqint
 #' @param mat square interaction matrix with winner in rows and losers in columns (can have column/row names or not)

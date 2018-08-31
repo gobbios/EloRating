@@ -25,19 +25,20 @@
 #' res <- randomelo(mat, 10)
 #' data.frame(ID=colnames(res[[1]]), avg=round(colMeans(res[[1]]),1))
 
-randomelo <- function(interactionmatrix, runs = 2000, normprob = TRUE, k = 100, progressbar = FALSE) {
+randomelo <- function(interactionmatrix, runs = 2000, normprob = TRUE,
+                      k = 100, progressbar = FALSE) {
   # create a sequence from the matrix
   winner <- c()
   loser <- c()
-  for(i in 1:nrow(interactionmatrix)) {
-    for(j in 1:ncol(interactionmatrix)) {
-      if(interactionmatrix[i, j] > 0) {
+  for (i in 1:nrow(interactionmatrix)) {
+    for (j in 1:ncol(interactionmatrix)) {
+      if (interactionmatrix[i, j] > 0) {
         winner <- c(winner, rep(rownames(interactionmatrix)[i], interactionmatrix[i, j]))
         loser <- c(loser, rep(colnames(interactionmatrix)[j], interactionmatrix[i, j]))
       }
     }
   }
-  Date <- seq(as.Date("2000-01-01"), as.Date("2000-01-01")+length(winner)-1, by="day")
+  Date <- seq(as.Date("2000-01-01"), as.Date("2000-01-01") + length(winner) - 1, by = "day")
   # the starting sequence (which will actually not be used, but only randomized versions of it...)
   xdata <- data.frame(Date, winner, loser)
   rm(i, j, winner, loser, Date)
@@ -45,13 +46,13 @@ randomelo <- function(interactionmatrix, runs = 2000, normprob = TRUE, k = 100, 
   res <- matrix(ncol = length(unique(c(levels(xdata$winner), levels(xdata$loser)))), nrow = runs, 0)
   colnames(res) <- unique(c(levels(xdata$winner), levels(xdata$loser)))
 
-  if(progressbar) progbar <- txtProgressBar(min = 0, max = runs, style = 3, char = ".")
+  if (progressbar) progbar <- txtProgressBar(min = 0, max = runs, style = 3, char = ".")
 
-  for(i in 1:runs) {
+  for (i in 1:runs) {
     tempdata <- xdata[sample(1:nrow(xdata)), ]; rownames(tempdata) <- NULL
     tempres <- elo.seq(tempdata$winner, tempdata$loser, tempdata$Date, progressbar = FALSE, runcheck = FALSE, normprob = normprob, k = k)
     res[i, ] <- extract_elo(tempres)[colnames(res)]
-    if(progressbar) setTxtProgressBar(progbar, i)
+    if (progressbar) setTxtProgressBar(progbar, i)
   }
 
   outp <- list()

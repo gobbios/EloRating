@@ -9,9 +9,10 @@
 #'
 #' @keywords datasets
 #'
-#' @references Franz, M., McLean, E., Tung, J., Altmann, J., & Alberts, S. C. (2015). Self-organizing dominance hierarchies in a wild primate population. Proceedings of the Royal Society B, 282, 20151512. (\href{https://doi.org/10.1098/rspb.2015.1512}{DOI: 10.1098/rspb.2015.1512})
+#' @references
+#' \insertRef{franz2015a}{EloRating}
 #'
-#' Franz M., McLean E., Tung J., Altmann J., Alberts S. C. (2015) Data from: Self-organizing dominance hierarchies in a wild primate population. Dryad Digital Repository. (\href{https://doi.org/10.5061/dryad.d0g0d}{DOI: 10.5061/dryad.d0g0d})
+#' \insertRef{franz2015c}{EloRating}
 #'
 #' @examples
 #' data(baboons1)

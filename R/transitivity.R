@@ -8,7 +8,8 @@
 #' @importFrom network network
 #' @importFrom graphics box hist
 #'
-#' @references Shizuka, D., & McDonald, D. B. (2012). A social network perspective on measurements of dominance hierarchies. Animal Behaviour, 83(4), 925-934. (\href{https://doi.org/10.1016/j.anbehav.2012.01.011}{DOI: 10.1016/j.anbehav.2012.01.011})
+#' @references
+#' \insertRef{shizuka2012}{EloRating}
 #'
 #' \href{http://www.shizukalab.com/toolkits/sna/triangle-transitivity}{http://www.shizukalab.com/toolkits/sna/triangle-transitivity}
 #'

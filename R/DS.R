@@ -7,21 +7,23 @@
 #'
 #' @return a data.frame with columns ID, DS (David's scores) and normDS (normalized David's scores)
 #'
-#' @references David, H. A. 1987. Ranking from unbalanced paired-comparison data. Biometrika, 74, 432-436. (\href{https://dx.doi.org/10.1093/biomet/74.2.432}{DOI: 10.1093/biomet/74.2.432})
+#' @references
+#' \insertRef{david1987}{EloRating}
 #'
-#' de Vries, H., Stevens, J. M. G. & Vervaecke, H. 2006. Measuring and testing the steepness of dominance hierarchies. Animal Behaviour, 71, 585-592. (\href{https://dx.doi.org/10.1016/j.anbehav.2005.05.015}{DOI: 10.1016/j.anbehav.2005.05.015})
+#' \insertRef{gammell2003}{EloRating}
 #'
-#' Gammell, M. P., de Vries, H., Jennings, D. J., Carlin, C. M. and Hayden, T. J. 2003. David's score: a more appropriate dominance ranking method than Clutton-Brock et al.'s index. Animal Behaviour, 66, 601-605. (\href{https://dx.doi.org/10.1006/anbe.2003.2226}{DOI: 10.1006/anbe.2003.2226})
+#' \insertRef{devries2006}{EloRating}
 #'
 #' @author Christof Neumann
 #'
 #' @examples
 #' data(bonobos)
 #' DS(bonobos)
+#' DS(bonobos, prop = "Pij")
 #'
 #' @export
 
-DS <- function(interactionmatrix, prop=c("Dij", "Pij")) {
+DS <- function(interactionmatrix, prop = c("Dij", "Pij")) {
   rn <- rownames(interactionmatrix)
   cn <- colnames(interactionmatrix)
   merged <- length(intersect(rn, cn))

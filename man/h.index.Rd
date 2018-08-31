@@ -26,9 +26,9 @@ h.index(bonobos)
 
 }
 \references{
-Appleby, M. C. 1983. The probability of linearity in hierarchies. Animal Behaviour, 31, 600-608. (\href{https://dx.doi.org/10.1016/S0003-3472(83)80084-0}{DOI: 10.1016/S0003-3472(83)80084-0})
+\insertRef{appleby1983}{EloRating}
 
-de Vries, H. 1995. An improved test of linearity in dominance hierarchies containing unknown or tied relationships. Animal Behaviour, 50, 1375-1389. (\href{https://dx.doi.org/10.1016/0003-3472(95)80053-0}{DOI: 10.1016/0003-3472(95)80053-0})
+\insertRef{devries1995}{EloRating}
 }
 \author{
 Christof Neumann

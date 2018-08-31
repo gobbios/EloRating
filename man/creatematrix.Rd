@@ -32,7 +32,7 @@ square matrix with dominance interactions (winner in rows, loser in columns)
 create a dominance matrix from the underlying observed sequence
 }
 \details{
-The function works with either the output of \code{\link{elo.seq}}, or with two vectors of winners/losers. If you use winner and loser vectors, their arguments need to be named, and also the remaining arguments (\code{daterange=} and \code{onlyinteracting=}) are ignored. The function does not yet allow to include draws if you supply winner/loser vectors. If you go via the \code{\link{elo.seq}}-route, the function can handle draws (via the \code{drawmethod=} argument).
+The function works with either the output of \code{\link{elo.seq}}, or with two vectors of winners and losers. If you use winner and loser vectors, their arguments need to be named, and also the remaining arguments (\code{daterange=} and \code{onlyinteracting=}) are ignored. The function does not yet allow to include draws if you supply winner/loser vectors. If you go via the \code{\link{elo.seq}}-route, the function can handle draws (via the \code{drawmethod=} argument).
 }
 \examples{
 data(adv)

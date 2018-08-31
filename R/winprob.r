@@ -10,7 +10,8 @@
 #'
 #' @return numeric, expected chance of first individual to win an interacation with the second individual
 #'
-#' @references Elo, A. E. 1978. The Rating of Chess Players, Past and Present. New York: Arco.
+#' @references
+#' \insertRef{elo1978}{EloRating}
 #'
 #' @author Christof Neumann
 #'
@@ -26,12 +27,12 @@
 
 winprob <- function(elo1, elo2, normprob=TRUE) {
 
-  if(normprob) {
+  if (normprob) {
     # z score based on fixed SD=200 (see Elo 1978)
     z_score <- (elo1 - elo2) / (200 * sqrt(2))
     p_win <- pnorm(z_score)
   } else {
-    p_win <- 1 - 1 / (1 + 10^((elo1 - elo2)/400))
+    p_win <- 1 - 1 / ( 1 + 10 ^ ( (elo1 - elo2) / 400 ) )
   }
 
   return(p_win)

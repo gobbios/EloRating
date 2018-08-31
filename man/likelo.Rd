@@ -26,14 +26,20 @@ This function returns the (log) likelihood of a dominance interaction sequence. 
 }
 \examples{
 data(adv)
-SEQ <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date, k = 200)
-likelo(SEQ)
-SEQ <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date, k = 100)
-likelo(SEQ)
+res <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date, k = 200)
+likelo(res)
+res <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date, k = 100)
+likelo(res)
 ks <- seq(100, 400, by = 20)
 liks <- numeric(length(ks))
 for(i in 1:length(liks)) {
-  liks[i] <- likelo(elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date, k = ks[i]))
+  liks[i] <- likelo(elo.seq(winner = adv$winner, loser = adv$loser,
+                    Date = adv$Date, k = ks[i]))
 }
 plot(ks, liks, type = "l")
+}
+\references{
+\insertRef{franz2015a}{EloRating}
+
+\insertRef{mcmahan1984}{EloRating}
 }

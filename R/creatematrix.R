@@ -17,7 +17,7 @@
 #'
 #' @author Christof Neumann
 #'
-#' @details The function works with either the output of \code{\link{elo.seq}}, or with two vectors of winners/losers. If you use winner and loser vectors, their arguments need to be named, and also the remaining arguments (\code{daterange=} and \code{onlyinteracting=}) are ignored. The function does not yet allow to include draws if you supply winner/loser vectors. If you go via the \code{\link{elo.seq}}-route, the function can handle draws (via the \code{drawmethod=} argument).
+#' @details The function works with either the output of \code{\link{elo.seq}}, or with two vectors of winners and losers. If you use winner and loser vectors, their arguments need to be named, and also the remaining arguments (\code{daterange=} and \code{onlyinteracting=}) are ignored. The function does not yet allow to include draws if you supply winner/loser vectors. If you go via the \code{\link{elo.seq}}-route, the function can handle draws (via the \code{drawmethod=} argument).
 #' @export
 #'
 #' @examples
@@ -46,7 +46,8 @@
 #' # omit ties/draws
 #' creatematrix(SEQ, drawmethod="1")
 
-creatematrix <- function(eloobject, daterange=NULL, drawmethod="omit", onlyinteracting=FALSE, winners, losers, draw=NULL) {
+creatematrix <- function(eloobject, daterange=NULL, drawmethod="omit",
+                         onlyinteracting=FALSE, winners, losers, draw=NULL) {
   # decide which data were supplied (elo object or winners/losers)
   if (missing(eloobject)) {
     if (!missing(winners) & !missing(losers)) funcmode <- "vec"
@@ -139,7 +140,6 @@ creatematrix <- function(eloobject, daterange=NULL, drawmethod="omit", onlyinter
     }
 
     return(mat)
-
   }
 
   # or return errors if data was supplied in incomplete or false way

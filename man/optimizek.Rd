@@ -59,7 +59,7 @@ res <- elo.seq(winner = as.character(xdata$Winner), loser = as.character(xdata$L
                Date = as.character(xdata$Date))
 # slow
 optimizek(res, optimode = "loop", doplot = TRUE, resolution = 100, krange = c(50, 400))
-# fast
+# fast (despite higher resolution)
 optimizek(res, optimode = "loopfast", doplot = TRUE, resolution = 1000, krange = c(50, 400))}
 }
 \references{

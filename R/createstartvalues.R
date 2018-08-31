@@ -18,7 +18,8 @@
 #'
 #' @author Christof Neumann
 #'
-#' @references Newton-Fisher, N. 2017.  Modeling social dominance: Elo-ratings, prior history, and the intensity of aggression. International Journal of Primatology, 38, 427-447. (\href{https://doi.org/10.1007/s10764-017-9952-2}{DOI: 10.1007/s10764-017-9952-2})
+#' @references
+#' \insertRef{newton-fisher2017a}{EloRating}
 #'
 #' @examples
 #' # assuming a group with 7 individuals
@@ -45,12 +46,12 @@ createstartvalues <- function(ranks = NULL, rankclasses = NULL, shape = 0.3, sta
 
   # if rank classes/categories are provided it is assumed that they are ordered (and names are disregarded): first list item highest category, down to lowest category
 
-  if(!is.null(ranks) & !is.null(rankclasses)) stop("ranks and rank classes detected, please provide one or the other", call. = FALSE)
+  if (!is.null(ranks) & !is.null(rankclasses)) stop("ranks and rank classes detected, please provide one or the other", call. = FALSE)
 
-  if(!is.null(ranks)) res <- startvalue + ((median(ranks) - ranks) * k * ranks^(shape * (-1)))
+  if (!is.null(ranks)) res <- startvalue + ( (median(ranks) - ranks ) * k * ranks ^ (shape * (-1)))
 
-  if(!is.null(rankclasses)) {
-    if(length(rankclasses) == 4) {
+  if (!is.null(rankclasses)) {
+    if (length(rankclasses) == 4) {
       # total number of individuals
       N <- length(unlist(rankclasses))
       # rank definitions cf paper:
@@ -60,18 +61,19 @@ createstartvalues <- function(ranks = NULL, rankclasses = NULL, shape = 0.3, sta
 
       ranks <- unlist(sapply(1:4, function(x)rep(rdefs[x], length.out = nperclass[x])))
       names(ranks) <- unlist(rankclasses)
-      res <- startvalue + ((median(ranks) - ranks) * k * ranks^(shape * (-1)))
+      res <- startvalue + ( (median(ranks) - ranks ) * k * ranks ^ (shape * (-1)))
 
     }
   }
 
   # center custion startvalues around desired startvalue
-  if(mean(res) != startvalue) res <- res - mean(res) + startvalue
+  if (mean(res) != startvalue) res <- res - mean(res) + startvalue
 
   # and round ratings
   res <- round(res)
 
-  # add k and startvalue to the output, to make sure that the elo.seq function uses the same values [which in the current implementation is not actually used]
+  # add k and startvalue to the output, to make sure that the elo.seq function
+  # uses the same values [which in the current implementation is not actually used]
   res <- list(res = res, k = k, startvalue = startvalue)
 
   return(res)

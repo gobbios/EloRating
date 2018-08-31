@@ -41,12 +41,13 @@
 #'                Date = as.character(xdata$Date))
 #' # slow
 #' optimizek(res, optimode = "loop", doplot = TRUE, resolution = 100, krange = c(50, 400))
-#' # fast
+#' # fast (despite higher resolution)
 #' optimizek(res, optimode = "loopfast", doplot = TRUE, resolution = 1000, krange = c(50, 400))}
 
 
-optimizek <- function(eloobject, krange = c(2, 400), optimode = "loop", resolution = 100,
-                      daterange = NULL, doplot = FALSE, progbar = FALSE, ...) {
+optimizek <- function(eloobject, krange = c(2, 400), optimode = "loop",
+                      resolution = 100, daterange = NULL, doplot = FALSE,
+                      progbar = FALSE, ...) {
   # recreate interaction data
   winner <- eloobject$logtable$winner
   loser <- eloobject$logtable$loser

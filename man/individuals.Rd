@@ -29,23 +29,23 @@ if a \code{to} date is set (i.e. different from \code{NULL}), either the IDs of 
 }
 \examples{
 data(adv)
-SEQ <- elo.seq(winner=adv$winner, loser=adv$loser, Date=adv$Date)
-individuals(SEQ, outp="N")
-individuals(SEQ, outp="IDs")
-individuals(SEQ, outp="CV") # not defined
+SEQ <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date)
+individuals(SEQ, outp = "N")
+individuals(SEQ, outp = "IDs")
+individuals(SEQ, outp = "CV") # not defined
 
 # consider additional presence information
 data(advpres)
-SEQ <- elo.seq(winner=adv$winner, loser=adv$loser, Date=adv$Date,
-               presence=advpres)
-individuals(SEQ, outp="N")
-individuals(SEQ, outp="IDs")
-individuals(SEQ, outp="CV") # not defined
+SEQ <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date,
+               presence = advpres)
+individuals(SEQ, outp = "N")
+individuals(SEQ, outp = "IDs")
+individuals(SEQ, outp = "CV") # not defined
 
 # across a date range
-individuals(SEQ, from="2010-01-01", to="2010-01-31", outp="N")
-individuals(SEQ, from="2010-01-01", to="2010-01-31", outp="IDs")
-individuals(SEQ, from="2010-01-01", to="2010-01-31", outp="CV")
+individuals(SEQ, from = "2010-01-01", to = "2010-01-31", outp = "N")
+individuals(SEQ, from = "2010-01-01", to = "2010-01-31", outp = "IDs")
+individuals(SEQ, from = "2010-01-01", to = "2010-01-31", outp = "CV")
 }
 \author{
 Christof Neumann

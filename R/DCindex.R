@@ -6,14 +6,14 @@
 #'
 #' @return numeric value, the DCI
 #'
-#' @references van Hooff, J. A. R. A. M., Wensing, J. A. B. 1987. Dominance and its behavioural measures in a captive wolf pack. In Man and Wolf, edited by H. Frank, 219-52. Dordrecht: Junk.
-#'
+#' @references
+#' \insertRef{vanhooff1987}{EloRating}
 #' @author Christof Neumann
 #' @export
 #'
 #' @examples
 #' data(adv)
-#' SEQ <- elo.seq(winner=adv$winner, loser=adv$loser, Date=adv$Date)
+#' SEQ <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date)
 #' mat <- creatematrix(SEQ)
 #' DCindex(mat)
 #'
