@@ -117,7 +117,7 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
 
   if (runcheck) {
     rc <- seqcheck(winner, loser, Date, draw, presence)
-    if (sum(rc$checksum[c("IDcheck", "selfinteractions", "startpresence1", "startpresence2", "endpresence1", "endpresence2", "IDmatch", "IA_presencematch", "presenceentries", "datecol", "length", "continouspres", "seqdatorder")]) > 0) stop("there appear to be some problems with your data, please consider running 'seqcheck()'\notherwise set runcheck=FALSE")
+    if (sum(rc$checksum[c("IDcheck", "selfinteractions", "startpresence1", "startpresence2", "endpresence1", "endpresence2", "IDmatch", "IA_presencematch", "presenceentries", "datecol", "length", "continouspres", "seqdateorder")]) > 0) stop("there appear to be some problems with your data, please consider running 'seqcheck()'\notherwise set runcheck=FALSE")
   }
 
   # handle startvalues
@@ -282,7 +282,7 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
 
   # the next two lines could be changed to refer to recelo but they might as well not...
   we <- startvalue[W] # most recent rating of winner, in this case = startingvalue
-  le <- startvalue[W] # most recent rating of loser, in this case = startingvalue
+  le <- startvalue[L] # most recent rating of loser, in this case = startingvalue
 
   # calculate new ratings accounting for whether the interaction ended in a draw
   if (draw[1]) {
@@ -449,7 +449,7 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   ####################################
 
   # start with the original rating matrix
-  cmat <- mat;
+  cmat <- mat
   # first: for those IDs that were present at the beginning (startIDs): backfill the first rating back up to day 1
   needtobefilled <- names(which(is.na(mat[1, startIDs])))
   if (length(needtobefilled) > 0) {
@@ -604,3 +604,4 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   class(res) <- "elo"
   return(res)
 }
+
