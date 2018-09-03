@@ -7,8 +7,8 @@
 using namespace Rcpp;
 
 // fastelo
-List fastelo(CharacterVector WINNER, CharacterVector LOSER, CharacterVector ALLIDS, NumericVector KVALS, NumericVector STARTVALUES, bool NORMPROB);
-RcppExport SEXP _EloRating_fastelo(SEXP WINNERSEXP, SEXP LOSERSEXP, SEXP ALLIDSSEXP, SEXP KVALSSEXP, SEXP STARTVALUESSEXP, SEXP NORMPROBSEXP) {
+List fastelo(CharacterVector WINNER, CharacterVector LOSER, CharacterVector ALLIDS, NumericVector KVALS, NumericVector STARTVALUES, bool NORMPROB, bool ROUND);
+RcppExport SEXP _EloRating_fastelo(SEXP WINNERSEXP, SEXP LOSERSEXP, SEXP ALLIDSSEXP, SEXP KVALSSEXP, SEXP STARTVALUESSEXP, SEXP NORMPROBSEXP, SEXP ROUNDSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -18,7 +18,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type KVALS(KVALSSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type STARTVALUES(STARTVALUESSEXP);
     Rcpp::traits::input_parameter< bool >::type NORMPROB(NORMPROBSEXP);
-    rcpp_result_gen = Rcpp::wrap(fastelo(WINNER, LOSER, ALLIDS, KVALS, STARTVALUES, NORMPROB));
+    Rcpp::traits::input_parameter< bool >::type ROUND(ROUNDSEXP);
+    rcpp_result_gen = Rcpp::wrap(fastelo(WINNER, LOSER, ALLIDS, KVALS, STARTVALUES, NORMPROB, ROUND));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -48,7 +49,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_EloRating_fastelo", (DL_FUNC) &_EloRating_fastelo, 6},
+    {"_EloRating_fastelo", (DL_FUNC) &_EloRating_fastelo, 7},
     {"_EloRating_mat2seqint", (DL_FUNC) &_EloRating_mat2seqint, 1},
     {"_EloRating_steepint", (DL_FUNC) &_EloRating_steepint, 3},
     {NULL, NULL, 0}

@@ -5,7 +5,7 @@
 #' @usage elo.seq(winner, loser, Date, draw = NULL, presence = NULL, startvalue = 1000,
 #'                k = 100, normprob = TRUE, init = "average", intensity = NULL,
 #'                iterate = 0, runcheck = TRUE, progressbar = FALSE)
-#' fastelo(WINNER, LOSER, ALLIDS, KVALS, STARTVALUES, NORMPROB)
+#' fastelo(WINNER, LOSER, ALLIDS, KVALS, STARTVALUES, NORMPROB = TRUE, ROUND = TRUE)
 #' @param winner either a factor or character vector with winner IDs of dyadic dominance interactions
 #' @param loser either a factor or character vector with loser IDs of dyadic dominance interactions
 #' @param Date character vector of form "YYYY-MM-DD" with the date of the respective interaction
@@ -27,7 +27,8 @@
 #' @param ALLIDS character vector, contains all the indivuals IDS
 #' @param KVALS numeric vector of the same length \code{WINNER}, i.e. one k value for each interaction
 #' @param STARTVALUES numeric vector of the same length as \code{ALLIDS}, i.e. one start value for each individual
-#' @param NORMPROB logical, same as \code{normprob} for use in \code{fastelo()}
+#' @param NORMPROB logical, by default \code{TRUE}: same as \code{normprob} for use in \code{fastelo()}
+#' @param ROUND logical, by default \code{TRUE}: should ratings be rounded to integers. For use in \code{fastelo()}
 #' @details The presence 'matrix' is actually an object of class \code{data.frame} containing information about wether an individual was present on a given day or not. The first column represents the dates, running at least from the date of the earliest interaction until at least the date of the last interaction with one line per day (regardless of whether there were actually interactions observed on each day). Further, each individual is represented as a column in which "1" indicates an individual was present on the row-date and a "0" indicates the individuals absence on this date. \code{NA}s are not allowed. See \code{\link{advpres}} for an example.
 #'
 #' The function \code{fastelo()} is a stripped-down version of \code{elo.seq()}, which performs only the most basic calculations while ignoring anything that is date and presence related. Neither does it perform data checks. In other words, it just calculates ratings based on the sequence. It's most useful in simulations, for example when estimating optimal k parameters. Its main advantage is its speed, which is substantially faster than \code{elo.seq()}. Note that currently there is no support for tied interactions. The main difference to note is that both, start values and k values have to be supplied as vectors with one value for each individual and interaction respectively.
@@ -553,6 +554,15 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   #-------- START ----------#
   ###########################
 
+  # store start values and k values to be included in function output
+  outk <- k
+  if (length(unique(startvalue)) > 1) {
+    outstart <- startvalue
+  } else {
+    outstart <- rep(svl, length(allids))
+    names(outstart) <- allids
+  }
+
   # get some more 'log' data...
 
   if (length(unique(startvalue)) > 1) startvalue <- paste("custom values ranging between", range(startvalue)[1], "and", range(startvalue)[2])
@@ -598,7 +608,8 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   # return and 'class' results
   res <- list(mat = mat, lmat = lmat, cmat = cmat, pmat = pmat, nmat = nmat,
               logtable = logtable, stability = stability,
-              truedates = truedates, misc = misc, allids = sort(allids)
+              truedates = truedates, misc = misc, allids = sort(allids),
+              kvals = outk, startvalues = outstart
               )
 
   class(res) <- "elo"

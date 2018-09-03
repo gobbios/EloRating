@@ -9,16 +9,16 @@
 \arguments{
 \item{x}{result from \code{\link{seqcheck}}}
 
-\item{...}{further arguments passed to or from other methods}
+\item{...}{further arguments passed to or from other methods (ignored here)}
 }
 \description{
 prints its argument
 }
 \examples{
-data(adv); data(advpres)
-SEQC <- seqcheck(winner=adv$winner, loser=adv$loser, Date=adv$Date,
-                 presence=advpres)
-print(SEQC)
+data(adv)
+data(advpres)
+print(seqcheck(winner = adv$winner, loser = adv$loser, Date = adv$Date,
+                 presence = advpres))
 }
 \author{
 Christof Neumann

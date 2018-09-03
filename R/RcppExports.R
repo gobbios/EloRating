@@ -2,8 +2,8 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #' @export
-fastelo <- function(WINNER, LOSER, ALLIDS, KVALS, STARTVALUES, NORMPROB) {
-    .Call('_EloRating_fastelo', PACKAGE = 'EloRating', WINNER, LOSER, ALLIDS, KVALS, STARTVALUES, NORMPROB)
+fastelo <- function(WINNER, LOSER, ALLIDS, KVALS, STARTVALUES, NORMPROB = TRUE, ROUND = TRUE) {
+    .Call('_EloRating_fastelo', PACKAGE = 'EloRating', WINNER, LOSER, ALLIDS, KVALS, STARTVALUES, NORMPROB, ROUND)
 }
 
 mat2seqint <- function(mat) {

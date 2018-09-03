@@ -15,9 +15,8 @@
 prints its argument
 }
 \examples{
-data(adv); data(advpres)
-SEQC <- seqcheck(winner=adv$winner, loser=adv$loser, Date=adv$Date)
-print(SEQC)
+data(adv)
+print(seqcheck(winner = adv$winner, loser = adv$loser, Date = adv$Date))
 }
 \author{
 Christof Neumann
