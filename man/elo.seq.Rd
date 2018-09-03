@@ -8,7 +8,7 @@
 elo.seq(winner, loser, Date, draw = NULL, presence = NULL, startvalue = 1000,
                k = 100, normprob = TRUE, init = "average", intensity = NULL,
                iterate = 0, runcheck = TRUE, progressbar = FALSE)
-fastelo(WINNER, LOSER, ALLIDS, KVALS, STARTVALUES, NORMPROB)
+fastelo(WINNER, LOSER, ALLIDS, KVALS, STARTVALUES, NORMPROB = TRUE, ROUND = TRUE)
 }
 \arguments{
 \item{winner}{either a factor or character vector with winner IDs of dyadic dominance interactions}
@@ -50,7 +50,9 @@ fastelo(WINNER, LOSER, ALLIDS, KVALS, STARTVALUES, NORMPROB)
 
 \item{STARTVALUES}{numeric vector of the same length as \code{ALLIDS}, i.e. one start value for each individual}
 
-\item{NORMPROB}{logical, same as \code{normprob} for use in \code{fastelo()}}
+\item{NORMPROB}{logical, by default \code{TRUE}: same as \code{normprob} for use in \code{fastelo()}}
+
+\item{ROUND}{logical, by default \code{TRUE}: should ratings be rounded to integers. For use in \code{fastelo()}}
 }
 \value{
 An object of class \code{elo}, which is list with 10 items that serves as basis to extract relevant information:

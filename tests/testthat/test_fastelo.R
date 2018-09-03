@@ -21,8 +21,7 @@ test_that("elofast and eloseq same results", {
 
 data(adv2)
 myks <- list(displace = 20, fight = 200)
-res1 <- elo.seq(winner = adv2$winner, loser = adv2$loser, Date = adv2$Date,
-                k = myks, intensity = adv2$intensity)
+res1 <- elo.seq(winner = adv2$winner, loser = adv2$loser, Date = adv2$Date, k = myks, intensity = adv2$intensity)
 res1 <- extract_elo(res1)
 
 ks <- unlist(myks[adv2$intensity])
