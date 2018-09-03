@@ -35,7 +35,11 @@
 #'         color=TRUE)
 
 
-eloplot <- function(eloobject, ids = "all", interpolate = "yes", from = "start", to = "end", color = TRUE){
+eloplot <- function(eloobject, ids = "all", interpolate = "yes",
+                    from = "start", to = "end", color = TRUE) {
+  # save graphical parameters for restoring upon exiting the function
+  op <- par("mar")
+
   res <- eloobject
   # plotdata handling
   if (interpolate == "yes") {
@@ -169,4 +173,8 @@ eloplot <- function(eloobject, ids = "all", interpolate = "yes", from = "start",
       legend(1, 2.04, c(ids, ids.wo), cex = 0.8, bty = "n", pch = p.times[c(1:length(ids), 26)], pt.cex = 1, pt.bg = "grey")
     }
   }
+
+  # reset layout and margins
+  invisible(layout(1))
+  par(mar = op)
 }
