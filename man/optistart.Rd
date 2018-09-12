@@ -4,7 +4,8 @@
 \alias{optistart}
 \title{optimize start values}
 \usage{
-optistart(eloobject, spread = 200, runs = 2000, initialcohort = TRUE)
+optistart(eloobject, spread = 200, runs = 2000, doplot = FALSE,
+  initialcohort = TRUE)
 }
 \arguments{
 \item{eloobject}{output from \code{\link{elo.seq}}}
@@ -12,6 +13,8 @@ optistart(eloobject, spread = 200, runs = 2000, initialcohort = TRUE)
 \item{spread}{numeric, the standard deviation of the ratings to be tested (by default 200)}
 
 \item{runs}{numeric, number of inital ratings to be tested (by default 2000)}
+
+\item{doplot}{logical, should the distribution of log likelihoods be plotted}
 
 \item{initialcohort}{logical, not yet implemented}
 }

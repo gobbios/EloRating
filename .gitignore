@@ -20,3 +20,5 @@ src/*.o
 src/*.so
 src/*.dll
 packagearchive/
+inst/doc/
+vignettes/zz_cacheloc/

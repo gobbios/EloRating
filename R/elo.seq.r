@@ -45,9 +45,17 @@
 #' \item{misc}{various}
 #' \item{allids}{a (sorted) character vector with all IDs that occur in the dataset}
 #'
-#' \code{fastelo()} returns a list with two items:
-#' \item{1}{numeric vector of the final ratings in the same order as \code{ALLIDS}}
-#' \item{2}{numeric vector with winning probabilities in the same order as the interactions were supplied}
+#' \code{fastelo()} returns a list with ten items:
+#' \item{\code{$ratings}}{numeric vector of the final ratings in the same order as \code{ALLIDS}}
+#' \item{\code{$winprobs}}{numeric vector with winning probabilities in the same order as the interactions were supplied}
+#' \item{\code{$rtype}}{character of length 1, as a marker that the result comes from \code{fastelo()}}
+#' \item{\code{$startvalues}}{numeric vector with start values}
+#' \item{\code{$kvalues}}{numeric vector with k values}
+#' \item{\code{$winner}}{character vector with winners}
+#' \item{\code{$loser}}{character vector with losers}
+#' \item{\code{$allids}}{character vector with all IDs that occur in the sequence}
+#' \item{\code{$normprob}}{logical, was normal probability used for winning expectations}
+#' \item{\code{$round}}{logical, was rounding to integers used during the calculation of ratings}
 #'
 #' @references
 #' \insertRef{elo1978}{EloRating}
@@ -101,7 +109,7 @@
 #' svals <- rep(1000, length(allids))
 #'
 #' res1 <- fastelo(WINNER = winner, LOSER = loser, ALLIDS = allids, KVALS = k,
-#'                 STARTVALUES = svals, NORMPROB = TRUE)[[1]]
+#'                 STARTVALUES = svals, NORMPROB = TRUE)$ratings
 #' names(res1) <- allids
 #' res1 <- sort(res1, decreasing = TRUE)
 #' res2 <- extract_elo(elo.seq(winner = winner, loser = loser, Date = Date,
@@ -609,7 +617,7 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   res <- list(mat = mat, lmat = lmat, cmat = cmat, pmat = pmat, nmat = nmat,
               logtable = logtable, stability = stability,
               truedates = truedates, misc = misc, allids = sort(allids),
-              kvals = outk, startvalues = outstart
+              kvals = outk, startvalues = outstart, rtype = "elo.seq"
               )
 
   class(res) <- "elo"

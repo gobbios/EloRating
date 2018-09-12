@@ -56,5 +56,13 @@ List fastelo(CharacterVector WINNER, CharacterVector LOSER, CharacterVector ALLI
     }
 
   }
-  return Rcpp::List::create(svals, winprobs) ;
+
+  // naming the ratings vector and create another object to allow identifying that the returned list comes from the fastelo function
+  svals.names() = ALLIDS;
+  CharacterVector rtype = CharacterVector::create("fastelo");
+  return Rcpp::List::create(Rcpp::Named("ratings") = svals, Rcpp::Named("winprobs") = winprobs, Rcpp::Named("rtype") = rtype,
+                                        Rcpp::Named("startvalues") = STARTVALUES, Rcpp::Named("kvalues") = KVALS,
+                                        Rcpp::Named("winner") = WINNER, Rcpp::Named("loser") = LOSER, Rcpp::Named("allids") = ALLIDS,
+                                        Rcpp::Named("normprob") = NORMPROB, Rcpp::Named("round") = ROUND
+                              ) ;
 }

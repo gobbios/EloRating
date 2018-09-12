@@ -5,11 +5,11 @@
 \title{optimize the k parameter}
 \usage{
 optimizek(eloobject, krange = c(2, 400), optimode = "loop",
-  resolution = 100, daterange = NULL, doplot = FALSE,
+  resolution = 100, itype = NULL, daterange = NULL, doplot = FALSE,
   progbar = FALSE, ...)
 }
 \arguments{
-\item{eloobject}{output from \code{\link{elo.seq}}}
+\item{eloobject}{output from \code{\link{elo.seq}} or from \code{\link{fastelo}}}
 
 \item{krange}{either a vector of length 2, giving the range of k values to be tested, or a named list with vectors of length 2, in which each list item is named according to different interaction types (see the \code{intensity=} argument in \code{\link{elo.seq}})}
 
@@ -17,16 +17,18 @@ optimizek(eloobject, krange = c(2, 400), optimode = "loop",
 
 \item{resolution}{numeric, the number of steps between the range of k values to be tested. Currently only a single value can be supplied here and in case \code{krange} is a list this value will be applied to all items in this list}
 
-\item{daterange}{character or Date of length 2, provides a date range for optimization}
+\item{itype}{character or factor containing the different interaction types, which is only relevant if \code{krange} is a list. The content of \code{itype} and the names of \code{krange} have to match!}
 
-\item{doplot}{logical, should a plot be returned. Works only in the \code{optimode = "loop"} and \code{optimode = "loopfast"} and only if there are maximally two different interaction types}
+\item{daterange}{character or Date of length 2, provides a date range for optimization. Only relevant in case \code{eloobject} is the result of \code{elo.seq()}}
+
+\item{doplot}{logical, should a plot be returned. Works only if \code{optimode = "loop"}, and only if there are maximally two different interaction types}
 
 \item{progbar}{logical, should a progress bar be displayed, not yet implemented}
 
 \item{...}{additional arguments for the plot and text functions, e.g. for setting \code{cex} or \code{lwd}}
 }
 \value{
-a data frame with one line, in which the maximal log likelihood is returned alongside the one or several corresponding k values
+a list with two items: (1) \code{$best}, a data frame with one line, in which the maximal log likelihood is returned alongside the one or several corresponding k values, and (2) \code{$complete}, a data frame with all the values tested and their log likelihoods
 }
 \description{
 optimize the k parameter
@@ -34,33 +36,22 @@ optimize the k parameter
 \details{
 this function attempts to find the objectively best k parameter. This is done by a maximum likelihood approach in which the likelihood is represented by the individual winning probabilities. In a perfect situation, in each interaction the winner would have a winning probability of 1, whereas in the worst case, in each interaction the winner would have a winning probability of 0.
 
-There are two major approaches to find the best k. One does it 'by hand', i.e. by means of a loop trying many different k values (specified by \code{resolution}), recalculating the ratings (and associated winning probabilities) and return the likelihood for each k value. The second approach uses the \code{optimize} function, but this is not yet implemented. For the loop approach, there are two implementations. The first uses internally the \code{elo.seq()} function. This approach is relatively slow and the only advantage is that it can account for tied interaction outcomes. The second uses a much faster function (\code{fastelo()}) that just does the bare minimum in terms of rating calculations (and cannot yet handle ties).
+There are two major approaches to find the best k. One does it 'by hand', i.e. by means of a loop trying many different k values (specified by \code{resolution}), recalculating the ratings (and associated winning probabilities) and return the likelihood for each k value. The second approach uses the \code{optimize} function, but this is not yet implemented.
 
-One thing to note is that you can use interaction-level k values, i.e. if you have interactions of different types (e.g. fights vs. displacements) you can try to find the optimal k for each interaction type. This is achieved in the loop approaches (\code{"loop"} and \code{"loopfast"}) by trying different \emph{combinations} of k values. Because of the combinatorial nature of this approach, the number of individual sequences to be fitted increases sharply with higher resolutions: if you have two different interaction types and use a resolution of 5, the function will need to run 25 (= 5 * 5) iterations. If you use a more reasonable resolution of 100 the number of iterations will be already 10000. Also note that in that case the actual plotting of the results might take a lot of time. Just try with low values first to see whether it works as expected and the potentially increase the resolution.
+One thing to note is that you can use interaction-level k values, i.e. if you have interactions of different types (e.g. fights vs. displacements) you can try to find the optimal k for each interaction type. This is achieved in the (\code{"loop"} approach by trying different \emph{combinations} of k values. Because of the combinatorial nature of this approach, the number of individual sequences to be fitted increases sharply with higher resolutions: if you have two different interaction types and use a resolution of 5, the function will need to run 25 (= 5 * 5) iterations. If you use a more reasonable resolution of 100 the number of iterations will be already 10000. Also note that in that case the actual plotting of the results might take a lot of time in such cases. Just try with low values first to see whether it works as expected and the potentially increase the resolution.
 }
 \examples{
 data(adv2)
 res <- elo.seq(winner = adv2$winner, loser = adv2$loser, Date = adv2$Date)
-optimizek(eloobject = res, krange = c(50, 400), resolution = 200, doplot = TRUE)
+optimizek(eloobject = res, krange = c(50, 400), resolution = 200, doplot = TRUE)$best
 
 # using different interaction intensities
 myks <- list(displace = 20, fight = 200)
 res <- elo.seq(winner = adv2$winner, loser = adv2$loser, Date = adv2$Date,
                k = myks, intensity = adv2$intensity)
-optimizek(eloobject = res, optimode = "loopfast",
+optimizek(eloobject = res, optimode = "loop",
           krange = list(fight = c(50, 600), displace = c(20, 200)),
-          resolution = 20, doplot = TRUE)
-
-# optimode = "loopfast" is much faster
-\dontrun{
-data("baboons2")
-xdata <- baboons2
-res <- elo.seq(winner = as.character(xdata$Winner), loser = as.character(xdata$Loser),
-               Date = as.character(xdata$Date))
-# slow
-optimizek(res, optimode = "loop", doplot = TRUE, resolution = 100, krange = c(50, 400))
-# fast (despite higher resolution)
-optimizek(res, optimode = "loopfast", doplot = TRUE, resolution = 1000, krange = c(50, 400))}
+          resolution = 100, itype = adv2$intensity, main = 'bla')$best
 }
 \references{
 \insertRef{franz2015a}{EloRating}

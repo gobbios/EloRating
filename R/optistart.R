@@ -5,6 +5,7 @@
 #' @param eloobject output from \code{\link{elo.seq}}
 #' @param spread numeric, the standard deviation of the ratings to be tested (by default 200)
 #' @param runs numeric, number of inital ratings to be tested (by default 2000)
+#' @param doplot logical, should the distribution of log likelihoods be plotted
 #' @param initialcohort logical, not yet implemented
 #'
 #' @return a list with multiple items:
@@ -21,7 +22,7 @@
 #' eloplot(res1)
 #' eloplot(res2)
 
-optistart <- function(eloobject, spread = 200, runs = 2000, initialcohort = TRUE) {
+optistart <- function(eloobject, spread = 200, runs = 2000, doplot = FALSE, initialcohort = TRUE) {
   allids <- eloobject$allids
   n <- length(allids)
   normprob <- eloobject$misc["normprob"] == "1"
@@ -42,10 +43,13 @@ optistart <- function(eloobject, spread = 200, runs = 2000, initialcohort = TRUE
   }
   original <- likelo(fastelo(WINNER = w, LOSER = l, ALLIDS = allids,
                              KVALS = kval, STARTVALUES = rep(startval, n), NORMPROB = normprob))
-  x <- hist(logliks, breaks = 50, plot = FALSE)
-  plot(x, ylim = c(0, max(x$counts)*1.05), yaxs = "i", las = 1, main = "")
-  box()
-  abline(v = original, col = "red", lwd = 2)
+  if (doplot) {
+    x <- hist(logliks, breaks = 50, plot = FALSE)
+    plot(x, ylim = c(0, max(x$counts)*1.05), yaxs = "i", las = 1, main = "")
+    box()
+    abline(v = original, col = "red", lwd = 2)
+  }
+
   return(list(best = resmat[which.max(logliks), ], val = max(logliks),
               original = original, resmat = resmat, logliks = logliks))
 }
