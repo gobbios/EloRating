@@ -38,15 +38,16 @@
 #' extract_elo(SEQ, "2010-01-10", daterange=5)
 #' extract_elo(SEQ, "2010-01-10", daterange=5, NA.interpolate=TRUE)
 #'
+#' # and for multiple dates and a single IDs
+#' dates <- sample(adv$Date, size = 10, replace = TRUE)
+#' ids <- "b"
+#' extract_elo(eloobject = SEQ, extractdate = dates, standardize = FALSE, IDs = ids)
+#'
 #' # and for multiple dates and IDs
 #' dates <- sample(adv$Date, size = 10, replace = TRUE)
 #' ids <- sample(colnames(advpres)[2:8], size = 10, replace = TRUE)
 #' extract_elo(eloobject = SEQ, extractdate = dates, standardize = FALSE, IDs = ids)
 #'
-#' # and for multiple dates for a single IDs
-#' dates <- sample(adv$Date, size = 10, replace = TRUE)
-#' ids <- "b"
-#' extract_elo(eloobject = SEQ, extractdate = dates, standardize = FALSE, IDs = ids)
 
 extract_elo <- function(eloobject, extractdate = eloobject$misc["maxDate"],
                         standardize = FALSE, IDs = NULL, NA.interpolate = FALSE,

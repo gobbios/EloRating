@@ -1,6 +1,12 @@
 \name{NEWS}
 \title{News for Package \pkg{EloRating}}
 
+\section{Changes in version 0.46.5 (2019-02-11)}{
+	\itemize{
+	  \item updated tutorial
+	}
+}
+
 \section{Changes in version 0.46.4 (2018-08-30)}{
 	\itemize{
 	  \item added reference management with \code{Rdpack}
