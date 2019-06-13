@@ -1,7 +1,7 @@
 ---
 title: '`EloRating` - a brief tutorial'
 author: "Christof Neumann & Lars Kulik"
-date: "2017-07-30 (v. 0.45.03)"
+date: "`r paste(Sys.Date(), ' (v. ', packageVersion('EloRating'), ')', sep = '')`"
 output:
   pdf_document:
     fig_caption: yes
@@ -44,7 +44,7 @@ runbaboonplots <- TRUE
 
 The `EloRating` package is work in progress. If you have any criticism, suggestions or bugs to report, please let us know.
 
-We describe here the main functionality of the `EloRating` package. For the sake of this tutorial, we first present an example with the minimal amount of data required: a sequence of decided dominance interactions along with the dates of these interactions.\footnote{Dealing with calendar dates in `R` is prone to unexpected behavior. We decided to stick to a specific format ("YYYY-MM-DD") and the functions assume that dates appear in this format in the objects from which the functions work.} Even though the package is capable of dealing with undecided interactions (in fact the example file contains this information), we decided to omit this aspect for the sake of clarity in the first part (section [Using `EloRating`](#using-elorating)). In addition, this first example is not linked to 'presence' data. In other words, here we assume that all individuals that occur in the data set were present over the entire study period. For the same example utilizing information about presence/absence of individuals and undecided interactions/draws see section on [presence data and undecided interactions](#incorporating-presence-data-and-undecided-interactions).
+We describe here the main functionality of the `EloRating` package. For the sake of this tutorial, we first present an example with the minimal amount of data required: a sequence of decided dominance interactions along with the dates of these interactions.\footnote{Dealing with calendar dates in `R` is prone to unexpected behaviour. We decided to stick to a specific format ("YYYY-MM-DD") and the functions assume that dates appear in this format in the objects from which the functions work.} Even though the package is capable of dealing with undecided interactions (in fact the example file contains this information), we decided to omit this aspect for the sake of clarity in the first part (section [Using `EloRating`](#using-elorating)). In addition, this first example is not linked to 'presence' data. In other words, here we assume that all individuals that occur in the data set were present over the entire study period. For the same example utilizing information about presence/absence of individuals and undecided interactions/draws see section on [presence data and undecided interactions](#incorporating-presence-data-and-undecided-interactions).
 
 In the section [Further notes on the stability index](#further-notes-on-the-stability-index), we present a detailed description of the updated stability index $S$.
 
@@ -62,7 +62,7 @@ install.packages("EloRating")
 
 There are a number of additional packages that are required before `EloRating` will work. If you used the approach just shown, this is nothing to worry about because all the required packages will be installed alongside `EloRating`. 
 
-If you want the latest development version of the package you can install it from GitHub. For this to work, you need a the following packages installed: `zoo`, `sna`, `network`, `Rcpp`, `RcppArmadillo`, `knitr`, `Rdpack` and `devtools`. It might be neccessary to install these first before you can install the GitHub version of `EloRating`, e.g. by \texttt{install.packages("zoo")} etc. Furthermore you will need a set of tools:
+If you want the latest development version of the package you can install it from GitHub. For this to work, you need at least the following packages installed: `zoo`, `sna`, `network`, `Rcpp`, `RcppArmadillo`, `knitr`, `Rdpack` and `devtools`. It might be necessary to install these first before you can install the GitHub version of `EloRating`, e.g. by \texttt{install.packages("zoo")} etc. Furthermore you will need a set of tools:
 
 + **Windows**: Rtools from  https://cran.r-project.org/bin/windows/Rtools/
 
@@ -262,7 +262,7 @@ eloplot(res2, ids = c("s", "a", "w", "k", "c"), from = "2000-06-05", to = "2000-
 
 In principle, there are two different tuning knobs with which the calculation of Elo-ratings is controlled. First there is the *k* parameter and second there is the issue of which start values to assign the individuals at the beginning of the rating process. So far, we simply assumed a single *k* parameter as well as using the same starting value for each individual throughout. Now, this is probably not ideal because we make at least two implicit assumptions here. First, using the same *k* implies that all interactions have equal consequences in the sense that we can't distinguish for example between mild and severe aggression. A physical fight is probably more relevant for the assessment of an individual's status than say a mild threat and leave interaction or a displacement without any overt physical aggression. This should/could be reflected in different *k* values that assign larger *k* to fights and lower *k* to mild interactions.\footnote{To use a sports metaphor: a tennis match in a Grand Slam tournament should be more impactful on the ranking than a training match (even if it's against the same opponent).} Likewise, by assigning each individual the same starting value we assume that, at least potentially, all individuals could have the same status. For example, assigning females and males the same initial score seems not very plausible in many animal species and chances are that starting values that assign higher values to males than to females leads to a more realistic ratings/rankings.
 
-There are two ways to address this. We can either incorporate such reasoning based on prior knowledge of the study system, or alternatively, we can try to find settigs that optimize some objective fit criterion. In this section we will go through both approaches. We start by incorporating prior knowledge to set different start and *k* values. And the then we will look into ways of using maximum likelihood to set these parameters.
+There are two ways to address this. We can either incorporate such reasoning based on prior knowledge of the study system, or alternatively, we can try to find settings that optimize some objective fit criterion. In this section we will go through both approaches. We start by incorporating prior knowledge to set different start and *k* values. And the then we will look into ways of using maximum likelihood to set these parameters.
 
 ## Prior knowledge
 
@@ -302,7 +302,7 @@ res3 <- elo.seq(winner = xdata$winner, loser = xdata$loser, Date = xdata$Date, p
 eloplot(res3)
 ```
 
-In the next example, we first calculate Elo-ratings without prior knowledge, i.e. like in the examples above. But then we use the final ratings of this step to calculate ranks and based on these ranks, we calculate Elo-ratings again but now with this 'prior' knowledge. Now, this is a somewhat circular approach, but it serves well to show how prior information can flatten El-rating trajectories (figure \ref{fig:prior}). For this example, we use a smaller data set to have less cluttered figures.
+In the next example, we first calculate Elo-ratings without prior knowledge, i.e. like in the examples above. But then we use the final ratings of this step to calculate ranks and based on these ranks, we calculate Elo-ratings again but now with this 'prior' knowledge. Now, this is a somewhat circular approach, but it serves well to show how prior information can flatten Elo-rating trajectories (figure \ref{fig:prior}). For this example, we use a smaller data set to have less cluttered figures.
 
 ```{r}
 data(adv2)
@@ -357,7 +357,7 @@ axis(2, las = 1, cex.axis = 0.7)
 box()
 ```
 
-When we look at figure \ref{fig:prior} we can see several things. First, the actual order of individuals at the end of both runs is identical and final ratings are highly correlated ($r= `r sprintf("%.2f", cor(e1, e2))`$). Further, several patterns among the final ratings are very similar, e.g. gold and blue are close to each other, as are green and grey\footnote{my apologies to color blind people}, while the two red individuals are relatively further spaced apart. The only major difference is the black individual which is close to blue and gold in the left panel but further away from them in the center panel. Equally interesting are the correlation coefficients for each day between the two approaches (figure \ref{fig:prior}, right panel). Not surprisingly, correlations become close over time (keep in mind that on the first day, there was only one interaction observed and as such, in the left panel, only two individuals (blue and gold) had ratings different from 1000).
+When we look at figure \ref{fig:prior} we can see several things. First, the actual order of individuals at the end of both runs is identical and final ratings are highly correlated ($r= `r sprintf("%.2f", cor(e1, e2))`$). Further, several patterns among the final ratings are very similar, e.g. gold and blue are close to each other, as are green and grey\footnote{my apologies to colour blind people}, while the two red individuals are relatively further spaced apart. The only major difference is the black individual which is close to blue and gold in the left panel but further away from them in the centre panel. Equally interesting are the correlation coefficients for each day between the two approaches (figure \ref{fig:prior}, right panel). Not surprisingly, correlations become close over time (keep in mind that on the first day, there was only one interaction observed and as such, in the left panel, only two individuals (blue and gold) had ratings different from 1000).
 
 You can also supply rank classes. These rank classes will then be transformed into intermediate 'ranks', which then are transformed into custom start values according to the same principal as above with regards to the shape parameter. The major caveat here is that currently you have to specify **four** rank classes. If you have less, two for example, you still need to specify all four, but leave unused classes `NULL`. The class-rank conversion is done via the following formula: class=1: 1; class=2: $N/4$; class=3: $N/2$; class=4: $N - N/4$, where $N$ is the group size. Please note that rank classes have to be given in descending order, i.e. the first class is the highest class (e.g. 'high-ranking'), but the actual labels of the rank classes are meaningless and are simply used for illustration.
 
@@ -387,19 +387,19 @@ elo.seq(winner = adv2$winner, loser = adv2$loser, Date = adv2$Date,
 
 In future package versions it hopefully will be allowed to include subsets of individuals in the context of prior ratings (such that the above example would work).
 
-In general, I (CN) am still unsure about the general validity of this approach. It adds information without much apparent justification: from an ordinal ranking (or rank classes) with meaningless differences to cardinal scores where the differences between any two pairs of individuals can be compared in terms of magnitude. For example, in an ordinal ranking no distinction can be made between the difference of rank 1 versus rank 2 or rank 11 versus rank 12. In a cardinal system (like David's score), such differences are meaningful, such that rank 1 and rank 2 can be relatively more close to each other than rank 11 and 12, or the other way around. That being said, if there is some knowledge of the species in this respect, i.e. how pronounced are power differentials between individuals (compare also to steepness), the approach may be justified. Otherwise, for the moment I would advise either to set the shape parameter to 0 (which implies that differences between all adjacent pairs of individuals are identical, steepness = 1) or to refrain from incorporating ordinal ranks altogether. A better founded reasoning for the approach is needed in my opinion, and also it would be really interesting to achieve the inclusion of cardinal scores into the system, for example prior knowledge of David's scores.
+In general, I (CN) am still unsure about the general validity of this approach. It adds information without much apparent justification: from an ordinal ranking (or rank classes) with meaningless differences between the ranks (or rank classes) to cardinal scores where the differences between any two pairs of individuals can be compared in terms of magnitude. For example, in an ordinal ranking no distinction can be made between the difference of rank 1 versus rank 2 or rank 11 versus rank 12. In a cardinal system (like David's score), such differences are meaningful, such that rank 1 and rank 2 can be relatively more close to each other than rank 11 and 12, or the other way around. That being said, if there is some knowledge of the species in this respect, i.e. if we know how pronounced power differentials are between individuals (compare also to steepness), the approach may be justified. Otherwise, for the moment I would advise either to set the shape parameter to 0 (which implies that differences between all adjacent pairs of individuals are identical, steepness = 1) or to refrain from incorporating ordinal ranks altogether. A better founded reasoning for the approach is needed in my opinion, and also it would be really interesting to achieve the inclusion of cardinal scores into the system, for example prior knowledge of David's scores.
 
 
 ### Adjusting *k*
 
-Here we describe how to set different *k* values to different types of interactions. Typically, setting *k* would allow to differentiate interactions of different intensity. Similarly, we can envision that *k* could be set according to the value of the resource that is contested in a given interaction. Larger *k*s would be set for interactions of higher intensity or higher resource value.
+Here we describe how to set different *k* values to different types of interactions. Typically, setting *k* would allow differentiating interactions of different intensity. Similarly, we can envision that *k* could be set according to the value of the resource that is contested in a given interaction. Larger *k*s would be set for interactions of higher intensity or higher resource value.
 
-In our small example of 33 interactions between 7 individuals, we have observed interactions of two different intensities: displace (threat/leave) interactions and fights (fight/flee interactions). For the sake of this example, we consider that displacing another individual is milder and should have less of an effect on dominance status, hence we assign such interactions a relatively low *k* value, here $k=50$. In contrast, `real' fights should be much more consequential, hence we chose $k=200$. Please note that a objective way for how to choose varying *k* is still unknown, and currently guided mostly by intuition. Future work could explore whether and how it is possible to optimize varying $k$ akin to the approach of @franz2015a and @foerster2016b (see also below).
+In our small example of 33 interactions between 7 individuals, we have observed interactions of two different intensities: displace (threat/leave) interactions and fights (fight/flee interactions). For the sake of this example, we consider that displacing another individual is milder and should have less of an effect on dominance status, hence we assign such interactions a relatively low *k* value, here $k=50$. In contrast, `real' fights should be much more consequential, hence we chose $k=200$. In the example here I chose the two *k* values arbitrarily. For an objective way for how to choose varying *k* (or even if you have only a single *k*, i.e. you don't distinguish between different aggression types), look at the [section on optimization](#optimization).
 
 In the current implementation, different *k* have to be supplied as a named list, where the names have to correspond to the intensity/interaction type specified. In our example we need a list with two items:
 
 ```{r}
-table(adv2$intensity)
+table(adv2$intensity) # remind ourselves how the intensity categories are named
 
 myk <- list(displace = 50, fight = 200)
 res3 <- elo.seq(winner = adv2$winner, loser = adv2$loser, Date = adv2$Date, intensity = adv2$intensity, k = myk)
@@ -489,7 +489,7 @@ Another approach of adjusting $k$ is to optimize its value with a likelihood app
 
 To recap: the expected winning probability for an individual depends on the rating difference prior to an interaction and *k* determines how much a rating can change after a single interaction. Hence, using different *k* will lead to different winning probabilities. Just to be clear, we calculate the rating sequence multiple times and just change *k* for each iteration. So, each iteration of the sequence and using different *k* will lead to different sets of expected winning probabilities and hence to different (log) likelihoods. The *k* value that results in the largest (= maximal) log likelihood is the *k* that leads to the largest expected winning probabilities. The function that achieves this in the package is \texttt{opimizek()}. 
 
-\texttt{opimizek()} does exactly what is described above: calculate ratings mutliple times with different *k* (\texttt{resolution=} determines how often) and extract the product of the expected winning probabilities. The other thing to specify is the range of *k* you want to test (the \texttt{krange=} argument), and here limits of 10 until 500 seems a reasonable choice. Finally, note that the \texttt{optimizek()} function requires as its main argument the result of a call to \texttt{elo.seq()}. 
+\texttt{opimizek()} does exactly what is described above: calculate ratings multiple times with different *k* (\texttt{resolution=} determines how often) and extract the product of the expected winning probabilities. The other thing to specify is the range of *k* you want to test (the \texttt{krange=} argument), and here limits of 10 until 500 seems a reasonable choice. Finally, note that the \texttt{optimizek()} function requires as its main argument the result of a call to \texttt{elo.seq()}. 
 
 So, here we calculate the ratings from a sequence with 250 interactions and just use the default *k = 100* in this step (for the purpose of finding the optimal *k*, its value in this step is of no relevance). Then we apply \texttt{optimizek()} with *k* limits of 10 and 500 and with a resolution of 491.\footnote{I chose this odd resolution to obtain steps 1 of the tested \textit{k}: check out \texttt{seq(from = 10, to = 500, length.out = 491).}} The result of this is a list with two entries: \texttt{\$best} contains the optimal *k* for that sequence, and \texttt{\$complete} contains the entire set of tested *k* along with the log likelihood for each tested *k*.
 
@@ -565,7 +565,7 @@ plotfoo(xdata)
 
 The next step in this approach is to incorporate any knowledge you may have about interaction types. As stated above, it seems plausible to assume that interactions of different intensities will have different consequences on individuals' rating trajectories, which may be reflected in different *k* values for different interaction types. But the same question remains as above, i.e. what values to choose? One solution is to simply extend the optimization approach to multiple dimensions (for example finding two *k* values if there are two interaction types). Implementing this is also done with the \texttt{optimizek()} function. There are two things that need to be changed compared to the case with only finding one *k*: we need to supply a list with the to-be-tested *k* values with one list item for each interaction type and we need to specify the vector/column that contains the information about which interaction type belongs to each interaction.\footnote{Handing over the interaction type vector can be done either when running \texttt{elo.seq()} or it can be done in the \texttt{optimizek()} function call.} 
 
-Two more things to note. (1) The \textit{names} of the list need to match the entries in the interaction type vector/column. (2) The resolution setting works combinatorically, i.e. if you set this to 5 with two interaction types the function will run $5*5=25$ times, and if you have three interaction types with a resolution of 100 the function will iterate $100*100*100 = 1000000$ times. Just keep in mind that higher resolutions here lead to longer run times, so it might be wise to start with small values to see whether everything works.
+Two more things to note. (1) The \textit{names} of the list need to match the entries in the interaction type vector/column. (2) The resolution setting works combinatorially, i.e. if you set this to 5 with two interaction types the function will run $5*5=25$ times, and if you have three interaction types with a resolution of 100 the function will iterate $100*100*100 = 1000000$ times. Just keep in mind that higher resolutions here lead to longer run times, so it might be wise to start with small values to see whether everything works.
 
 
 ```{r}
@@ -584,9 +584,9 @@ We can also illustrate these results with a heatmap (figure \ref{fig:2k}):
 heatmapplot(loglik ~ threat + fight, data = ores2$complete)
 ```
 
-Finally, we can also investigate how taking into account interaction type compares to ignoring interaction type (figure \ref{fig:likelihoodcompare}). The idea here is that a rating model that accounts for some variable (interaction type) should be better than a model that doesn't account for it. So here we visualize the likelihoods as a function of different *k*. The thick blue line represents the results with one *k*, ignoring interaction types (the same as in figure \ref{fig:maxlik1}). For the red lines we look at how the likelihood changes according to $k_{threat}$ when the *k* for fights ($k_{fight}$) is fixed. The continuous line reflects this at $k_{fight} = `r round(ores2$best$fight, 1)`$, i.e. at the optimal value for $k_{fight}$, while the dashed line corresponds to $k_{fight} = 10$. The grey curves represent the same thing, just that $k_{fight}$ varies, while $k_{threat}$ is fixed (continuous line: $k_{threat} = `r round(ores2$best$threat, 1)`$ and dashed line $k_{threat} = 500$). The arrows below the horizontal axis depict the maximum point of each curve. There are at least two points to make here. First, the *k* values at the peaks of the continuous curves (indicated by the arrows) reflect the *k* values we found in the optimization step above. This is logical because I chose the fixed values to depict in the figure post-hoc, i.e. after I knew what the optimal values were. Second, in absolute terms, neither the continuous red and grey curves lead to a maximum likelihood that is substantially larger than that at the maximum of the blue curve (`r round(ores2$best$loglik, 2)` versus `r round(ores$best$loglik, 2)`). Hence, in this example it appears that the added complexity of incorporating two interaction types doesn't lead to a substantially better fit (in terms of winning probabilities on which the ML is based). You could even test this with a likelihood ratio test if you really wanted to, although I don't really see a practical reason to do so in real life.
+Finally, we can also investigate how taking into account interaction type compares to ignoring interaction type (figure \ref{fig:likelihoodcompare})\footnote{Code for this figure is in the appendix}. The idea here is that a rating model that accounts for some variable (interaction type) should be better than a model that doesn't account for it. So here we visualize the likelihoods as a function of different *k*. The thick blue line represents the results with one *k*, ignoring interaction types (the same as in figure \ref{fig:maxlik1}). For the red lines we look at how the likelihood changes according to $k_{threat}$ when the *k* for fights ($k_{fight}$) is fixed. The continuous line reflects this at $k_{fight} = `r round(ores2$best$fight, 1)`$, i.e. at the optimal value for $k_{fight}$, while the dashed line corresponds to $k_{fight} = 10$. The grey curves represent the same thing, just that $k_{fight}$ varies, while $k_{threat}$ is fixed (continuous line: $k_{threat} = `r round(ores2$best$threat, 1)`$ and dashed line $k_{threat} = 500$). The arrows below the horizontal axis depict the maximum point of each curve. There are at least two points to make here. First, the *k* values at the peaks of the continuous curves (indicated by the arrows) reflect the *k* values we found in the optimization step above. This is logical because I chose the fixed values to depict in the figure post-hoc, i.e. after I knew what the optimal values were. Second, in absolute terms, neither the continuous red and grey curves lead to a maximum likelihood that is substantially larger than that at the maximum of the blue curve (`r round(ores2$best$loglik, 2)` versus `r round(ores$best$loglik, 2)`). Hence, in this example it appears that the added complexity of incorporating two interaction types doesn't lead to a substantially better fit (in terms of winning probabilities on which the ML is based). You could even formally test this with a likelihood ratio test, although I don't see a practical reason to do so in real life.
 
-```{r, fig.width=7, fig.height=4.8, out.width="50%", fig.cap = "\\small Incorporating versus ignoring interaction type leads to different shapes in likelihood functions. The arrows below the horizontal axis indicate the optimal \\textit{k} for each curve. See text for more explanations. \\label{fig:likelihoodcompare}"}
+```{r, echo = FALSE, fig.width=7, fig.height=4.8, out.width="50%", fig.cap = "\\small Incorporating versus ignoring interaction type leads to different shapes in likelihood functions. The arrows below the horizontal axis indicate the optimal \\textit{k} for each curve. See text for more explanations. \\label{fig:likelihoodcompare}"}
 plot(0, 0, type = "n", xlim = c(0, 500), ylim = c(-220, -100), las = 1, xlab = bquote(italic(k)), 
      ylab = "log likelihood", yaxs = "i")
 points(ores$complete$k, ores$complete$loglik, type = "l", col = "blue", lwd = 2)
@@ -622,10 +622,12 @@ legend("bottom", legend = c("one interaction type", "threat (fight fixed)", "fig
 
 It is also possible to use a maximum likelihood approach to try out multiple sets of starting values in order to find one the maximizes the likelihood of winning probabilities. Actually though, this is more of an approximate approach because we cannot go through all possible combinations of start ratings. So what we rather do is to generate a large number of sets of starting values and then assess the likelihood of these sets. For example a set of *a = 1100, b = 1000, c = 900* may be better than the set of *a = 1200, b = 1000, c = 800*. 
 
-```{r optistart, eval = FALSE, cache = TRUE}
+In the following piece of code we run a simulation where we compare the performance of informed start ratings (either via prior knowledge or via optimization) with uninformed start ratings. I won't explain the code in detail here (that is for future versions), just note that we begin with creating sequences for which we *know* the true ranks (via a function in the `aniDom` package). Then we create (1) start values from these known ranks, (2) start values based on a best set of random start values (as outline in the paragraph above) and (3) uniform start values (i.e. each individual has the same start value). For approach (2) I use two different sets of possible start values (1000 and 10000), where the expectation is that the higher the number of possible start values the higher the probability that a 'good' set is among them. In the end, we compare the correlations between the final ratings from each of the three approaches and the true ranks. A higher correlation indicates that the relationship between true ranks and final ratings is better. 
+
+```{r optistart, eval = TRUE, cache = TRUE, fig.width=7, fig.height=3.8, out.width = "70%", fig.cap = "\\small Comparison of performance between different approaches to assign custom start values.  \\label{fig:optistart}"}
 library(aniDom)
 set.seed(123)
-resmat <- matrix(ncol = 2, nrow = 50)
+resmat <- matrix(ncol = 4, nrow = 100)
 
 for (i in 1:nrow(resmat)) {
   xd <- generate_interactions(N.inds = 10, N.obs = 200, b = -2, a = 1, id.biased = TRUE)
@@ -645,29 +647,37 @@ for (i in 1:nrow(resmat)) {
   # informed by optimized start values
   templist <- list(allids = allids, misc = c(normprob = "1"), logtable = data.frame(winner = w, loser = l),
                    kvals = rep(100, length(w)), startvalues = rep(1000, length(allids)))
-  svals <- optistart(templist, runs = 5000)$best
+  svals <- optistart(templist, runs = 1000)$best
   ores2 <- fastelo(w, l, allids, kvals, svals)
   ores2 <- ores2[[1]][allids]
   
+  # with more runs
+  svals <- optistart(templist, runs = 10000)$best
+  ores3 <- fastelo(w, l, allids, kvals, svals)
+  ores3 <- ores3[[1]][allids]
+  
   # uninformed
   svals <- rep(1000, length(allids))
-  ores3 <- fastelo(w, l, allids, kvals, svals)
-  ores3 <- ores3[[1]]
+  ores4 <- fastelo(w, l, allids, kvals, svals)
+  ores4 <- ores4[[1]]
   
-  resmat[i, 1] <- cor(ores1, 1:10, method = "s")
-  resmat[i, 2] <- cor(ores2, 1:10, method = "s")
+  resmat[i, 1] <- cor(ores1, myranks, method = "s")
+  resmat[i, 2] <- cor(ores2, myranks, method = "s")
+  resmat[i, 3] <- cor(ores3, myranks, method = "s")
+  resmat[i, 4] <- cor(ores4, myranks, method = "s")
 }
+
 resmat <- resmat * (-1)
-boxplot(resmat)
+boxplot(resmat, axes = FALSE, boxwex = 0.4, lty = 1)
+axis(1, at = 1:4, tcl = 0, cex.axis = 0.7, padj = 0.5,
+     labels = c("informed by\nknown ranks", "informed by\noptimized start values\n(1000 runs)", 
+                "informed by\noptimized start values\n(10000 runs)", "uninformed"))
+axis(2, las = 1)
+box()
 ```
 
 
-
-
-
-
-
-
+Figure \ref{fig:optistart} shows the results of this simulation. We did 100 runs here, i.e. we created 100 different data sets. The best performance is achieved by using approach (1), i.e. assigning ratings based on prior knowledge of ranks. The remaining runs don't differ much in terms of their performance, although with some squinting of the eyes we could argue that approach (2) with 10000 tries is a tiny bit better than the remaining two (1000 tries and uniform). The take-home message here then is that if you know prior ranks, use them.\footnote{But if you actually have interaction data from *before* your study, I would rather incorporate those interactions in my sequence directly rather than discarding them in favour of using ordinal ranks} That said, if you don't know prior ranks then there seems to be only a very small advantage of using procedure (2). One more thing to note here is that this simulation is far from comprehensive. For example, group size was fixed (10) as was the number of interactions per data set (200). I suspect that for larger group sizes approach (2) becomes inefficient.
 
 
 # More functions related to Elo-rating
@@ -686,7 +696,7 @@ stab_elo(res2, from = "2000-05-05", to = "2000-06-05")
 
 ## Individual rating trajectories with `traj.elo()`
 
-`traj.elo()` provides information about Elo-rating trajectories of individuals over time. These trajectories are simply regression slopes of ratings as a function of days. To calculate these slopes we use ratings per day, which may differ from those ratings that would be returned by `extract_elo()`. For `extract_elo()`, we return ratings on a given day regardless of whether there were actually observed interactions for a given individual (i.e. the most recent rating). For `traj_elo()`, we use  only ratings from days *with* observed interactions. As a consequence, we need at least two days with interactions to calculate a slope. If there was no or only one day with observed interactions, the slope is returned as `NA` in the output and a warning message is produced (*s* and *n* in the example).
+`traj.elo()` provides information about Elo-rating trajectories of individuals over time. These trajectories are simply regression slopes of ratings as a function of days. To calculate these slopes we use ratings per day, which may differ from those ratings that would be returned by `extract_elo()`. For `extract_elo()`, we return ratings on a given day regardless of whether there were actually observed interactions for a given individual (i.e. the most recent rating). For `traj_elo()`, we use  only ratings from days *with* observed interactions. As a consequence, we need at least two days with interactions to calculate a slope. If there was no or only one day with observed interactions, the slope is returned as `NA` in the output and a message is produced (*s* and *n* in the examples).
 
 ```{r}
 traj_elo(res2, ID = c("s", "f", "n", "z"), from = "2000-05-05", to = "2000-06-05")
@@ -856,11 +866,11 @@ prunk(mat)
 
 ## David's scores and steepness
 
-With the `DS()` function you can calculate David's scores [@david1987; @gammell2003; @devries2006]. Note that this function only works on square matrices (see  [`creatematrix()`](#from-sequence-to-matrix-with-creatematrix) for how to create a matrix from a sequence).
+With the `DS()` function you can calculate David's scores [@david1987; @gammell2003; @devries2006]. Note that this function only works on square matrices (see  [`creatematrix()`](#from-sequence-to-matrix-with-creatematrix) for how to create a matrix from a sequence). There are two ways by which the dyadic winning proportions can be calculated. The default way is to calculate proportions corrected for chance (`prop = "Dij"`). Alternatively, you can use raw proportions with `prop = "Pij"` (see @devries2006 for details).
 
 ```{r}
 data(bonobos)
-DS(bonobos)
+DS(bonobos, prop = "Dij")
 ```
 
 With the `steepness()` function we can calculate steepness based on David's scores [@devries2006]. 
@@ -1018,7 +1028,7 @@ legend(x = 1, y = 2.04, colnames(ratings), cex = 0.8, bty = "n", pch = 16, pt.ce
        lty = myltys)
 ```
 
-Finally, we may want to add symbols on top of the lines so that distinction between individuals becomes clearer in addition or replacing the color approach. Because putting symbols on for each single interaction may clutter the plot, I find it useful to use only every X\textsuperscript{th} data point. In the example we use every 3rd point (`stp <- 3`). The data come from yet another list item in the results (`$nmat`).
+Finally, we may want to add symbols on top of the lines so that distinction between individuals becomes clearer in addition or replacing the colour approach. Because putting symbols on for each single interaction may clutter the plot, I find it useful to use only every X\textsuperscript{th} data point. In the example we use every 3rd point (`stp <- 3`). The data come from yet another list item in the results (`$nmat`).
 
 ```{r, fig.width=5, fig.height=3.3, fig.cap='\\small Elo-ratings of 7 individuals across one month. Individuals are coded by color and line type, which are noted in the legend. For each individual, ratings after every third interaction are highlighted. \\label{fig:adv4}'}
 ias <- apply(SEQ$nmat, 2, cumsum)
@@ -1216,6 +1226,37 @@ axis(2, las = 1, cex.axis = 0.7)
 box()
 ```
 
+
+\paragraph{}
+This code produces figure \ref{fig:likelihoodcompare}.
+\footnotesize
+```{r, eval = FALSE}
+plot(0, 0, type = "n", xlim = c(0, 500), ylim = c(-220, -100), las = 1, xlab = bquote(italic(k)), 
+     ylab = "log likelihood", yaxs = "i")
+points(ores$complete$k, ores$complete$loglik, type = "l", col = "blue", lwd = 2)
+arrows(x0 = ores$best$k, y0 = -230, x1 = ores$best$k, y1 = -220, col = "blue", lwd = 2, xpd = TRUE, length = 0.1)
+
+pdata <- ores2$complete[ores2$complete$fight == ores2$best$fight, ]
+points(pdata$threat, pdata$loglik, type = "l", col = "red")
+arrows(x0 = ores2$best$threat, y0 = -230, x1 = ores2$best$threat, y1 = -220, col = "red", lwd = 2, xpd = TRUE, length = 0.1)
+
+pdata <- ores2$complete[ores2$complete$fight == 10, ]
+points(pdata$threat, pdata$loglik, type = "l", col = "red", lty = 3)
+x <- pdata$threat[which.max(pdata$loglik)]
+arrows(x0 = x, y0 = -230, x1 = x, y1 = -220, col = "red", lwd = 2, xpd = TRUE, length = 0.1, lty = 3)
+
+pdata <- ores2$complete[ores2$complete$threat == ores2$best$threat, ]
+points(pdata$fight, pdata$loglik, type = "l", col = "grey")
+arrows(x0 = ores2$best$fight, y0 = -230, x1 = ores2$best$fight, y1 = -220, col = "grey", lwd = 2, xpd = TRUE, length = 0.1)
+
+pdata <- ores2$complete[ores2$complete$threat == 500, ]
+points(pdata$fight, pdata$loglik, type = "l", col = "grey", lty = 3)
+x <- pdata$fight[which.max(pdata$loglik)]
+arrows(x0 = x, y0 = -230, x1 = x, y1 = -220, col = "grey", lwd = 2, xpd = TRUE, length = 0.1, lty = 3)
+
+legend("bottom", legend = c("one interaction type", "threat (fight fixed)", "fight (threat fixed)"), 
+       col = c("blue", "red", "grey"), lty = 1, cex = 0.7)
+```
 
 \paragraph{}
 This code produces figure \ref{fig:differentprobs}.

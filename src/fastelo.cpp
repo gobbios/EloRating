@@ -20,9 +20,9 @@ List fastelo(CharacterVector WINNER, CharacterVector LOSER, CharacterVector ALLI
   double divi = 0.0 ;
 
 
-  for (size_t seqindex=0; seqindex < WINNER.size(); seqindex++) {
+  for (int seqindex=0; seqindex < WINNER.size(); seqindex++) {
     // get current ratings
-    for (size_t k = 0; k < ALLIDS.size(); k++) {
+    for (int k = 0; k < ALLIDS.size(); k++) {
       if (ALLIDS[k] == LOSER[seqindex])  { loserrat = svals[k] ; }
       if (ALLIDS[k] == WINNER[seqindex]) { winnerrat = svals[k] ; }
     }
@@ -50,7 +50,7 @@ List fastelo(CharacterVector WINNER, CharacterVector LOSER, CharacterVector ALLI
     }
 
     // update ratings in results object
-    for(size_t k = 0; k < ALLIDS.size(); k++) {
+    for(int k = 0; k < ALLIDS.size(); k++) {
       if(ALLIDS[k] == LOSER[seqindex]) { svals[k] = loserrat; }
       if(ALLIDS[k] == WINNER[seqindex]) { svals[k] = winnerrat; }
     }

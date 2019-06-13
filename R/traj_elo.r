@@ -64,7 +64,7 @@ traj_elo <- function(eloobject, ID, from = min(eloobject$stability$date), to = m
 
       # calculate slope (but only if there were actual observations...)
       if (res$Nobs[i]  > 1 ) res$slope[i] <- as.numeric(lm(traj ~ DR)$coefficients["DR"])
-      if (res$Nobs[i] <= 1 ) warning(paste("no (or only one) observation for", ID[i], "during specified date range\n"), call. = FALSE)
+      if (res$Nobs[i] <= 1 ) message(paste("no (or only one) observation for", ID[i], "during specified date range\n"))
     }
   }
 

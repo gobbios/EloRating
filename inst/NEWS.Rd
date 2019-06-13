@@ -1,6 +1,13 @@
 \name{NEWS}
 \title{News for Package \pkg{EloRating}}
 
+\section{Changes in version 0.46.6 (2019-06-13)}{
+	\itemize{
+	  \item conform to new CRAN rules (put makevars back)
+	  \item updated tutorial and new tests
+	}
+}
+
 \section{Changes in version 0.46.5 (2019-02-11)}{
 	\itemize{
 	  \item updated tutorial
@@ -13,7 +20,6 @@
 	  \item added multiple functions to optimize k parameter (\code{\link{fastelo}}, \code{\link{likelo}}, \code{\link{optimizek}})
 	}
 }
-
 
 \section{Changes in version 0.46.3 (2018-07-13)}{
 	\itemize{

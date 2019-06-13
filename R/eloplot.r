@@ -16,7 +16,7 @@
 #'
 #' @return a plot
 #'
-#' @importFrom zoo as.yearmon
+#' @importFrom zoo as.yearmon as.Date.yearmon
 #' @importFrom graphics axis layout legend lines mtext par plot points
 #' @importFrom utils tail
 #' @importFrom grDevices colors
@@ -115,7 +115,7 @@ eloplot <- function(eloobject, ids = "all", interpolate = "yes",
     ids.wo <- names(xx)[xx == nrow(plotdata)]
   }
 
-  fst.month <- unique(as.Date(as.yearmon(dates)))
+  fst.month <- unique(as.Date.yearmon(as.yearmon(dates)))
   if (dates[1] > fst.month[1]) fst.month <- fst.month[-1]
   if (tail(dates, 1) < tail(fst.month, 1)) fst.month <- fst.month[-(length(fst.month))]
   labs <- c(min(dates), fst.month[length(fst.month) %/% 3], fst.month[(length(fst.month) %/% 3) * 2], max(dates))
