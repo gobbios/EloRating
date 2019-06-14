@@ -21,7 +21,6 @@
 #' @seealso \code{\link{ISIranks}}
 #'
 #' @examples
-#' \dontrun{
 #'  data(devries98)
 #'  h.index(devries98)
 #'  ISI(devries98)
@@ -32,8 +31,7 @@
 #'  mat <- creatematrix(SEQ)
 #'  res <- ISI(mat)
 #'  # note that this matrix is not sufficiently linear to justify such ordering
-#'  h.index(mat)}
-#'
+#'  h.index(mat)
 #'
 #' @export
 

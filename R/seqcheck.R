@@ -63,12 +63,12 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' data(adv)
 #' seqcheck(winner = adv$winner, loser = adv$loser, Date = adv$Date)
 #' data(advpres)
 #' seqcheck(winner = adv$winner, loser = adv$loser, Date = adv$Date,
 #'          presence = advpres)
+#'
 #' # create faulty presence data
 #' # remove one line from presence data
 #' faultypres <- advpres[-1, ]
@@ -77,18 +77,23 @@
 #' # run check
 #' seqcheck(winner = adv$winner, loser = adv$loser, Date = adv$Date,
 #'          presence = faultypres)
+#'
 #' # fix first error
 #' faultypres <- rbind(faultypres[1, ], faultypres)
 #' faultypres$Date[1] <- "2010-01-01"
+#'
 #' # run check again
 #' seqcheck(winner = adv$winner, loser = adv$loser, Date = adv$Date,
 #'          presence = faultypres)
+#'
 #' # fix presence on date for interaction number 6
 #' faultypres[6, 2:8] <- 1
+#'
 #' # run check again
 #' seqcheck(winner = adv$winner, loser = adv$loser, Date = adv$Date,
 #'          presence = faultypres)
-#' # all good now}
+#' # all good now
+
 
 seqcheck <- function(winner, loser, Date, draw = NULL, presence = NULL) {
 

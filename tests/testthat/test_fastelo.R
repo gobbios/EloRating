@@ -7,12 +7,13 @@ Date <- xdata$seqdat$Date
 k <- rep(100, length(winner))
 svals <- rep(1000, length(allids))
 
-# fast elo, and resorting according to match ordering of elo.seq
+# fast elo, and resorting according to names of ids from elo.seq
 res1 <- fastelo(WINNER = winner, LOSER = loser, ALLIDS = allids, KVALS = k, STARTVALUES = svals, NORMPROB = TRUE)[[1]]
 names(res1) <- allids
 res1 <- sort(res1, decreasing = TRUE)
 # elo.seq
 res2 <- extract_elo(elo.seq(winner = winner, loser = loser, Date = Date, startvalue = 1000, k = 100, normprob = TRUE, runcheck = FALSE))
+res2 <- res2[names(res1)]
 
 test_that("elofast and eloseq same results", {
   expect_equal(res1, res2)

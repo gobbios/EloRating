@@ -72,12 +72,12 @@ Warnings:
 \code{The following individuals were observed only on one day}: while not per se a problem for the calculation of Elo ratings, individuals that were observed only on one day (irrespective of the number of interactions on that day) cannot be plotted. \code{\link{eloplot}} will give a warning in such cases, too.
 }
 \examples{
-\dontrun{
 data(adv)
 seqcheck(winner = adv$winner, loser = adv$loser, Date = adv$Date)
 data(advpres)
 seqcheck(winner = adv$winner, loser = adv$loser, Date = adv$Date,
          presence = advpres)
+
 # create faulty presence data
 # remove one line from presence data
 faultypres <- advpres[-1, ]
@@ -86,18 +86,22 @@ faultypres[5, 2:8] <- 0
 # run check
 seqcheck(winner = adv$winner, loser = adv$loser, Date = adv$Date,
          presence = faultypres)
+
 # fix first error
 faultypres <- rbind(faultypres[1, ], faultypres)
 faultypres$Date[1] <- "2010-01-01"
+
 # run check again
 seqcheck(winner = adv$winner, loser = adv$loser, Date = adv$Date,
          presence = faultypres)
+
 # fix presence on date for interaction number 6
 faultypres[6, 2:8] <- 1
+
 # run check again
 seqcheck(winner = adv$winner, loser = adv$loser, Date = adv$Date,
          presence = faultypres)
-# all good now}
+# all good now
 }
 \author{
 Christof Neumann

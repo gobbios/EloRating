@@ -25,7 +25,6 @@ The number of interations is set substantially higher than what was suggested in
 The I&SI algorithm (c.f. de Vries 1998) does not necessarily result in a unique order (see example below). If such a case occurs, all (equally good) solutions are returned as a list.
 }
 \examples{
-\dontrun{
  data(devries98)
  h.index(devries98)
  ISI(devries98)
@@ -36,8 +35,7 @@ The I&SI algorithm (c.f. de Vries 1998) does not necessarily result in a unique 
  mat <- creatematrix(SEQ)
  res <- ISI(mat)
  # note that this matrix is not sufficiently linear to justify such ordering
- h.index(mat)}
-
+ h.index(mat)
 
 }
 \references{

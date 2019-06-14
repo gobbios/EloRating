@@ -1,6 +1,13 @@
 \name{NEWS}
 \title{News for Package \pkg{EloRating}}
 
+\section{Changes in version 0.46.8 (2019-06-14)}{
+	\itemize{
+	  \item conform to CRAN submission rules (DESCRIPTION file)
+	  \item modified examples
+	}
+}
+
 \section{Changes in version 0.46.6 (2019-06-13)}{
 	\itemize{
 	  \item conform to new CRAN rules (put makevars back)

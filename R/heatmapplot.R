@@ -20,9 +20,8 @@
 #' xdata$resp <- rnorm(nrow(xdata))
 #' heatmapplot(resp ~ a + b, data = xdata)
 #'
-#' \dontrun{
 #' set.seed(123)
-#' xdata <- expand.grid(k = seq(8, 200, length.out = 51), shape = seq(0, 1, length.out = 51))
+#' xdata <- expand.grid(k = seq(8, 200, length.out = 31), shape = seq(0, 1, length.out = 31))
 #' idata <- randomsequence(10, 50, reversals = 0.3)
 #' allids <- colnames(idata$pres)[2:ncol(idata$pres)]
 #' winner <- as.character(idata$seqdat$winner)
@@ -40,7 +39,6 @@
 #' }
 #'
 #' heatmapplot(ll ~ k + shape, data = xdata)
-#' }
 
 heatmapplot <- function(formula, data, xbreaks = NULL, ybreaks = NULL,
                         addvals = FALSE, addN = FALSE, digits = 1, ...) {
