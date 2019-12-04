@@ -2,10 +2,11 @@
 #'
 #' @param eloobject output from \code{\link{elo.seq}} or from \code{\link{fastelo}}
 #' @param krange either a vector of length 2, giving the range of k values to be tested, or a named list with vectors of length 2, in which each list item is named according to different interaction types (see the \code{intensity=} argument in \code{\link{elo.seq}})
-#' @param optimode character, either \code{"loop"}, \code{"loopfast"} or \code{"optimize"}
+#' @param optimode character, either \code{"loop"} or \code{"optimize"}. See details.
 #' @param resolution numeric, the number of steps between the range of k values to be tested. Currently only a single value can be supplied here and in case \code{krange} is a list this value will be applied to all items in this list
 #' @param itype character or factor containing the different interaction types, which is only relevant if \code{krange} is a list. The content of \code{itype} and the names of \code{krange} have to match!
 #' @param daterange character or Date of length 2, provides a date range for optimization. Only relevant in case \code{eloobject} is the result of \code{elo.seq()}
+#' @param burnin numeric, the number of interactions to be excluded from the calculation of the (log) likelihood. This parameter is ignored if a date range is supplied. By default \code{burnin = 0}, i.e. all interactions are considered.
 #' @param doplot logical, should a plot be returned. Works only if \code{optimode = "loop"}, and only if there are maximally two different interaction types
 #' @param progbar logical, should a progress bar be displayed, not yet implemented
 #' @param ... additional arguments for the plot and text functions, e.g. for setting \code{cex} or \code{lwd}
@@ -26,6 +27,9 @@
 #' res <- elo.seq(winner = adv2$winner, loser = adv2$loser, Date = adv2$Date)
 #' optimizek(eloobject = res, krange = c(50, 400), resolution = 200, doplot = TRUE)$best
 #'
+#' # with a burnin value set:
+#' optimizek(eloobject = res, krange = c(50, 400), resolution = 200, burnin = 15, doplot = TRUE)$best
+#'
 #' # using different interaction intensities
 #' myks <- list(displace = 20, fight = 200)
 #' res <- elo.seq(winner = adv2$winner, loser = adv2$loser, Date = adv2$Date,
@@ -34,9 +38,10 @@
 #'           krange = list(fight = c(50, 600), displace = c(20, 200)),
 #'           resolution = 100, itype = adv2$intensity, main = 'bla')$best
 
+
 optimizek <- function(eloobject, krange = c(2, 400), optimode = "loop",
                       resolution = 100, itype = NULL, daterange = NULL,
-                      doplot = FALSE, progbar = FALSE, ...) {
+                      burnin = 0, doplot = FALSE, progbar = FALSE, ...) {
   # recreate interaction data
   if (eloobject$rtype == "elo.seq") {
     winner <- eloobject$logtable$winner
@@ -89,7 +94,7 @@ optimizek <- function(eloobject, krange = c(2, 400), optimode = "loop",
         tempres <- fastelo(WINNER = winner, LOSER = loser, ALLIDS = allids,
                            KVALS = ks, STARTVALUES = startvals,
                            NORMPROB = normprob, ROUND = xround)
-        ll[i] <- likelo(tempres)
+        ll[i] <- likelo(tempres, burnin = burnin)
       }
       res$loglik <- ll
 
@@ -100,7 +105,7 @@ optimizek <- function(eloobject, krange = c(2, 400), optimode = "loop",
         tempres <- fastelo(WINNER = winner, LOSER = loser, ALLIDS = allids,
                            KVALS = rep(res$k[i], length(winner)),
                            STARTVALUES = startvals, NORMPROB = normprob, ROUND = xround)
-        ll[i] <- likelo(tempres)
+        ll[i] <- likelo(tempres, burnin = burnin)
       }
       res$loglik <- ll
     }
@@ -112,7 +117,9 @@ optimizek <- function(eloobject, krange = c(2, 400), optimode = "loop",
         abline(v = res$k[which.max(res$loglik)], col = "red")
       } else {
         if (length(krange) == 2) {
-          heatmapplot(loglik ~ displace + fight, data = res, ...)
+          f <- as.formula(paste("loglik ~ ", names(res)[2], "+", names(res)[1]))
+          # heatmapplot(loglik ~ displace + fight, data = res, ...)
+          heatmapplot(formula = f, data = res, ...)
         } else {
           message("more than 2 intensities: no figure produced")
         }

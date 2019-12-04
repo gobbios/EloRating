@@ -21,7 +21,7 @@ test_that("optimal k one-dimension", {
 klist <- list(fight = c(100, 400), displace = c(50, 350))
 
 res1 <- optimizek(eloobject = elores1, krange = klist, resolution = 50, itype = xdata$seqdat$intensity)
-res2 <- optimizek(eloobject = elores1, krange = klist, resolution = 50, itype = xdata$seqdat$intensity)
+res2 <- optimizek(eloobject = elores2, krange = klist, resolution = 50, itype = xdata$seqdat$intensity)
 
 test_that("optimal k two dimensions", {
   expect_equal(res1, res2)

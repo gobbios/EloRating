@@ -1,11 +1,11 @@
 #' (log) likelihood of Elo-rating model
 #'
 #' @param eloobject output from \code{\link{elo.seq}}
-#' @param daterange character or Date of length 2, gives the date range for which likelihood should be calculated. By default, the entire date range is considered.
+#' @param daterange character or Date of length 2, gives the date range for which likelihood should be calculated. By default, the entire date range of all interactions is considered.
 #' @param ll logical, should the log likelihood be returned rather than the likelihood, by default \code{TRUE}
-#' @param burnin not yet implemented
+#' @param burnin numeric, the number of interactions to be excluded from the calculation of the (log) likelihood. This parameter is ignored if a date range is supplied. By default \code{burnin = 0}, i.e. all interactions are considered.
 #' @details This function returns the (log) likelihood of a dominance interaction sequence. The likelihood is the product of all winning probabilities (for each interaction).
-#' @return numeric of length 1, the log likelihood
+#' @return numeric of length 1, the (log) likelihood
 #' @export
 #'
 #' @references
@@ -25,8 +25,19 @@
 #'                     Date = adv$Date, k = ks[i]))
 #' }
 #' plot(ks, liks, type = "l")
+#'
+#' # discard early interactions via 'burnin'
+#' likelo(res)
+#' # the same as above:
+#' likelo(res, burnin = 0)
+#' # discard the first 10 interactions:
+#' likelo(res, burnin = 10)
+#' # discard all but the last interaction:
+#' likelo(res, burnin = 32)
+#' # which is the same as the log of the last winning probability:
+#' log(winprob(res$logtable$Apre[33], res$logtable$Bpre[33]))
 
-likelo <- function(eloobject, daterange = NULL, burnin = NULL, ll = TRUE) {
+likelo <- function(eloobject, burnin = 0, ll = TRUE, daterange = NULL) {
   if (class(eloobject) == "elo") {
     temp <- eloobject$logtable
     normprob <- eloobject$misc["normprob"] == "1"
@@ -34,15 +45,43 @@ likelo <- function(eloobject, daterange = NULL, burnin = NULL, ll = TRUE) {
       d1 <- which(eloobject$truedates == as.Date(daterange[1]))
       d2 <- which(eloobject$truedates == as.Date(daterange[2]))
       temp <- temp[temp$Date >= d1 & temp$Date <= d2, ]
+      if (!is.null(burnin)) {
+        burnin <- NULL
+        message("burnin ignored because date range supplied")
+      }
     }
     foo <- function(X) winprob(elo1 = X[1], elo2 = X[2], normprob = normprob)
     winprobs <- apply(temp[, c("Apre", "Bpre")], MARGIN = 1, FUN = foo)
-    if (ll) res <- sum(log(winprobs)) else res <- prod(winprobs)
+    nint <- length(winprobs)
+
+    if (burnin >= nint) {
+      stop (paste("not enough interactions (", nint, ") for the desired burnin (", burnin, ")", sep = ""), call. = FALSE)
+    }
+    startloc <- burnin + 1
+
+    if (ll) {
+      res <- sum(log(winprobs[startloc:nint]))
+    } else {
+      res <- prod(winprobs[startloc:nint])
+    }
   }
 
   if (class(eloobject) == "list") {
-    if (!is.null(daterange)) message("date range ignored for results from fastelo")
-    if (ll) res <- sum(log(eloobject[[2]])) else res <- prod(eloobject[[2]])
+    if (!is.null(daterange)) {
+      message ("date range ignored for results from fastelo")
+    }
+    nint <- length(eloobject[[2]])
+
+    if (burnin >= nint) {
+      stop (paste("not enough interactions (", nint, ") for the desired burnin (", burnin, ")", sep = ""), call. = FALSE)
+    }
+    startloc <- burnin + 1
+
+    if (ll) {
+      res <- sum(log(eloobject[[2]][startloc:nint]))
+    } else {
+      res <- prod(eloobject[[2]][startloc:nint])
+    }
   }
   return(res)
 }

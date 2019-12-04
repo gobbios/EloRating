@@ -1,6 +1,13 @@
 \name{NEWS}
 \title{News for Package \pkg{EloRating}}
 
+\section{Changes in version 0.46.9 (2019-12-04)}{
+	\itemize{
+	  \item support for burnin in \code{\link{likelo}}, \code{\link{optimizek}} and \code{\link{optistart}}
+	  \item modified DESCRIPTION
+	}
+}
+
 \section{Changes in version 0.46.8 (2019-06-14)}{
 	\itemize{
 	  \item conform to CRAN submission rules (DESCRIPTION file)

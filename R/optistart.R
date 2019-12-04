@@ -3,6 +3,7 @@
 #' experimental function to test different sets of randomly selected start values
 #'
 #' @param eloobject output from \code{\link{elo.seq}}
+#' @param burnin numeric, the number of interactions to be excluded from the calculation of the (log) likelihood. This parameter is ignored if a date range is supplied. By default \code{burnin = 0}, i.e. all interactions are considered.
 #' @param spread numeric, the standard deviation of the ratings to be tested (by default 200)
 #' @param runs numeric, number of inital ratings to be tested (by default 2000)
 #' @param doplot logical, should the distribution of log likelihoods be plotted
@@ -22,7 +23,7 @@
 #' eloplot(res1)
 #' eloplot(res2)
 
-optistart <- function(eloobject, spread = 200, runs = 2000, doplot = FALSE, initialcohort = TRUE) {
+optistart <- function(eloobject, burnin = 0, spread = 200, runs = 2000, doplot = FALSE, initialcohort = TRUE) {
   allids <- eloobject$allids
   n <- length(allids)
   normprob <- eloobject$misc["normprob"] == "1"
@@ -38,7 +39,8 @@ optistart <- function(eloobject, spread = 200, runs = 2000, doplot = FALSE, init
   for(i in 1:nrow(resmat)) {
     svals <- rnorm(n, mean = startval, sd = spread)
     svals <- round(svals - mean(svals) + startval)
-    logliks[i] <- likelo(fastelo(WINNER = w, LOSER = l, ALLIDS = allids, KVALS = kval, STARTVALUES = svals, NORMPROB = normprob))
+    logliks[i] <- likelo(fastelo(WINNER = w, LOSER = l, ALLIDS = allids, KVALS = kval, STARTVALUES = svals, NORMPROB = normprob),
+                         burnin = burnin)
     resmat[i, ] <- svals
   }
   original <- likelo(fastelo(WINNER = w, LOSER = l, ALLIDS = allids,

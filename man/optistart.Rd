@@ -4,11 +4,13 @@
 \alias{optistart}
 \title{optimize start values}
 \usage{
-optistart(eloobject, spread = 200, runs = 2000, doplot = FALSE,
-  initialcohort = TRUE)
+optistart(eloobject, burnin = 0, spread = 200, runs = 2000,
+  doplot = FALSE, initialcohort = TRUE)
 }
 \arguments{
 \item{eloobject}{output from \code{\link{elo.seq}}}
+
+\item{burnin}{numeric, the number of interactions to be excluded from the calculation of the (log) likelihood. This parameter is ignored if a date range is supplied. By default \code{burnin = 0}, i.e. all interactions are considered.}
 
 \item{spread}{numeric, the standard deviation of the ratings to be tested (by default 200)}
 

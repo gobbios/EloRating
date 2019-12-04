@@ -4,19 +4,19 @@
 \alias{likelo}
 \title{(log) likelihood of Elo-rating model}
 \usage{
-likelo(eloobject, daterange = NULL, burnin = NULL, ll = TRUE)
+likelo(eloobject, burnin = 0, ll = TRUE, daterange = NULL)
 }
 \arguments{
 \item{eloobject}{output from \code{\link{elo.seq}}}
 
-\item{daterange}{character or Date of length 2, gives the date range for which likelihood should be calculated. By default, the entire date range is considered.}
-
-\item{burnin}{not yet implemented}
+\item{burnin}{numeric, the number of interactions to be excluded from the calculation of the (log) likelihood. This parameter is ignored if a date range is supplied. By default \code{burnin = 0}, i.e. all interactions are considered.}
 
 \item{ll}{logical, should the log likelihood be returned rather than the likelihood, by default \code{TRUE}}
+
+\item{daterange}{character or Date of length 2, gives the date range for which likelihood should be calculated. By default, the entire date range of all interactions is considered.}
 }
 \value{
-numeric of length 1, the log likelihood
+numeric of length 1, the (log) likelihood
 }
 \description{
 (log) likelihood of Elo-rating model
@@ -37,6 +37,17 @@ for(i in 1:length(liks)) {
                     Date = adv$Date, k = ks[i]))
 }
 plot(ks, liks, type = "l")
+
+# discard early interactions via 'burnin'
+likelo(res)
+# the same as above:
+likelo(res, burnin = 0)
+# discard the first 10 interactions:
+likelo(res, burnin = 10)
+# discard all but the last interaction:
+likelo(res, burnin = 32)
+# which is the same as the log of the last winning probability:
+log(winprob(res$logtable$Apre[33], res$logtable$Bpre[33]))
 }
 \references{
 \insertRef{franz2015a}{EloRating}

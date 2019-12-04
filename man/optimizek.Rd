@@ -5,21 +5,23 @@
 \title{optimize the k parameter}
 \usage{
 optimizek(eloobject, krange = c(2, 400), optimode = "loop",
-  resolution = 100, itype = NULL, daterange = NULL, doplot = FALSE,
-  progbar = FALSE, ...)
+  resolution = 100, itype = NULL, daterange = NULL, burnin = 0,
+  doplot = FALSE, progbar = FALSE, ...)
 }
 \arguments{
 \item{eloobject}{output from \code{\link{elo.seq}} or from \code{\link{fastelo}}}
 
 \item{krange}{either a vector of length 2, giving the range of k values to be tested, or a named list with vectors of length 2, in which each list item is named according to different interaction types (see the \code{intensity=} argument in \code{\link{elo.seq}})}
 
-\item{optimode}{character, either \code{"loop"}, \code{"loopfast"} or \code{"optimize"}}
+\item{optimode}{character, either \code{"loop"} or \code{"optimize"}. See details.}
 
 \item{resolution}{numeric, the number of steps between the range of k values to be tested. Currently only a single value can be supplied here and in case \code{krange} is a list this value will be applied to all items in this list}
 
 \item{itype}{character or factor containing the different interaction types, which is only relevant if \code{krange} is a list. The content of \code{itype} and the names of \code{krange} have to match!}
 
 \item{daterange}{character or Date of length 2, provides a date range for optimization. Only relevant in case \code{eloobject} is the result of \code{elo.seq()}}
+
+\item{burnin}{numeric, the number of interactions to be excluded from the calculation of the (log) likelihood. This parameter is ignored if a date range is supplied. By default \code{burnin = 0}, i.e. all interactions are considered.}
 
 \item{doplot}{logical, should a plot be returned. Works only if \code{optimode = "loop"}, and only if there are maximally two different interaction types}
 
@@ -44,6 +46,9 @@ One thing to note is that you can use interaction-level k values, i.e. if you ha
 data(adv2)
 res <- elo.seq(winner = adv2$winner, loser = adv2$loser, Date = adv2$Date)
 optimizek(eloobject = res, krange = c(50, 400), resolution = 200, doplot = TRUE)$best
+
+# with a burnin value set:
+optimizek(eloobject = res, krange = c(50, 400), resolution = 200, burnin = 15, doplot = TRUE)$best
 
 # using different interaction intensities
 myks <- list(displace = 20, fight = 200)
