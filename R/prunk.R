@@ -18,9 +18,9 @@
 #' mat <- creatematrix(x, c("2010-01-01", "2010-01-15"))
 #' prunk(mat)
 
-prunk <- function(eloobject, daterange=NULL) {
+prunk <- function(eloobject, daterange = NULL) {
 
-  if (class(eloobject) == "elo") {
+  if (inherits(x = eloobject, what = "elo")) {
     # get all ids, the sequence, and the presence matrix
     xd <- eloobject$logtable
     xd$Date <- as.Date(eloobject$truedates[xd[, 1]])
@@ -50,7 +50,16 @@ prunk <- function(eloobject, daterange=NULL) {
     startval <- as.numeric(eloobject$misc["startvalue"])
     kval <- as.numeric(eloobject$misc["k"])
     init <- as.character(eloobject$misc["init"])
-    eloobject <- elo.seq(xd$winner, xd$loser, xd$Date, draw = xd$draw, presence = pres, startvalue = startval, k = kval, init = init, progressbar = F, runcheck = F)
+    eloobject <- elo.seq(winner = xd$winner,
+                         loser = xd$loser,
+                         Date = xd$Date,
+                         draw = xd$draw,
+                         presence = pres,
+                         startvalue = startval,
+                         k = kval,
+                         init = init,
+                         progressbar = FALSE,
+                         runcheck = FALSE)
 
     # create the matrix, and make sure also IDs that didn't interact but were present are included
     mat <- creatematrix(eloobject, drawmethod = "omit")
@@ -87,7 +96,7 @@ prunk <- function(eloobject, daterange=NULL) {
 
   }
 
-  if (class(eloobject) == "matrix") {
+  if (inherits(x = eloobject, what = "matrix")) {
     up <- eloobject[upper.tri(eloobject)]
     lo <- t(eloobject)[upper.tri(eloobject)]
     res <- c(round(sum(up + lo == 0) / length(lo), 3), length(lo), NA, NA)

@@ -18,6 +18,7 @@
 #' @return a list with two items: (1) \code{$best}, a data frame with one line, in which the maximal log likelihood is returned alongside the one or several corresponding k values, and (2) \code{$complete}, a data frame with all the values tested and their log likelihoods
 #' @export
 #' @importFrom graphics text
+#' @importFrom stats as.formula
 #' @references
 #' \insertRef{franz2015a}{EloRating}
 #'

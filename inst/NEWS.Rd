@@ -1,6 +1,13 @@
 \name{NEWS}
 \title{News for Package \pkg{EloRating}}
 
+
+\section{Changes in version 0.46.10 (2019-12-05)}{
+	\itemize{
+	  \item fixes issues related to changes in the result of \code{class(x) == "matrix"} that will become problematic in R 4.0.0
+	}
+}
+
 \section{Changes in version 0.46.9 (2019-12-04)}{
 	\itemize{
 	  \item support for burnin in \code{\link{likelo}}, \code{\link{optimizek}} and \code{\link{optistart}}

@@ -7,7 +7,7 @@
 likelo(eloobject, burnin = 0, ll = TRUE, daterange = NULL)
 }
 \arguments{
-\item{eloobject}{output from \code{\link{elo.seq}}}
+\item{eloobject}{output from \code{\link{elo.seq}} (or from \code{\link{fastelo}})}
 
 \item{burnin}{numeric, the number of interactions to be excluded from the calculation of the (log) likelihood. This parameter is ignored if a date range is supplied. By default \code{burnin = 0}, i.e. all interactions are considered.}
 

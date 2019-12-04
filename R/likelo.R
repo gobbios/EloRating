@@ -1,6 +1,6 @@
 #' (log) likelihood of Elo-rating model
 #'
-#' @param eloobject output from \code{\link{elo.seq}}
+#' @param eloobject output from \code{\link{elo.seq}} (or from \code{\link{fastelo}})
 #' @param daterange character or Date of length 2, gives the date range for which likelihood should be calculated. By default, the entire date range of all interactions is considered.
 #' @param ll logical, should the log likelihood be returned rather than the likelihood, by default \code{TRUE}
 #' @param burnin numeric, the number of interactions to be excluded from the calculation of the (log) likelihood. This parameter is ignored if a date range is supplied. By default \code{burnin = 0}, i.e. all interactions are considered.
@@ -38,7 +38,7 @@
 #' log(winprob(res$logtable$Apre[33], res$logtable$Bpre[33]))
 
 likelo <- function(eloobject, burnin = 0, ll = TRUE, daterange = NULL) {
-  if (class(eloobject) == "elo") {
+  if (inherits(x = eloobject, what = "elo")) {
     temp <- eloobject$logtable
     normprob <- eloobject$misc["normprob"] == "1"
     if (!is.null(daterange)) {

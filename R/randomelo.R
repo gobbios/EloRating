@@ -50,7 +50,13 @@ randomelo <- function(interactionmatrix, runs = 2000, normprob = TRUE,
 
   for (i in 1:runs) {
     tempdata <- xdata[sample(1:nrow(xdata)), ]; rownames(tempdata) <- NULL
-    tempres <- elo.seq(tempdata$winner, tempdata$loser, tempdata$Date, progressbar = FALSE, runcheck = FALSE, normprob = normprob, k = k)
+    tempres <- elo.seq(winner = tempdata$winner,
+                       loser = tempdata$loser,
+                       Date = tempdata$Date,
+                       progressbar = FALSE,
+                       runcheck = FALSE,
+                       normprob = normprob,
+                       k = k)
     res[i, ] <- extract_elo(tempres)[colnames(res)]
     if (progressbar) setTxtProgressBar(progbar, i)
   }
