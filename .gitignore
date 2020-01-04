@@ -1,3 +1,4 @@
+*.DS_Store
 Meta
 doc
 .Rproj.user
@@ -15,6 +16,8 @@ vignettes/*.log
 vignettes/*.xml
 vignettes/*.gz
 vignettes/*.toc
+vignettes/*.html
+vignettes/*.R
 vignettes/tutorial-blx.bib
 testlab/
 R/_new.R
@@ -24,3 +27,4 @@ src/*.dll
 packagearchive/
 inst/doc/
 vignettes/zz_cacheloc/
+inst/doc

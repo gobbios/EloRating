@@ -106,7 +106,7 @@ ISI <- function(mat, runs = 5000, printmessages = TRUE) {
   # in which unknown and tied relationships (also diagonal) are marked "NA"
   bestmat <- makena(randmat(mat))
   # get the metrics of this matrix
-  (bestmetrics <- c(.incon(bestmat), .sincon(bestmat)))
+  bestmetrics <- c(.incon(bestmat), .sincon(bestmat))
   # create a list for candidate matrices
   res <- list()
 
