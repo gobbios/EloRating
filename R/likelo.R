@@ -37,7 +37,13 @@
 #' # which is the same as the log of the last winning probability:
 #' log(winprob(res$logtable$Apre[33], res$logtable$Bpre[33]))
 
-likelo <- function(eloobject, burnin = 0, ll = TRUE, daterange = NULL) {
+likelo <- function(eloobject,
+                   burnin = 0,
+                   ll = TRUE,
+                   daterange = NULL) {
+  res <- NA
+
+  # two 'methods': one for classic 'elo' and for 'fastelo'
   if (inherits(x = eloobject, what = "elo")) {
     temp <- eloobject$logtable
     normprob <- eloobject$misc["normprob"] == "1"
@@ -53,9 +59,14 @@ likelo <- function(eloobject, burnin = 0, ll = TRUE, daterange = NULL) {
     foo <- function(X) winprob(elo1 = X[1], elo2 = X[2], normprob = normprob)
     winprobs <- apply(temp[, c("Apre", "Bpre")], MARGIN = 1, FUN = foo)
     nint <- length(winprobs)
-
     if (burnin >= nint) {
-      stop (paste("not enough interactions (", nint, ") for the desired burnin (", burnin, ")", sep = ""), call. = FALSE)
+      stop (paste("not enough interactions (",
+                  nint,
+                  ") for the desired burnin (",
+                  burnin,
+                  ")",
+                  sep = ""),
+            call. = FALSE)
     }
     startloc <- burnin + 1
 
@@ -66,22 +77,28 @@ likelo <- function(eloobject, burnin = 0, ll = TRUE, daterange = NULL) {
     }
   }
 
-  if (class(eloobject) == "list") {
+  if (inherits(x = eloobject, what = "fastelo")) {
     if (!is.null(daterange)) {
       message ("date range ignored for results from fastelo")
     }
-    nint <- length(eloobject[[2]])
-
+    nint <- length(eloobject$winprobs)
     if (burnin >= nint) {
-      stop (paste("not enough interactions (", nint, ") for the desired burnin (", burnin, ")", sep = ""), call. = FALSE)
+      stop (paste("not enough interactions (",
+                  nint,
+                  ") for the desired burnin (",
+                  burnin,
+                  ")",
+                  sep = ""),
+            call. = FALSE)
     }
     startloc <- burnin + 1
 
     if (ll) {
-      res <- sum(log(eloobject[[2]][startloc:nint]))
+      res <- sum(log(eloobject$winprobs[startloc:nint]))
     } else {
-      res <- prod(eloobject[[2]][startloc:nint])
+      res <- prod(eloobject$winprobs[startloc:nint])
     }
   }
-  return(res)
+
+  res
 }
