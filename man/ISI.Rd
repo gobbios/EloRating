@@ -23,6 +23,10 @@ de Vries' I&SI ranking
 The number of interations is set substantially higher than what was suggested in the de Vries' 1998 paper, because my algorithm here is less efficient.
 
 The I&SI algorithm (c.f. de Vries 1998) does not necessarily result in a unique order (see example below). If such a case occurs, all (equally good) solutions are returned as a list.
+
+The function checks whether a \code{table} is supplied instead of a \code{matrix} and converts from table to matrix if possible (trying to keep the column and row names if supplied in the table).
+
+If the matrix does not have column-names, unique column- and row-names are assigned.
 }
 \examples{
  data(devries98)

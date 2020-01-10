@@ -15,7 +15,11 @@
 #'
 #' @details The number of interations is set substantially higher than what was suggested in the de Vries' 1998 paper, because my algorithm here is less efficient.
 #'
-#' @details The I&SI algorithm (c.f. de Vries 1998) does not necessarily result in a unique order (see example below). If such a case occurs, all (equally good) solutions are returned as a list.
+#' The I&SI algorithm (c.f. de Vries 1998) does not necessarily result in a unique order (see example below). If such a case occurs, all (equally good) solutions are returned as a list.
+#'
+#' The function checks whether a \code{table} is supplied instead of a \code{matrix} and converts from table to matrix if possible (trying to keep the column and row names if supplied in the table).
+#'
+#' If the matrix does not have column-names, unique column- and row-names are assigned.
 #'
 #' @importFrom stats na.omit
 #' @seealso \code{\link{ISIranks}}
@@ -44,14 +48,14 @@ ISI <- function(mat, runs = 5000, printmessages = TRUE) {
   }
 
   randmat <- function(mat) {
-    s <- sample(1:ncol(mat))
+    s <- sample(seq_len(ncol(mat)))
     return(mat[s, s])
   }
 
   largestincon <- function(mat) {
     outmat <- matrix(FALSE, ncol = ncol(mat), nrow = nrow(mat))
     outmat[upper.tri(mat)] <- mat[upper.tri(mat)] < t(mat)[upper.tri(mat)]
-    m <- matrix(1:length(mat), ncol(mat), byrow = FALSE) + ncol(mat) - 1
+    m <- matrix(seq_along(mat), ncol(mat), byrow = FALSE) + ncol(mat) - 1
     ms <- na.omit(m[outmat])
     ps <- na.omit(.diffmat(mat)[outmat])
     x <- ms[which(ps == max(ps))]
@@ -60,7 +64,7 @@ ISI <- function(mat, runs = 5000, printmessages = TRUE) {
   }
 
   flip1 <- function(mat, pos) {
-    s <- 1:ncol(mat)
+    s <- seq_len(ncol(mat))
     s[pos] <- rev(pos)
     return(mat[s, s])
   }
@@ -80,7 +84,7 @@ ISI <- function(mat, runs = 5000, printmessages = TRUE) {
       for (i in 2:ncol(mat)) {
         if (mat[i, i - 1] == mat[i - 1, i]) {
           di <- di1 <- 0
-          for (k in 1:ncol(mat)) {
+          for (k in seq_len(ncol(mat))) {
             di <- di + sign(mat[i - 1, k] - mat[k, i - 1])
             di1 <- di1 + sign(mat[i, k] - mat[k, i])
           }
@@ -100,8 +104,27 @@ ISI <- function(mat, runs = 5000, printmessages = TRUE) {
     return(mat)
   }
 
+  # some checks:
+  # require square matrix (also works for table)
+  if (nrow(mat) != ncol(mat)) stop("matrix is not square")
+
+  # convert table to matrix
+  if (is.table(mat)) {
+    cn <- colnames(mat)
+    mat <- matrix(mat, nrow = nrow(mat))
+    colnames(mat) <- rownames(mat) <- cn
+    diag(mat) <- 0
+  }
+
+  # require column names
+  if (is.null(colnames(mat))) {
+    colnames(mat) <- paste0("i", seq_len(ncol(mat)))
+    rownames(mat) <- colnames(mat)
+  }
+
+
   # get an index
-  mindex <- 1:ncol(mat)
+  mindex <- ncol(mat)
   # start with randomized matrix
   # in which unknown and tied relationships (also diagonal) are marked "NA"
   bestmat <- makena(randmat(mat))
@@ -153,8 +176,10 @@ ISI <- function(mat, runs = 5000, printmessages = TRUE) {
   res <- res[minsi]
   res <- res[which(!duplicated(lapply(res, colnames)))]
 
-  # put zeros back in
-  for (i in 1:length(res)) res[[i]][is.na(res[[i]])] <- 0
+  # put tied (incl 0/0) relationships back in
+  for (i in seq_along(res)) {
+    res[[i]] <- mat[rownames(res[[i]]), colnames(res[[i]])]
+  }
 
   # check for adjancents with ties
   # and reorder those according to number of individuals dominated
@@ -169,7 +194,7 @@ ISI <- function(mat, runs = 5000, printmessages = TRUE) {
 
     temp <- matrix(ncol = length(res), nrow = nrow(mat))
     rownames(temp) <- colnames(mat)
-    for (i in 1:nrow(mat)) {
+    for (i in seq_len(nrow(mat))) {
       temp[i, ] <- unlist(lapply(res, function(x) {
         which(colnames(x) == rownames(temp)[i])
       }

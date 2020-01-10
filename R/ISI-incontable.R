@@ -36,7 +36,8 @@ incontable <- function(mat) {
       ROW <- mat[i, ][upper.tri(mat)[i, ]]
       COL <- mat[, i][lower.tri(mat)[, i]]
       res <- cbind(res, rbind(names(which(ROW - COL < 0)),
-                              rep(colnames(mat)[i], length(names(which(ROW - COL < 0))))))
+                              rep(colnames(mat)[i],
+                                  length(names(which(ROW - COL < 0))))))
     }
 
     SIs <- vector()
