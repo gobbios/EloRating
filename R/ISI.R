@@ -124,7 +124,7 @@ ISI <- function(mat, runs = 5000, printmessages = TRUE) {
 
 
   # get an index
-  mindex <- ncol(mat)
+  mindex <- seq_len(ncol(mat))
   # start with randomized matrix
   # in which unknown and tied relationships (also diagonal) are marked "NA"
   bestmat <- makena(randmat(mat))
