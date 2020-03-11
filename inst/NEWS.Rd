@@ -1,6 +1,17 @@
 \name{NEWS}
 \title{News for Package \pkg{EloRating}}
 
+\section{Changes in version 0.46.11 (2020-03-12)}{
+	\itemize{
+	  \item fixes bug that set tied relationships to zero relationships in the output of \code{\link{ISI}}
+	  \item minor fix in \code{\link{randomelo}} for compatibility with R 4.0.0
+	  \item new function \code{\link{coresidence}}
+	  \item new function \code{\link{correctly_predicted}}
+	  \item new function \code{\link{dyadic_dom}}
+	  \item new function \code{\link{simple_dom}}
+	  \item new function \code{\link{CBI}}
+	}
+}
 
 \section{Changes in version 0.46.10 (2019-12-05)}{
 	\itemize{

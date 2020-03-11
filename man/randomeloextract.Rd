@@ -11,7 +11,10 @@ randomeloextract(x, ID, mode = c("obj", "samp", "avg"))
 
 \item{ID}{character, ID}
 
-\item{mode}{character, one of three: 1) \code{"obj"}: a random value from all the sequences; 2) \code{"samp"}: a random value sampled from a normal distribution with mean and sd of all randomized values; 3) \code{"avg"}: the average value from all the runs}
+\item{mode}{character, one of three: 1) \code{"obj"}: a random value from all
+the sequences; 2) \code{"samp"}: a random value sampled from a normal
+distribution with mean and sd of all randomized values; 3)
+\code{"avg"}: the average value from all the runs}
 }
 \value{
 numeric
@@ -21,9 +24,9 @@ extract ratings from random sequences based on an interaction matrix
 }
 \examples{
 data(adv)
-SEQ <- elo.seq(winner=adv$winner, loser=adv$loser, Date=adv$Date)
-mat <- creatematrix(SEQ)
-res <- randomelo(mat, 10)
+elores <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date)
+mat <- creatematrix(elores)
+res <- randomelo(mat, runs = 10)
 randomeloextract(res, "a", "samp")
 randomeloextract(res, "a", "obj")
 randomeloextract(res, "a", "avg")

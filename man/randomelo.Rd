@@ -4,32 +4,48 @@
 \alias{randomelo}
 \title{calculate Elo ratings from an interaction matrix}
 \usage{
-randomelo(interactionmatrix, runs = 2000, normprob = TRUE, k = 100,
-  progressbar = FALSE)
+randomelo(
+  interactionmatrix,
+  runs = 2000,
+  normprob = TRUE,
+  k = 100,
+  progressbar = FALSE
+)
 }
 \arguments{
-\item{interactionmatrix}{square interaction matrix with winner in rows and losers in columns, for example the output from \code{\link{creatematrix}}}
+\item{interactionmatrix}{square interaction matrix with winner in rows and
+losers in columns, for example the output from
+\code{\link{creatematrix}}}
 
-\item{runs}{number of randomly generated sequences based on the interactions in the \code{interactionmatrix}}
+\item{runs}{number of randomly generated sequences based on the interactions
+in the \code{interactionmatrix}}
 
-\item{normprob}{logical (by default \code{TRUE}). Should a normal curve be assumed for calculating the winning/losing probablities, or a logistic curve. See \code{\link{winprob}} for details}
+\item{normprob}{logical (by default \code{TRUE}). Should a normal curve be
+assumed for calculating the winning/losing probablities, or a logistic
+curve. See \code{\link{winprob}} for details}
 
-\item{k}{numeric, factor \emph{k} that determines the maximum change in ratings. By default \code{k=100}}
+\item{k}{numeric, factor \emph{k} that determines the maximum change in
+ratings. By default \code{k=100}}
 
-\item{progressbar}{logical, should progress bars be displayed, by default \code{progressbar=TRUE}}
+\item{progressbar}{logical, should progress bars be displayed, by default
+\code{progressbar=TRUE}}
 }
 \value{
-list of length 2. The first element contains a matrix with the final ratings of each individual from each random sequence. IDs are in the columns, each run is represented as one row. The second element of the list contains the original interaction matrix.
+list of length 2. The first element contains a matrix with the final
+rating of each individual from each random sequence. IDs are in the columns,
+each run is represented as one row. The second element of the list contains
+the original interaction matrix.
 }
 \description{
-calculate Elo ratings from an interaction matrix based on randomly generated sequences
+calculate Elo ratings from an interaction matrix based on randomly
+generated sequences
 }
 \examples{
 data(adv)
-SEQ <- elo.seq(winner=adv$winner, loser=adv$loser, Date=adv$Date)
-mat <- creatematrix(SEQ)
+elores <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date)
+mat <- creatematrix(elores)
 res <- randomelo(mat, 10)
-data.frame(ID=colnames(res[[1]]), avg=round(colMeans(res[[1]]),1))
+data.frame(ID = colnames(res[[1]]), avg = round(colMeans(res[[1]]), 1))
 }
 \author{
 Christof Neumann

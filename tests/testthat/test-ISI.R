@@ -8,7 +8,7 @@ mat[4, 2] <- 1
 
 
 test_that("ISI returns a list", {
-  expect_message(res <- ISI(mat = mat, runs = 5000, printmessages = FALSE))
+  expect_message(res <- ISI(mat = mat, runs = 5000, printmessages = TRUE))
   expect_true(length(res) > 1)
 })
 
