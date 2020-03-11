@@ -4,9 +4,20 @@
 \alias{.elo.seq_old}
 \title{calculate Elo ratings}
 \usage{
-.elo.seq_old(winner, loser, Date, draw = NULL, presence = NULL,
-  startvalue = 1000, k = 100, normprob = TRUE, init = "average",
-  iterate = 0, runcheck = TRUE, progressbar = FALSE)
+.elo.seq_old(
+  winner,
+  loser,
+  Date,
+  draw = NULL,
+  presence = NULL,
+  startvalue = 1000,
+  k = 100,
+  normprob = TRUE,
+  init = "average",
+  iterate = 0,
+  runcheck = TRUE,
+  progressbar = FALSE
+)
 }
 \arguments{
 \item{winner}{either a factor or character vector with winner IDs of dyadic dominance interactions}

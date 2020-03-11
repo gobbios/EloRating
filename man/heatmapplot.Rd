@@ -4,8 +4,16 @@
 \alias{heatmapplot}
 \title{heatmap}
 \usage{
-heatmapplot(formula, data, xbreaks = NULL, ybreaks = NULL,
-  addvals = FALSE, addN = FALSE, digits = 1, ...)
+heatmapplot(
+  formula,
+  data,
+  xbreaks = NULL,
+  ybreaks = NULL,
+  addvals = FALSE,
+  addN = FALSE,
+  digits = 1,
+  ...
+)
 }
 \arguments{
 \item{formula}{formula for plot}

@@ -4,8 +4,15 @@
 \alias{creatematrix}
 \title{create a dominance matrix}
 \usage{
-creatematrix(eloobject, daterange = NULL, drawmethod = "omit",
-  onlyinteracting = FALSE, winners, losers, draw = NULL)
+creatematrix(
+  eloobject,
+  daterange = NULL,
+  drawmethod = "omit",
+  onlyinteracting = FALSE,
+  winners,
+  losers,
+  draw = NULL
+)
 }
 \arguments{
 \item{eloobject}{output from \code{\link{elo.seq}}}

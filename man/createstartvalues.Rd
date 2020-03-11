@@ -4,8 +4,13 @@
 \alias{createstartvalues}
 \title{calculate start values from prior knowledge}
 \usage{
-createstartvalues(ranks = NULL, rankclasses = NULL, shape = 0.3,
-  startvalue = 1000, k = 100)
+createstartvalues(
+  ranks = NULL,
+  rankclasses = NULL,
+  shape = 0.3,
+  startvalue = 1000,
+  k = 100
+)
 }
 \arguments{
 \item{ranks}{named vector, contains the ordinal ranks of all individuals for which such prior knowledge exists, names of the vector refer to the individual codes as they occur in the interaction sequence supplied to \code{\link{elo.seq}}}

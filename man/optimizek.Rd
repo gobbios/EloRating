@@ -4,9 +4,18 @@
 \alias{optimizek}
 \title{optimize the k parameter}
 \usage{
-optimizek(eloobject, krange = c(2, 400), optimode = "loop",
-  resolution = 100, itype = NULL, daterange = NULL, burnin = 0,
-  doplot = FALSE, progbar = FALSE, ...)
+optimizek(
+  eloobject,
+  krange = c(2, 400),
+  optimode = "loop",
+  resolution = 100,
+  itype = NULL,
+  daterange = NULL,
+  burnin = 0,
+  doplot = FALSE,
+  progbar = FALSE,
+  ...
+)
 }
 \arguments{
 \item{eloobject}{output from \code{\link{elo.seq}} or from \code{\link{fastelo}}}

@@ -4,8 +4,12 @@
 \alias{traj_elo}
 \title{calculate dominance trajectory}
 \usage{
-traj_elo(eloobject, ID, from = min(eloobject$stability$date),
-  to = max(eloobject$stability$date))
+traj_elo(
+  eloobject,
+  ID,
+  from = min(eloobject$stability$date),
+  to = max(eloobject$stability$date)
+)
 }
 \arguments{
 \item{eloobject}{result from \code{\link{elo.seq}}}

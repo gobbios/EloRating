@@ -4,8 +4,14 @@
 \alias{eloplot}
 \title{Elo rating plots}
 \usage{
-eloplot(eloobject, ids = "all", interpolate = "yes", from = "start",
-  to = "end", color = TRUE)
+eloplot(
+  eloobject,
+  ids = "all",
+  interpolate = "yes",
+  from = "start",
+  to = "end",
+  color = TRUE
+)
 }
 \arguments{
 \item{eloobject}{elo object, output of \code{\link{elo.seq}} function}

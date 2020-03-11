@@ -4,9 +4,14 @@
 \alias{extract_elo}
 \title{extract Elo ratings from elo object}
 \usage{
-extract_elo(eloobject, extractdate = eloobject$misc["maxDate"],
-  standardize = FALSE, IDs = NULL, NA.interpolate = FALSE,
-  daterange = 1)
+extract_elo(
+  eloobject,
+  extractdate = eloobject$misc["maxDate"],
+  standardize = FALSE,
+  IDs = NULL,
+  NA.interpolate = FALSE,
+  daterange = 1
+)
 }
 \arguments{
 \item{eloobject}{result from \code{\link{elo.seq}}}

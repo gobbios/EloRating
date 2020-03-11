@@ -5,8 +5,12 @@
 \alias{stab.elo}
 \title{stability index \emph{S}}
 \usage{
-stab_elo(eloobject, from = min(eloobject$stability$date),
-  to = max(eloobject$stability$date), weight = TRUE)
+stab_elo(
+  eloobject,
+  from = min(eloobject$stability$date),
+  to = max(eloobject$stability$date),
+  weight = TRUE
+)
 }
 \arguments{
 \item{eloobject}{an object of class \code{"elo"}, usually the result of a call to \code{\link{elo.seq}}}

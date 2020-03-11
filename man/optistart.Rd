@@ -4,8 +4,14 @@
 \alias{optistart}
 \title{optimize start values}
 \usage{
-optistart(eloobject, burnin = 0, spread = 200, runs = 2000,
-  doplot = FALSE, initialcohort = TRUE)
+optistart(
+  eloobject,
+  burnin = 0,
+  spread = 200,
+  runs = 2000,
+  doplot = FALSE,
+  initialcohort = TRUE
+)
 }
 \arguments{
 \item{eloobject}{output from \code{\link{elo.seq}}}

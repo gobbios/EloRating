@@ -4,8 +4,12 @@
 \alias{individuals}
 \title{individuals present in the group}
 \usage{
-individuals(eloobject, from = eloobject$misc["maxDate"], to = NULL,
-  outp = c("N", "IDs", "CV"))
+individuals(
+  eloobject,
+  from = eloobject$misc["maxDate"],
+  to = NULL,
+  outp = c("N", "IDs", "CV")
+)
 }
 \arguments{
 \item{eloobject}{result from \code{\link{elo.seq}}}

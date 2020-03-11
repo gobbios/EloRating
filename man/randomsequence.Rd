@@ -4,9 +4,15 @@
 \alias{randomsequence}
 \title{random dominance interaction sequence}
 \usage{
-randomsequence(nID = 10, avgIA = 20,
-  startdate = as.Date("2000-01-01"), alphabet = TRUE,
-  reversals = 0.1, ties = NULL, presence = NULL)
+randomsequence(
+  nID = 10,
+  avgIA = 20,
+  startdate = as.Date("2000-01-01"),
+  alphabet = TRUE,
+  reversals = 0.1,
+  ties = NULL,
+  presence = NULL
+)
 }
 \arguments{
 \item{nID}{integer, number of IDs, must be less than 2601}
