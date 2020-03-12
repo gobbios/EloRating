@@ -4,7 +4,9 @@
 \name{devries98}
 \alias{devries98}
 \title{Dominance matrix from de Vries (1998)}
-\format{Named integer matrix.}
+\format{
+Named integer matrix.
+}
 \usage{
 data(devries98)
 }

@@ -9,7 +9,9 @@
 \alias{baboons5}
 \alias{baboons}
 \title{Baboon dominance sequences}
-\format{Data sets of 5 groups of baboons, with date, winner and loser columns}
+\format{
+Data sets of 5 groups of baboons, with date, winner and loser columns
+}
 \usage{
 baboons1
 }

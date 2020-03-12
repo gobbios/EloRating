@@ -4,7 +4,9 @@
 \name{bonobos}
 \alias{bonobos}
 \title{Dominance matrix from de Vries et al. 2006}
-\format{Integer matrix, with column and row names. Winners in rows and losers in columns.}
+\format{
+Integer matrix, with column and row names. Winners in rows and losers in columns.
+}
 \usage{
 data(bonobos)
 }

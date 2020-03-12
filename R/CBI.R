@@ -12,7 +12,7 @@
 #' \insertCite{clutton-brock1979}{EloRating} consider 'who won interactions',
 #' which are two very different conceptualizations, and which might explain the
 #' discrepancies.
-#' @return a named vector with the indices for each individual
+#' @return a named numeric vector with the indices for each individual
 #' @export
 #' @author Christof Neumann
 #' @references

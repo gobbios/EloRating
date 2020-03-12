@@ -23,3 +23,4 @@ test_that("data conversion", {
   res <- M2 - mat
   expect_equal(sum(colSums(res)+rowSums(res)), 0)
 })
+

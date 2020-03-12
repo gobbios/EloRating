@@ -16,9 +16,13 @@ optistart(
 \arguments{
 \item{eloobject}{output from \code{\link{elo.seq}}}
 
-\item{burnin}{numeric, the number of interactions to be excluded from the calculation of the (log) likelihood. This parameter is ignored if a date range is supplied. By default \code{burnin = 0}, i.e. all interactions are considered.}
+\item{burnin}{numeric, the number of interactions to be excluded from the
+calculation of the (log) likelihood. This parameter is ignored if a
+date range is supplied. By default \code{burnin = 0}, i.e. all
+interactions are considered.}
 
-\item{spread}{numeric, the standard deviation of the ratings to be tested (by default 200)}
+\item{spread}{numeric, the standard deviation of the ratings to be tested
+(by default 200)}
 
 \item{runs}{numeric, number of inital ratings to be tested (by default 2000)}
 
@@ -28,11 +32,16 @@ optistart(
 }
 \value{
 a list with multiple items:
-
-the item \code{$best} reflects the optimal start values found
 }
 \description{
-experimental function to test different sets of randomly selected start values
+experimental function to test different sets of randomly selected start
+values
+}
+\details{
+if the plot is produced, the red line indicates the log-likelihood
+         when all individuals are assigned the same starting value
+
+the item \code{$best} reflects the optimal start values found
 }
 \examples{
 set.seed(123)
@@ -42,4 +51,7 @@ ores <- optistart(res1)
 res2 <- elo.seq(xdata$winner, xdata$loser, xdata$Date, startvalue = ores$best)
 eloplot(res1)
 eloplot(res2)
+}
+\author{
+Christof Neumann
 }

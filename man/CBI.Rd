@@ -10,7 +10,7 @@ CBI(mat)
 \item{mat}{matrix}
 }
 \value{
-a named vector with the indices for each individual
+a named numeric vector with the indices for each individual
 }
 \description{
 Clutton-Brock et al 1979 index (CBI)

@@ -4,7 +4,9 @@
 \name{adv2}
 \alias{adv2}
 \title{Dominance sequence from Albers and de Vries (2001)}
-\format{Fictional example of an interaction sequence, with 33 interactions between 7 individuals.}
+\format{
+Fictional example of an interaction sequence, with 33 interactions between 7 individuals.
+}
 \usage{
 data(adv2)
 }

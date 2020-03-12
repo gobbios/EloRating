@@ -79,4 +79,3 @@ test_that("newold9", {
   expect_equal(newres$DS, oldres[, 1], tolerance = 0.00001)
   expect_equal(newres$normDS, oldres[, 2], tolerance = 0.00001)
 })
-

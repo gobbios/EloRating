@@ -1,8 +1,8 @@
 
 data(adv)
-SO <- .elo.seq_old(winner=adv$winner, loser=adv$loser, Date=adv$Date, k = 100, startvalue = 1000)
-SOb <- .elo.seq_old(winner=adv$winner, loser=adv$loser, Date=adv$Date, k = 100, startvalue = 1000, init = "bottom")
-SObl <- .elo.seq_old(winner=adv$winner, loser=adv$loser, Date=adv$Date, k = 100, startvalue = 1000, init = "bottom_low")
+SO <- EloRating:::.elo.seq_old(winner=adv$winner, loser=adv$loser, Date=adv$Date, k = 100, startvalue = 1000)
+SOb <- EloRating:::.elo.seq_old(winner=adv$winner, loser=adv$loser, Date=adv$Date, k = 100, startvalue = 1000, init = "bottom")
+SObl <- EloRating:::.elo.seq_old(winner=adv$winner, loser=adv$loser, Date=adv$Date, k = 100, startvalue = 1000, init = "bottom_low")
 
 
 
