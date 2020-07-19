@@ -7,3 +7,7 @@ r:
 cache: packages
 
 os: osx
+
+r_check_args: "--no-build-vignettes --ignore-vignettes --as-cran"
+
+r_build_args: "--no-build-vignettes --ignore-vignettes"
