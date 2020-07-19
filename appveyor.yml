@@ -20,7 +20,7 @@ environment:
   # USE_RTOOLS: true
   # R_REMOTES_STANDALONE: true
   matrix:
-  - R_VERSION: devel
+  - R_VERSION: oldrel
 
   - R_VERSION: release
 
