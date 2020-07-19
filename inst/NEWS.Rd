@@ -1,6 +1,12 @@
 \name{NEWS}
 \title{News for Package \pkg{EloRating}}
 
+\section{Changes in version 0.46.12 (2020-07-19)}{
+	\itemize{
+	  \item set up remote testing via TravisCI and AppVeyor
+	}
+}
+
 \section{Changes in version 0.46.11 (2020-03-12)}{
 	\itemize{
 	  \item fixes bug that set tied relationships to zero relationships in the output of \code{\link{ISI}}
