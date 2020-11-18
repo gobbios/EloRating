@@ -1,6 +1,12 @@
 \name{NEWS}
 \title{News for Package \pkg{EloRating}}
 
+\section{Changes in version 0.46.13 (2020-11-18)}{
+	\itemize{
+	  \item fixed bug in elo.seq when \code{init = "bottom"}
+	}
+}
+
 \section{Changes in version 0.46.12 (2020-07-19)}{
 	\itemize{
 	  \item set up remote testing via TravisCI and AppVeyor

@@ -49,7 +49,7 @@ test_that("newold7", {
   expect_equal(individuals(res2, from = "2000-05-05", to = "2000-05-05", outp = "N"), 8, tolerance = 0.00001)
   expect_equal(individuals(res2, from = "2000-05-05", to = "2000-06-05", outp = "N"), 8.3125, tolerance = 0.00001)
   expect_equal(individuals(res2, from = "2000-05-05", to = "2000-06-05", outp = "CV"), 0.07125283, tolerance = 0.00001)
-  expect_equal(individuals(res2, from = "2000-05-05", to = "2000-06-05", outp = "IDs"), c( "d", "k", "n", "w", "z", "c", "g", "f", "a", "s"))
+  expect_true(all(individuals(res2, from = "2000-05-05", to = "2000-06-05", outp = "IDs") %in% c( "d", "k", "n", "w", "z", "c", "g", "f", "a", "s")))
 })
 
 

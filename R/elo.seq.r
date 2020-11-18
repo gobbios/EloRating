@@ -13,14 +13,14 @@
 #' @param presence optional data.frame, to supply data about presence and absence of individuals for part of the time the data collection covered. see details
 #' @param startvalue the value of Elo ratings of the two individuals that are involved in the first interaction of the overall sequence prior to this interaction. By default set to 1000. See also \code{init}
 #' @param k factor \emph{k} that determines the maximum change in ratings. By default \code{k=100}
-#' @param normprob logical (by default \code{TRUE}). Should a normal curve be assumed for calculating the winning/losing probablities, or a logistic curve. See \code{\link{winprob}} for details
+#' @param normprob logical (by default \code{TRUE}). Should a normal curve be assumed for calculating the winning/losing probabilities, or a logistic curve. See \code{\link{winprob}} for details
 #' @param init character, what Elo rating does an individual have prior to its first interaction. Three options are available:
 #' \code{average}: individuals always start with the value specified in \code{startvalue}. Given stable composition of the group, this also reflects the average Elo rating on each day in that group, \cr
 #' \code{bottom}: subjects entering at the current lowest Elo value if the lowest value getting lower its getting lower for all subjects which had this lowest values before, it is reflecting that in some species new subjects entering a group at the bottom level "bottom entry"\cr
 #' \code{bottom_low}: same as \code{bottom} but additionally the start values getting after the first interaction lower for all non-interacting subjects and, reflecting that we have at start no knowledge about the subjects this option offers for "bottom entry" species the possibility to consider that in a way that those subjects which are not interacting getting lower from start on
 #' @param intensity a character vector or factor describing intensity of interaction, to be matched with custom k values if specified
 #' @param iterate not yet implemented
-#' @param runcheck logical, should several checks regarding data integrety be performed, by default \code{TRUE}. See \code{\link{seqcheck}}
+#' @param runcheck logical, should several checks regarding data integrity be performed, by default \code{TRUE}. See \code{\link{seqcheck}}
 #' @param progressbar logical, should progress bars be displayed, by default \code{progressbar=TRUE}
 #' @param WINNER same as \code{winner} for use in \code{fastelo()}
 #' @param LOSER same as \code{loser} for use in \code{fastelo()}
@@ -224,8 +224,6 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
                          draw = draw)
   if (!is.null(intensity)) logtable$intensity <- intensity
 
-  # temporary elo log
-  tempelo <- matrix(ncol = length(allids), nrow = 4, NA, dimnames = list(c("recelo", "present", "firstIA", "firstpres"), allids))
   # create matrix with number of observed interactions per day
   nmat <- mat
   nmat[, ] <- 0
@@ -235,41 +233,18 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   # for losers
   tabx <- table(Date, loser)
   nmat[as.character(truedates) %in% rownames(tabx), colnames(tabx)] <- nmat[as.character(truedates) %in% rownames(tabx), colnames(tabx)] + as.matrix(tabx)
-  # fill ratings of those individuals that were present at the beginning (i.e. the date of the first interaction/first day of date range) with the startvalue
+
+  # temporary elo log
   startIDs <- colnames(pmat)[pmat[1, ] == 1]
-  tempelo["recelo", allids] <- startvalue[allids]
-
-  tempelo["firstpres", startIDs] <- 1
-
-  for (m in startIDs) tempelo["firstIA", m] <- ndat[min(which(winner == m | loser == m))]
-  rm(m)
-  # immigrants and their first presence date and first interaction
   imiIDs <- allids[-c(which(allids %in% startIDs))]
-  if (length(imiIDs) > 0) {
-    imiIDs <- matrix(ncol = length(imiIDs), nrow = 2, 0, dimnames = list(c("firstIA", "firstpres"), imiIDs))
-    for (m in colnames(imiIDs)) {
-      imiIDs[1, m] <- ndat[min(which(winner == m | loser == m))]
-    }
-    rm(m)
+  tempelo <- make_tempelo(winner = winner,
+                          loser = loser,
+                          pmat = pmat,
+                          allids = allids,
+                          startvalue = startvalue)
 
-    # special case if there is only one imigrant in the data set
-    if (ncol(imiIDs) == 1) {
-      imiIDs[2, ] <- min(which(pmat[, colnames(imiIDs)] == 1))
-      tempelo[3:4, colnames(imiIDs)] <- imiIDs
-    }
 
-    if (ncol(imiIDs) > 1) {
-      imiIDs[2, ] <- apply(pmat[, colnames(imiIDs)], 2, function(x) min(which(x == 1)) )
-      # sorting
-      imiIDs <- imiIDs[, names(sort(imiIDs[1, ]))]
-      imiIDs <- imiIDs[, names(sort(imiIDs[2, ]))]
-      tempelo[3:4, colnames(imiIDs)] <- imiIDs
-    }
-  }
-
-  tempelo <- tempelo[, names(sort(tempelo[3, ], na.last = TRUE))]
-  tempelo <- tempelo[, names(sort(tempelo[4, ], na.last = TRUE))]
-  # reorder matrices (to fit same order of names of tempelo...)
+  # reorder matrices (to fit order of in tempelo...)
   mat <- mat[, colnames(tempelo)]
   pmat <- pmat[, colnames(tempelo)]
   # just checking whether first interaction occurred before first presence...
@@ -277,7 +252,6 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
     xx <- paste(names(which( (tempelo[3, ] - tempelo[4, ]) < 0) ), collapse = ", ")
     stop(c("for ID (", xx, ") the first interaction occurred before first presence"))
   }
-  #}
 
   ###########################
   #--- first interaction ---#
@@ -317,7 +291,7 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   #---------------- START --------------------#
   #############################################
 
-  # loop for the remaining interactions seperated by init-type:
+  # loop for the remaining interactions separated by init-type:
   log.entry.bottom <- cbind(1, "", "")
   if (init == "bottom_low") {
     # alle Tiere die am anfang 1000 bekamen bekommen nach der 1. IA wenn sie nicht interagiert haben das minimum
@@ -342,7 +316,7 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
       # short versions for some objects (can maybe be removed later...)
       W <- winner[i]; L <- loser[i]; D <- ndat[i]
       # update tempelo with immigrants indication
-      tempelo[2, ][colnames(tempelo) %in% names(pmat)[pmat[D, ] == 1]] <- D
+      tempelo[2, ][colnames(tempelo) %in% colnames(pmat)[pmat[D, ] == 1]] <- D
       # if at least one ID is present for the FIRST time: insert a the respective BOTTOM value
       if(length(which(tempelo["firstpres", ] <= D & is.na(tempelo["recelo", ]))) > 0) {
         id.f <- names(which(tempelo["firstpres", ] <= D & is.na(tempelo["recelo", ])))
@@ -623,4 +597,3 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   class(res) <- "elo"
   return(res)
 }
-
