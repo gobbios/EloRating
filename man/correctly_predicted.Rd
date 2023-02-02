@@ -70,20 +70,20 @@ ranks.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: default method for logical vector
+\item \code{correctly_predicted(default)}: default method for logical vector
 
-\item \code{elo}: for usage with results of
+\item \code{correctly_predicted(elo)}: for usage with results of
 \code{\link{elo.seq}}
 
-\item \code{fastelo}: for usage with results of
+\item \code{correctly_predicted(fastelo)}: for usage with results of
 \code{\link{fastelo}}
 
-\item \code{list}: for usage with a list of order and
+\item \code{correctly_predicted(list)}: for usage with a list of order and
 interaction matrix
 
-\item \code{matrix}: for usage with an interaction matrix
-}}
+\item \code{correctly_predicted(matrix)}: for usage with an interaction matrix
 
+}}
 \examples{
 data(adv)
 res <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date)

@@ -548,7 +548,7 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
   # get some more 'log' data...
 
   if (length(unique(startvalue)) > 1) startvalue <- paste("custom values ranging between", range(startvalue)[1], "and", range(startvalue)[2])
-  if (!is.na(svl)) startvalue <- 1000
+  if (!is.na(svl)) startvalue <- svl
   if (is.list(ok)) {
     k <- paste("custom values ranging between", range(unlist(ok))[1], "and", range(unlist(ok))[2])
   } else {

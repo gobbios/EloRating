@@ -1,6 +1,12 @@
 \name{NEWS}
 \title{News for Package \pkg{EloRating}}
 
+\section{Changes in version 0.46.14 (2022-02-02)}{
+	\itemize{
+	  \item fixed bug in summary.elo.seq which reported start values incorrectly (#9)
+	}
+}
+
 \section{Changes in version 0.46.13 (2020-11-18)}{
 	\itemize{
 	  \item fixed bug in elo.seq when \code{init = "bottom"}
