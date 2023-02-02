@@ -15,7 +15,8 @@
 #' @export
 #'
 #' @examples
-#' data(adv); data(advpres)
+#' data(adv)
+#' data(advpres)
 #' SEQ <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date,
 #'                presence = advpres)
 #' lastdaypresent(SEQ, ID = "all", refdate = "2010-01-02")
@@ -23,7 +24,7 @@
 
 
 lastdaypresent <- function(x, ID = "all", refdate = NULL) {
-  if (class(x) == "elo") {
+  if (inherits(x, "elo")) {
     pm <- x$pmat
   } else {
     stop("so far 'x' must be of class 'elo'...", call. = FALSE)

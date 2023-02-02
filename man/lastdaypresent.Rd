@@ -23,7 +23,8 @@ last day an individual was present with respect to a reference date
 the function can result in \code{NA} for two reasons. 1) the ID is not found in the presence data, which is accompanied by a warning and 2) the ID was not yet present if a referene date is specified
 }
 \examples{
-data(adv); data(advpres)
+data(adv)
+data(advpres)
 SEQ <- elo.seq(winner = adv$winner, loser = adv$loser, Date = adv$Date,
                presence = advpres)
 lastdaypresent(SEQ, ID = "all", refdate = "2010-01-02")
