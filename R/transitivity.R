@@ -11,7 +11,7 @@
 #' @references
 #' \insertRef{shizuka2012}{EloRating}
 #'
-#' \href{http://www.shizukalab.com/toolkits/sna/triangle-transitivity}{http://www.shizukalab.com/toolkits/sna/triangle-transitivity}
+#' \href{https://shizukalab.com/r/triangle-transitivity-in-dominance-hierarchies-directed-graphs/}{https://shizukalab.com/r/triangle-transitivity-in-dominance-hierarchies-directed-graphs/}
 #'
 #' @return a named vector of length four
 #' @export

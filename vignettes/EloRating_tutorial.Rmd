@@ -31,6 +31,8 @@ knitr::knit_hooks$set(chunk = function(x, options) {
 knitr::opts_chunk$set(size = 'footnotesize', fig.align = 'center')
 # cache location
 knitr::opts_chunk$set(cache.path = "zz_cacheloc/")
+# compile time
+compile_start <- Sys.time()
 ```
 
 
@@ -626,7 +628,7 @@ It is also possible to use a maximum likelihood approach to try out multiple set
 
 In the following piece of code we run a simulation where we compare the performance of informed start ratings (either via prior knowledge or via optimization) with uninformed start ratings. I won't explain the code in detail here (that is for future versions), just note that we begin with creating sequences for which we *know* the true ranks (via a function in the `aniDom` package). Then we create (1) start values from these known ranks, (2) start values based on a best set of random start values (as outline in the paragraph above) and (3) uniform start values (i.e. each individual has the same start value). For approach (2) I use two different sets of possible start values (1000 and 10000), where the expectation is that the higher the number of possible start values the higher the probability that a 'good' set is among them. In the end, we compare the correlations between the final ratings from each of the three approaches and the true ranks. A higher correlation indicates that the relationship between true ranks and final ratings is better. 
 
-```{r optistart, eval = TRUE, cache = TRUE, fig.width=7, fig.height=3.8, out.width = "70%", fig.cap = "\\small Comparison of performance between different approaches to assign custom start values.  \\label{fig:optistart}"}
+```{r optistart_fig, eval = TRUE, cache = TRUE, fig.width=7, fig.height=3.8, out.width = "70%", fig.cap = "\\small Comparison of performance between different approaches to assign custom start values.  \\label{fig:optistart}"}
 library(aniDom)
 set.seed(123)
 resmat <- matrix(ncol = 4, nrow = 100)
@@ -776,7 +778,7 @@ legend("bottomright", legend = c("normal", "exponential", "exponential (alternat
 
 Furthermore, we can simulate random interaction sequences, then calculate ratings based on both winning probabilities, and then extract the ratings from a randomly selected individual. If we do this 100 times, we can see that there is very little difference between the two approaches (figure \ref{fig:differentprobssimu}).
 
-```{r differentprobssimu, cache=TRUE, echo=FALSE, fig.width=7, fig.height=4, out.width="70%", fig.cap = "Ratings from individuals that were based on either normally distributed winning probabilities or exponentially distributed winning probabilities. Code for the simulation and figure is in the \\nameref{sec:appendix}. \\label{fig:differentprobssimu}"}
+```{r differentprobssimu_fig, cache=TRUE, echo=FALSE, fig.width=7, fig.height=4, out.width="70%", fig.cap = "Ratings from individuals that were based on either normally distributed winning probabilities or exponentially distributed winning probabilities. Code for the simulation and figure is in the \\nameref{sec:appendix}. \\label{fig:differentprobssimu}"}
 set.seed(123)
 n <- 100
 xres <- data.frame(nid = sample(8:26, n, TRUE), 
@@ -1356,6 +1358,15 @@ abline(0, 1)
 ```
 
 
+```{r, echo=FALSE, eval = TRUE}
+# this is forced to be evaluated!
+stime <- "unknown"
+if (identical(Sys.getenv("NOT_CRAN"), "true")) {
+  stime <- round(as.numeric(difftime(time2 = compile_start, time1 = Sys.time(), units = "mins")), 1)
+}
+```
+
+This document took `r stime` minutes to compile.
 
 
 \clearpage

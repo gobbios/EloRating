@@ -1,0 +1,7 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+_build_check_steps.R
+travis.yml
+appveyor.yml
+^doc$
+^Meta$

@@ -4,6 +4,8 @@
 \section{Changes in version 0.46.14 (2022-02-02)}{
 	\itemize{
 	  \item fixed bug in summary.elo.seq which reported start values incorrectly (#9)
+	  \item code and documentation cosmetics
+	  \item removed TravisCI code testing
 	}
 }
 

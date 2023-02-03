@@ -7,7 +7,6 @@ doc
 .Ruserdata
 .Rproj
 EloRating.Rproj
-.Rbuildignore
 man/.Rapp.history
 vignettes/*.pdf
 vignettes/*.tex
@@ -28,3 +27,5 @@ packagearchive/
 inst/doc/
 vignettes/zz_cacheloc/
 inst/doc
+/doc/
+/Meta/
