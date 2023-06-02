@@ -34,7 +34,10 @@
 #' # involved in at least one interaction
 #' creatematrix(SEQ, daterange=c("2010-01-25", "2010-02-01"),
 #'              onlyinteracting=TRUE)
-#'
+#'              
+#' # interactions restricted to single date
+#' creatematrix(SEQ, daterange = c("2010-01-25", "2010-01-25"))
+#' 
 #' ## dealing with undecided interactions
 #' data(adv2)
 #' SEQ <- elo.seq(winner=adv2$winner, loser=adv2$loser, Date=adv2$Date,
@@ -73,10 +76,10 @@ creatematrix <- function(eloobject, daterange=NULL, drawmethod="omit",
     dataseq$xdate <- eloobject$truedates[1] - 1 + dataseq$Date
 
     #restrict to date range
-    dataseq <- dataseq[which(dataseq$xdate >= daterange[1] & dataseq$xdate <= daterange[2]), ]
+    dataseq <- dataseq[which(dataseq$xdate >= daterange[1] & dataseq$xdate <= daterange[2]), , drop = FALSE]
 
     # create empty matrix based on presence
-    pmat <- eloobject$pmat[which(eloobject$truedates == daterange[1]):which(eloobject$truedates == daterange[2]), ]
+    pmat <- eloobject$pmat[which(eloobject$truedates == daterange[1]):which(eloobject$truedates == daterange[2]), , drop = FALSE]
     IDS <- sort(colnames(pmat)[which(colSums(pmat) > 0)])
 
     mat <- matrix(ncol = length(IDS), nrow = length(IDS), 0)
@@ -88,14 +91,14 @@ creatematrix <- function(eloobject, daterange=NULL, drawmethod="omit",
     dataseq$loser <- as.character(dataseq$loser)
 
     # add decided interactions
-    xdata <- dataseq[dataseq$draw == FALSE, ]
+    xdata <- dataseq[dataseq$draw == FALSE, , drop = FALSE]
     xdata <- table(xdata$winner, xdata$loser)
     mat[rownames(xdata), colnames(xdata)] <- xdata
 
     # add ties/draws, but separate depending on how they were specified to be treated (if present in the data)
     if (sum(dataseq$draw) > 0) {
 
-      xdata <- dataseq[dataseq$draw == TRUE, ]
+      xdata <- dataseq[dataseq$draw == TRUE, , drop = FALSE]
       xdata <- table(xdata$winner, xdata$loser)
       if (drawmethod == "0.5") {
         xdata <- xdata / 2

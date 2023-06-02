@@ -55,6 +55,9 @@ creatematrix(SEQ, daterange=c("2010-01-25", "2010-02-01"))
 # involved in at least one interaction
 creatematrix(SEQ, daterange=c("2010-01-25", "2010-02-01"),
              onlyinteracting=TRUE)
+             
+# interactions restricted to single date
+creatematrix(SEQ, daterange = c("2010-01-25", "2010-01-25"))
 
 ## dealing with undecided interactions
 data(adv2)

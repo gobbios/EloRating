@@ -1,7 +1,13 @@
 \name{NEWS}
 \title{News for Package \pkg{EloRating}}
 
-\section{Changes in version 0.46.14 (2022-02-02)}{
+\section{Changes in version 0.46.15 (2023-06-02)}{
+	\itemize{
+	  \item fixed bug in creatematrix (#10)
+	}
+}
+
+\section{Changes in version 0.46.14 (2023-02-02)}{
 	\itemize{
 	  \item fixed bug in summary.elo.seq which reported start values incorrectly (#9)
 	  \item code and documentation cosmetics
