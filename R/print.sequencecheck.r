@@ -59,13 +59,17 @@ print.sequencecheck <- function(x, ...) {
   if (x$checksum["IA_presencematch"] == 2) {
     cat("Your presence data does not match the interaction data and therefore no check could be performed as to whether IDs were actually present on interaction dates...WARNING\n")
   }
-
+  
+  if (x$checksum["zeropresencerow"] == 1) {
+    cat(x$zeropresencerow, "...ERROR\n")
+  }
+  
 
   if (x$checksum["presenceentries"] == 1) cat("At least one presence entry is not 1 or 0...ERROR\n")
 
   if (x$checksum["continouspres"] == 1) cat("There appear to be gaps in your presence (days missing?)...ERROR\n")
 
-  if (sum(x$checksum[c("startpresence1", "startpresence2", "endpresence1", "endpresence2", "IDmatch", "IA_presencematch", "presenceentries", "datecol", "continouspres")]) == 0) cat("Presence data seems to be fine and matches interaction sequence...OK\n")
+  if (sum(x$checksum[c("startpresence1", "startpresence2", "endpresence1", "endpresence2", "IDmatch", "IA_presencematch", "presenceentries", "datecol", "continouspres", "zeropresencerow")]) == 0) cat("Presence data seems to be fine and matches interaction sequence...OK\n")
 
   if (x$checksum["presence"] == 0) cat("\n#####################################\n")
 }

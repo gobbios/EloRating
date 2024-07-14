@@ -1,6 +1,12 @@
 \name{NEWS}
 \title{News for Package \pkg{EloRating}}
 
+\section{Changes in version 0.46.16 (2024-07-15)}{
+	\itemize{
+	  \item add test to seqcheck for rows in presence matrix that consist of only zeros (#11)
+	}
+}
+
 \section{Changes in version 0.46.15 (2023-06-02)}{
 	\itemize{
 	  \item fixed bug in creatematrix (#10)

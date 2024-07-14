@@ -2,9 +2,15 @@
 # the user
 
 # create the tempelo object in elo.seq
-make_tempelo <- function(winner, loser, pmat, allids, startvalue) {
+make_tempelo <- function(winner, loser, pmat, allids, startvalue, Date, truedates) {
   # first interaction
+  # first_ia <- sapply(allids, function(x) min(which(winner == x | loser == x)))
+  
+  # first interaction (at which line in presence matrix!!!)
   first_ia <- sapply(allids, function(x) min(which(winner == x | loser == x)))
+  first_ia <- Date[first_ia]
+  first_ia <- sapply(first_ia, function(x)which(truedates == x))
+  
   # first presence
   first_pres <- apply(pmat[, allids], 2, function(x)min(which(x == 1)))
   # combine

@@ -126,7 +126,7 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
 
   if (runcheck) {
     rc <- seqcheck(winner, loser, Date, draw, presence)
-    if (sum(rc$checksum[c("IDcheck", "selfinteractions", "startpresence1", "startpresence2", "endpresence1", "endpresence2", "IDmatch", "IA_presencematch", "presenceentries", "datecol", "length", "continouspres", "seqdateorder")]) > 0) stop("there appear to be some problems with your data, please consider running 'seqcheck()'\notherwise set runcheck=FALSE")
+    if (sum(rc$checksum[c("IDcheck", "selfinteractions", "startpresence1", "startpresence2", "endpresence1", "endpresence2", "IDmatch", "IA_presencematch", "presenceentries", "datecol", "length", "continouspres", "seqdateorder", "zeropresencerow")]) > 0) stop("there appear to be some problems with your data, please consider running 'seqcheck()'\notherwise set runcheck=FALSE")
   }
 
   # handle startvalues
@@ -241,7 +241,9 @@ elo.seq <- function(winner, loser, Date, draw = NULL, presence = NULL,
                           loser = loser,
                           pmat = pmat,
                           allids = allids,
-                          startvalue = startvalue)
+                          startvalue = startvalue,
+                          Date = Date,
+                          truedates = truedates)
 
 
   # reorder matrices (to fit order of in tempelo...)

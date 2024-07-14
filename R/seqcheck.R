@@ -103,6 +103,8 @@ seqcheck <- function(winner, loser, Date, draw = NULL, presence = NULL) {
   # creating checksum
   checksum <- rep(0, 15)
   names(checksum) <- c("IDcheck", "selfinteractions", "presence", "startpresence1", "startpresence2", "endpresence1", "endpresence2", "IDmatch", "IA_presencematch", "presenceentries", "datecol", "length", "singledayobs", "continouspres", "seqdateorder")
+  
+  checksum <- c(checksum, zeropresencerow = 0) # 16
 
   Date <- as.Date(as.character(Date))
   # check whether dates for the interactions are in increasing order
@@ -169,7 +171,17 @@ seqcheck <- function(winner, loser, Date, draw = NULL, presence = NULL) {
       continouspres <- "not checked"
     }
 
-
+    # check whether there are rows only consisting of zeros in the presence table
+    zeropresencerow <- "not applicable"
+    if (!is.null(presence)) {
+      aux_pres <- presence[, -c(which(colnames(presence) == "Date"))]
+      xtest <- any(rowSums(aux_pres) == 0)
+      if (xtest) {
+        firstprobdate <- as.character(presence$Date[rowSums(aux_pres) == 0][1])
+        checksum["zeropresencerow"] <- 1
+        zeropresencerow <- paste0("There appear to be row(s) in the presence table that are completely made up of zeros (no individual present), first is ", shQuote(firstprobdate))
+      }
+    }
 
     # check whether date range in presence is the same as in sequence data
     START <- NA
@@ -278,7 +290,7 @@ seqcheck <- function(winner, loser, Date, draw = NULL, presence = NULL) {
 
 
     if (!is.null(presence)) {
-      res <- list(checksum = checksum, IDcheck = IDcheck, selfinteractions = selfinteractions, presence = presenceD, startpresence = START, endpresence = END, IDmatch = IDmatch, IA_presencematch = IA_presencematch, IA_presencematchN = IA_presencematchN, presenceentries = presenceentries, IDmatch1 = IDmatch1, IDmatch2 = IDmatch2, datecol = datecol, singledaycases = sIDs)
+      res <- list(checksum = checksum, IDcheck = IDcheck, selfinteractions = selfinteractions, presence = presenceD, startpresence = START, endpresence = END, IDmatch = IDmatch, IA_presencematch = IA_presencematch, IA_presencematchN = IA_presencematchN, presenceentries = presenceentries, IDmatch1 = IDmatch1, IDmatch2 = IDmatch2, datecol = datecol, singledaycases = sIDs, zeropresencerow = zeropresencerow)
       class(res) <- "sequencecheck"
     }
     if (is.null(presence)) {
