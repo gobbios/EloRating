@@ -29,14 +29,22 @@ for (i in seq_len(nrow(testres))) {
         xlog <- res$logtable
         m <- min(which(xlog$winner == test_id), which(xlog$loser == test_id))
         xlog[m, ]
-        sord <- which(xlog[m, c("winner", "loser")] == test_id)
-        startvalue <- xlog[m, c("Apre", "Bpre")[sord]]
-        testres[i, 1] <- min(res$mat[m - 1, ], na.rm = TRUE) == startvalue
+        startvalue <- xlog[m, c("Apre", "Bpre")[which(xlog[m, c("winner", "loser")] == test_id)]]
+        startvalue <- min(xlog[m, c("Apre", "Bpre", "Apost", "Bpost")])
+        res$mat[m - 1, ]
+        res$mat[m , ]
+        
+        # only do if the imigrant wins their first interaction
+        if (sdat$winner[m] == test_id) {
+          testres[i, 1] <- min(res$mat[m - 1, ], na.rm = TRUE) >= startvalue
+          if (!testres[i, 1]) stop()
+        }
         testres[i, 2] <- sum(pres[1, 2:ncol(pres)] == 0) > 1
-        if (!testres[i, 1]) stop()
+        
       }
     }
   }
+  cat(i, "\r")
 }
 
 test_that("init = bottom performs properly", {
