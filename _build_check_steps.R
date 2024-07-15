@@ -16,7 +16,7 @@ tools::compactPDF(paths = vignettepath, verbose = TRUE, gs_quality = "ebook")
 withr::with_envvar(c("NOT_CRAN" = "true"), devtools::build(args = c('--compact-vignettes=both')))
 
 # check source package (update file name if applicable)
-withr::with_envvar(c("NOT_CRAN" = "true"), devtools::check_built("../EloRating_0.46.17.tar.gz", args = "--as-cran"))
+withr::with_envvar(c("NOT_CRAN" = "true"), devtools::check_built("../EloRating_0.46.18.tar.gz", args = "--as-cran"))
 
 # then upload .tar.gz to wincheck
 # https://win-builder.r-project.org/upload.aspx
