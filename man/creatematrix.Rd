@@ -11,6 +11,7 @@ creatematrix(
   onlyinteracting = FALSE,
   winners,
   losers,
+  addids = NULL,
   draw = NULL
 )
 }
@@ -29,6 +30,10 @@ creatematrix(
 \item{winners}{vector of winners (see details)}
 
 \item{losers}{vector of losers (see details)}
+
+\item{addids}{vector of additional ids that should be added to the output
+matrix (but which were not observed interacting, i.e., they are
+added with only zeros)}
 
 \item{draw}{logical vector (currently not doing anything)}
 }
@@ -69,6 +74,12 @@ creatematrix(SEQ)
 creatematrix(SEQ, drawmethod="0.5")
 # omit ties/draws
 creatematrix(SEQ, drawmethod="1")
+
+# deal with unobserved individuals
+w <- c("a", "e", "c", "d", "a", "a")
+l <- c("e", "a", "a", "e", "d", "d")
+creatematrix(winners = w, losers = l)
+creatematrix(winners = w, losers = l, addids = c("B", "X")) # two 'extra' individuals
 }
 \author{
 Christof Neumann

@@ -11,6 +11,9 @@
 #' @param onlyinteracting logical, indicating whether all individuals that were present (default, \code{TRUE}) are shown in the matrix, or only those that were involved in an interaction in the specified date period. If no presence data was supplied to \code{\link{elo.seq}}, it is assumed that all individuals were present at all times
 #' @param winners vector of winners (see details)
 #' @param losers vector of losers (see details)
+#' @param addids vector of additional ids that should be added to the output
+#'          matrix (but which were not observed interacting, i.e., they are
+#'          added with only zeros)
 #' @param draw logical vector (currently not doing anything)
 #'
 #' @return square matrix with dominance interactions (winner in rows, loser in columns)
@@ -48,9 +51,15 @@
 #' creatematrix(SEQ, drawmethod="0.5")
 #' # omit ties/draws
 #' creatematrix(SEQ, drawmethod="1")
+#' 
+#' # deal with unobserved individuals
+#' w <- c("a", "e", "c", "d", "a", "a")
+#' l <- c("e", "a", "a", "e", "d", "d")
+#' creatematrix(winners = w, losers = l)
+#' creatematrix(winners = w, losers = l, addids = c("B", "X")) # two 'extra' individuals
 
 creatematrix <- function(eloobject, daterange=NULL, drawmethod="omit",
-                         onlyinteracting=FALSE, winners, losers, draw=NULL) {
+                         onlyinteracting=FALSE, winners, losers, addids = NULL, draw=NULL) {
   # decide which data were supplied (elo object or winners/losers)
   if (missing(eloobject)) {
     if (!missing(winners) & !missing(losers)) funcmode <- "vec"
@@ -127,7 +136,8 @@ creatematrix <- function(eloobject, daterange=NULL, drawmethod="omit",
   if (funcmode == "vec") {
     # all individuals in data
     allids <- sort(unique(c(as.character(winners), as.character(losers))))
-
+    if (!is.null(addids)) allids <- sort(unique(c(allids, addids)))
+    
     # create empty matrix
     mat <- matrix(ncol = length(allids), nrow = length(allids), 0)
     colnames(mat) <- rownames(mat) <- allids

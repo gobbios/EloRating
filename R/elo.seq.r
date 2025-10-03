@@ -96,7 +96,7 @@
 #' names(myranks) <- letters[1:7]
 #' mypriors <- createstartvalues(myranks, shape = 0.3)
 #' res <- elo.seq(winner = adv2$winner, loser = adv2$loser, Date = adv2$Date,
-#'                k = myks, intensity = adv2$intensity, startvalue = mypriors$res)
+#'                intensity = adv2$intensity, startvalue = mypriors$res)
 #' extract_elo(res)
 #'
 #' # compare elo.seq and fastelo
