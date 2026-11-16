@@ -849,7 +849,10 @@ summary(xres)
 
 ## From dominance matrix to sequence with `randomelo()`
 
-This is an experimental function to generate a set of random sequences based on an interaction matrix. Based on the randomly generated sequences, Elo-ratings are calculated (in the example 5 times, `runs = 5`)\footnote{Typically, you would want to set a substantially higher number, for example 1000}. For inspection, we save the average Elo-ratings across all the randomized sequences in a new object called `res`. If you plan to use this function, you may want to have a look at the [`EloChoice`](https://cran.r-project.org/web/packages/EloChoice/index.html) package, which does the same, but is substantially faster.
+This is an experimental function to generate a set of random sequences based on an interaction matrix.
+Based on the randomly generated sequences, Elo-ratings are calculated (in the example 5 times, `runs = 5`)\footnote{Typically, you would want to set a substantially higher number, for example 1000}.
+For inspection, we save the average Elo-ratings across all the randomized sequences in a new object called `res`.
+If you plan to use this function, you may want to have a look at the [`EloChoice`](https://CRAN.R-project.org/package=EloChoice) package, which does the same, but is substantially faster.
 
 
 ```{r}

@@ -1,6 +1,12 @@
 \name{NEWS}
 \title{News for Package \pkg{EloRating}}
 
+\section{Changes in version 0.46.19 (2025-10-03)}{
+	\itemize{
+	  \item allow unobserved individuals when using creatematrix() with vectors
+	}
+}
+
 \section{Changes in version 0.46.16 (2024-07-15)}{
 	\itemize{
 	  \item add test to seqcheck for rows in presence matrix that consist of only zeros (#11)
