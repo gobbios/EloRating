@@ -1,3 +1,9 @@
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/EloRating)](https://CRAN.R-project.org/package=EloRating)
+[![R-CMD-check](https://github.com/gobbios/EloRating/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gobbios/EloRating/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/gobbios/EloRating/branch/main/graph/badge.svg)](https://app.codecov.io/gh/gobbios/EloRating?branch=main)
+
+<!-- badges: end -->
 
 # EloRating
 
