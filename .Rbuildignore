@@ -8,3 +8,4 @@ appveyor.yml
 dump/
 ^cran-comments\.md$
 ^\.github$
+^CRAN-SUBMISSION$
