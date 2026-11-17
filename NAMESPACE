@@ -49,39 +49,51 @@ export(transitivity)
 export(winprob)
 importFrom(Rcpp,evalCpp)
 importFrom(Rdpack,reprompt)
-importFrom(grDevices,colorRampPalette)
-importFrom(grDevices,colors)
-importFrom(graphics,abline)
-importFrom(graphics,axis)
-importFrom(graphics,box)
-importFrom(graphics,hist)
-importFrom(graphics,layout)
-importFrom(graphics,legend)
-importFrom(graphics,lines)
-importFrom(graphics,mtext)
-importFrom(graphics,par)
-importFrom(graphics,plot)
-importFrom(graphics,points)
-importFrom(graphics,rect)
-importFrom(graphics,text)
+importFrom(grDevices,
+  colorRampPalette,
+  colors
+)
+importFrom(graphics,
+  abline,
+  axis,
+  box,
+  hist,
+  layout,
+  legend,
+  lines,
+  mtext,
+  par,
+  plot,
+  points,
+  rect,
+  text
+)
 importFrom(network,network)
-importFrom(sna,dyad.census)
-importFrom(sna,rguman)
-importFrom(sna,triad.census)
-importFrom(stats,aggregate)
-importFrom(stats,as.formula)
-importFrom(stats,complete.cases)
-importFrom(stats,lm)
-importFrom(stats,median)
-importFrom(stats,na.omit)
-importFrom(stats,pnorm)
-importFrom(stats,rnorm)
-importFrom(stats,sd)
-importFrom(utils,combn)
-importFrom(utils,setTxtProgressBar)
-importFrom(utils,tail)
-importFrom(utils,txtProgressBar)
-importFrom(zoo,as.Date.yearmon)
-importFrom(zoo,as.yearmon)
-importFrom(zoo,na.approx)
+importFrom(sna,
+  dyad.census,
+  rguman,
+  triad.census
+)
+importFrom(stats,
+  aggregate,
+  as.formula,
+  complete.cases,
+  lm,
+  median,
+  na.omit,
+  pnorm,
+  rnorm,
+  sd
+)
+importFrom(utils,
+  combn,
+  setTxtProgressBar,
+  tail,
+  txtProgressBar
+)
+importFrom(zoo,
+  as.Date.yearmon,
+  as.yearmon,
+  na.approx
+)
 useDynLib(EloRating)

@@ -37,3 +37,33 @@ test_that("elofast and eloseq same results with custom k", {
 res1
 res2
 
+
+test_that("elofast handles normprob correctly", {
+  w <- rep(c("a", "a", "b", "a", "d"), 2)
+  l <- rep(c("b", "c", "c", "c", "a"), 2)
+  o <- sample(seq_along(w))
+  w <- w[o]
+  l <- l[o]
+  nids <- 4
+  
+  # win probs 1
+  xx <- fastelo(WINNER = w, LOSER = l, ALLIDS = letters[seq_len(nids)], KVALS = rep(100, length(w)), STARTVALUES = rep(1000, nids), NORMPROB = TRUE)
+  xx$ratings
+  yy <- elo.seq(w, l, Date = as.Date(1:length(w)), normprob = TRUE)
+  yy$lmat[nrow(yy$lmat), ]
+  
+  
+  xtest <- as.numeric(xx$winprobs) - winprob(yy$logtable$Apre, yy$logtable$Bpre, normprob = TRUE) 
+  expect_all_equal(object = round(xtest, 6), expected = 0)
+  
+  
+  # win probs 2
+  xx <- fastelo(WINNER = w, LOSER = l, ALLIDS = letters[seq_len(nids)], KVALS = rep(100, length(w)), STARTVALUES = rep(1000, nids), NORMPROB = FALSE)
+  xx$ratings
+  yy <- elo.seq(w, l, Date = as.Date(1:length(w)), normprob = FALSE)
+  yy$lmat[nrow(yy$lmat), ]
+  xtest <- as.numeric(xx$winprobs) - winprob(yy$logtable$Apre, yy$logtable$Bpre, normprob = FALSE) 
+  expect_all_equal(object = round(xtest, 6), expected = 0)
+  
+})
+

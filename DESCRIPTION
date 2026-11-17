@@ -17,7 +17,6 @@ Maintainer: Christof Neumann <christofneumann1@gmail.com>
 Description: Provides functions to quantify animal dominance hierarchies. The major focus is on Elo rating and its ability to deal with temporal dynamics in dominance interaction sequences. For static data, David's score and de Vries' I&SI are also implemented. In addition, the package provides functions to assess transitivity, linearity and stability of dominance networks. See Neumann et al (2011) <doi:10.1016/j.anbehav.2011.07.016> for an introduction.
 License: GPL (>= 2)
 LazyData: true
-RoxygenNote: 7.3.2
 Depends: zoo, sna, network, R (>= 3.2.0)
 Suggests: 
     testthat (>= 2.1.0),
@@ -32,3 +31,4 @@ Encoding: UTF-8
 RdMacros: Rdpack
 URL: https://github.com/gobbios/EloRating
 BugReports: https://github.com/gobbios/EloRating/issues
+Config/roxygen2/version: 8.1.1

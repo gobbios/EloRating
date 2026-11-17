@@ -1,7 +1,11 @@
 ## Resubmission
 
 This is a patch release that fixes a stale URL in a vignette and which also includes a small new feature in function `creatematrix()`.
-The general testing and deployment workflow was also updated (see below for checking/testing via GitHub actions).
+The general testing and deployment workflow was also updated (see below for checking/testing via GitHub actions), including two new unit tests.
+
+## Submitted version
+
+EloRating 0.46.20
 
 ## Test environments
 * local macOS, R 4.6.1

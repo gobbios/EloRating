@@ -1,28 +1,37 @@
 # this is a set of instructions to check whether the package conforms to CRAN rules
-# these steps here are taken from https://github.com/paul-buerkner/brms/issues/158
+# look at test coverage
+# cov <- covr::package_coverage()
+# devtools::test_coverage()
+# devtools::test_coverage_active_file()
 
-devtools::clean_vignettes()
 devtools::document()
 devtools::clean_dll()
-withr::with_envvar(c("NOT_CRAN" = "true"), devtools::build_vignettes())
+# need checkbashisms
+# brew install checkbashisms
+# need GS
+stopifnot(file.exists("/opt/homebrew/bin/gs"))
+Sys.setenv(R_GSCMD = "/opt/homebrew/bin/gs")
+# build:
+tarball <- withr::with_envvar(
+  c(NOT_CRAN = "true"),
+  devtools::build(args = "--compact-vignettes=both")
+)
 
-# size reductions of PDF vignettes
-vignettepath <- "doc/EloRating_tutorial.pdf"
-if (!file.exists(vignettepath)) stop()
-tools::compactPDF(paths = vignettepath, verbose = TRUE, gs_quality = "ebook")
-# for whatever reason: compacting currently only works on my windows pc...
+# check tarball
+devtools::check_built(tarball, args = "--as-cran", env_vars = c(NOT_CRAN = "true"))
 
-# build source package
-withr::with_envvar(c("NOT_CRAN" = "true"), devtools::build(args = c('--compact-vignettes=both')))
+# remote checks instead of manual uploads
+devtools::check_win_devel(args = "--compact-vignettes=both") # instead of manual browser-based winbuilder upload
 
-# check source package (update file name if applicable)
-withr::with_envvar(c("NOT_CRAN" = "true"), devtools::check_built("../EloRating_0.46.18.tar.gz", args = "--as-cran"))
+# foghorn::winbuilder_queue()
 
-# then upload .tar.gz to wincheck
-# https://win-builder.r-project.org/upload.aspx
-# download zip for github release
-# create mac binary for release too
-devtools::build(binary = TRUE)
+# optional: upload zip/tarball/tgz as release on github
+# download zip from winbuilder for github release
+devtools::build(binary = TRUE, args = "--compact-vignettes=both")
 
+# finally: submit to CRAN
+# check cran-comments.mds
+devtools::submit_cran(args = "--compact-vignettes=both")
 
 # foghorn::cran_incoming()
+

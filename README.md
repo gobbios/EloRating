@@ -1,7 +1,7 @@
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/EloRating)](https://CRAN.R-project.org/package=EloRating)
 [![R-CMD-check](https://github.com/gobbios/EloRating/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/gobbios/EloRating/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/gobbios/EloRating/branch/main/graph/badge.svg)](https://app.codecov.io/gh/gobbios/EloRating?branch=main)
+[![Codecov test coverage](https://codecov.io/gh/gobbios/EloRating/branch/master/graph/badge.svg)](https://app.codecov.io/gh/gobbios/EloRating?branch=master)
 
 <!-- badges: end -->
 
@@ -20,5 +20,5 @@ Since version 0.45-0, the package contains C++ code, which means that you need t
 
 If you want to have a pdf of the tutorial, please use:
 
-`devtools::install_github("gobbios/EloRating", build_vignettes=TRUE)`
+`devtools::install_github("gobbios/EloRating", build_vignettes = TRUE)`
 
